@@ -1393,6 +1393,7 @@ MonoBehaviour:
   newSkin: {fileID: 0}
   script_name: SKIN_ZIZI
   Color_List_Count: 0
+  Selected_Color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1362048880
 GameObject:
   m_ObjectHideFlags: 0
@@ -2651,7 +2652,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1969488873
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2672,7 +2673,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000017166, y: -561}
+  m_AnchoredPosition: {x: -0.000078201, y: -833}
   m_SizeDelta: {x: 1236.4015, y: 1045.4312}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1969488874

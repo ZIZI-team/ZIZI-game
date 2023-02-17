@@ -6,6 +6,12 @@ using UnityEngine.UI;
 public class ReadyGame : MonoBehaviour
 {
 
+
+    // SKIN_ZIZI 70 , 35
+    // ColorPrefab 25
+
+
+
     // +++ SKIN +++ //
 
     // Skin Prefab : SkinName(Str) + SkinImg(Img) + Color(Script) + Anim(Script) + Skill(Script)
@@ -20,7 +26,7 @@ public class ReadyGame : MonoBehaviour
 
     // : Color
     public int Color_List_Count = 0;
-
+    public Color Selected_Color;
     
     // +++ MAP +++ //
 
@@ -45,7 +51,7 @@ public class ReadyGame : MonoBehaviour
         SearchSkin(MySkinIndex);     
     }
 
-    void Uodate()
+    void Update()
     {
 
     }
@@ -53,8 +59,8 @@ public class ReadyGame : MonoBehaviour
     public void SkinIndexUp()
     {
         Destroy(newSkin);
-        if (MySkinIndex == Color_List_Count - 1){ MySkinIndex = -1; }
-        MySkinIndex++;
+        if (MySkinIndex == Color_List_Count - 1){ MySkinIndex = 0; }
+        else { MySkinIndex++; }
 
         newSkin = Instantiate(MySkin[MySkinIndex], new Vector3(0, 0, 0), Quaternion.identity);
         newSkin.transform.SetParent(SkinPalette.transform, false);
@@ -64,9 +70,8 @@ public class ReadyGame : MonoBehaviour
     public void SkinIndexDown()
     {
         Destroy(newSkin); 
-
-        if (MySkinIndex == Color_List_Count - 1){ MySkinIndex = Color_List_Count; }
-        MySkinIndex--;
+        if (MySkinIndex == 0){ MySkinIndex = 2; }
+        else { MySkinIndex--; }
 
         newSkin = Instantiate(MySkin[MySkinIndex], new Vector3(0, 0, 0), Quaternion.identity);
         newSkin.transform.SetParent(SkinPalette.transform, false);
@@ -78,7 +83,10 @@ public class ReadyGame : MonoBehaviour
         // var SkinScript = MySkin[MySkinIndex].GetComponent<SKIN_ZIZI>();  
 
         // Test
-        Debug.Log(MySkin[0]);
+        // Debug.Log(MySkinIndex);
+        Debug.Log(Selected_Color);
+
+        
         // Debug.Log(SkinScript.Color_List[0]); 
     }
 }
