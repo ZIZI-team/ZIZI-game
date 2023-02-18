@@ -5,13 +5,6 @@ using UnityEngine.UI;
 
 public class ReadyGame : MonoBehaviour
 {
-
-
-    // SKIN_ZIZI 70 , 35
-    // ColorPrefab 25
-
-
-
     // +++ SKIN +++ //
 
     // Skin Prefab : SkinName(Str) + SkinImg(Img) + Color(Script) + Anim(Script) + Skill(Script)
@@ -21,13 +14,15 @@ public class ReadyGame : MonoBehaviour
     public GameObject SkinPalette;
     public GameObject newSkin;
 
-    // : Script
-    public string script_name = "SKIN_ZIZI";                            // 다시 생각해보기
-
     // : Color
     public int Color_List_Count = 0;
     public Color Selected_Color;
     
+    // : Final Skin
+    public GameObject Final_Skin;
+    public Color Final_SkinColor;
+    public bool SetFinalSkin = false;
+
     // +++ MAP +++ //
 
     // Map Prefab : MapName(Str) + MapImg(Img) + MapRule(Script)
@@ -45,10 +40,11 @@ public class ReadyGame : MonoBehaviour
         // MAP Can Choose
         Map.Add(Resources.Load<GameObject>("MAP_Prefab/MAP1"));  
 
-        // Start SKIN Prefab
-        newSkin = Instantiate(MySkin[MySkinIndex], new Vector3(0, 0, 0), Quaternion.identity);
+        // Set initiate SKIN Prefab
+        newSkin = Instantiate(MySkin[0], new Vector3(0, 0, 0), Quaternion.identity);
         newSkin.transform.SetParent(SkinPalette.transform, false);
-        SearchSkin(MySkinIndex);     
+        SearchSkin(0); 
+        ChangeSkinColor();    
     }
 
     void Update()
@@ -59,7 +55,7 @@ public class ReadyGame : MonoBehaviour
     public void SkinIndexUp()
     {
         Destroy(newSkin);
-        if (MySkinIndex == Color_List_Count - 1){ MySkinIndex = 0; }
+        if (MySkinIndex == MySkin.Count - 1){ MySkinIndex = 0; }
         else { MySkinIndex++; }
 
         newSkin = Instantiate(MySkin[MySkinIndex], new Vector3(0, 0, 0), Quaternion.identity);
@@ -88,5 +84,33 @@ public class ReadyGame : MonoBehaviour
 
         
         // Debug.Log(SkinScript.Color_List[0]); 
+    }
+
+    // Color Prefab Onclick
+    public void ChangeSkinColor()
+    {
+        newSkin.GetComponent<Image>().color = Selected_Color;
+        Debug.Log("ChangeColor : " + Selected_Color + "/ " + newSkin.name);
+    }
+
+
+    // Select Button Onclick
+    public void SelectSkin()
+    {
+        SetFinalSkin = true;
+
+        // Destroy Final Skin
+        if (Final_Skin != null){ Destroy(Final_Skin); }
+
+        // Select Object : Parent Object For Instantiate
+        GameObject SelectPanel = GameObject.Find("Select");
+
+        // Final Skin
+        Final_Skin = Instantiate(newSkin, new Vector3(0, -300, 0), Quaternion.identity);
+        Final_Skin.transform.SetParent(SelectPanel.transform, false);
+
+        // Set Final Skin Color
+        Final_SkinColor = Selected_Color;
+        Final_Skin.GetComponent<Image>().color = Final_SkinColor;
     }
 }

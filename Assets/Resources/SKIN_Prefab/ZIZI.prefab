@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3836082589436948190}
   - component: {fileID: 9173919387316441689}
-  - component: {fileID: 1655953167727196542}
+  - component: {fileID: 3957651984545688143}
   - component: {fileID: 1934887969581793603}
   m_Layer: 5
   m_Name: ZIZI
@@ -47,7 +47,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1382746492186278602}
   m_CullTransparentMesh: 1
---- !u!114 &1655953167727196542
+--- !u!114 &3957651984545688143
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,11 +59,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7e131285184c7e42832b7fbef2eb654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Image: {fileID: 0}
+  ColorPalette: {fileID: 0}
+  ColorPrefab: {fileID: 0}
+  ColorPalette_Object: []
   Color_List:
   - {r: 1, g: 0, b: 0, a: 0.5}
   - {r: 1, g: 1, b: 0.2, a: 0.5}
-  - {r: 0, g: 1, b: 1, a: 0.5}
+  - {r: 0, g: 1, b: 0, a: 0.5}
+  - {r: 1, g: 0, b: 1, a: 0.5}
   Animation_List: []
 --- !u!114 &1934887969581793603
 MonoBehaviour:

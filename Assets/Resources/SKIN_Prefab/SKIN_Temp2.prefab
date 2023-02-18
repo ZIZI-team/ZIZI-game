@@ -59,12 +59,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bddb25a0d6043cc47b5e26440fe5ad38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Image: {fileID: 0}
-  num: 1
+  ColorPalette: {fileID: 0}
+  ColorPrefab: {fileID: 0}
+  ColorPalette_Object: []
   Color_List:
   - {r: 0, g: 1, b: 1, a: 0.5}
-  - {r: 1, g: 0, b: 0, a: 0.5}
   - {r: 1, g: 1, b: 0.2, a: 0.5}
+  - {r: 1, g: 0, b: 0, a: 0.5}
   Animation_List: []
 --- !u!114 &666263348848866554
 MonoBehaviour:
