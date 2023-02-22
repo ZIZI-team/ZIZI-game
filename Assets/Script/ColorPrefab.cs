@@ -19,10 +19,13 @@ public class ColorPrefab : MonoBehaviour
     // color Prefab Onclick
     public void ColorPrefab_Onclick()
     {
-        GameObject.Find("ReadyGame").GetComponent<ReadyGame>().Selected_Color = gameObject.GetComponent<Image>().color;
-        GameObject.Find("ReadyGame").GetComponent<ReadyGame>().ChangeSkinColor();
-        
-        // Test
-        Debug.Log(GameObject.Find("ReadyGame").GetComponent<ReadyGame>().Selected_Color);
+        if ( gameObject.transform.parent.name == "1PColor")
+        {
+            GameObject.Find("ReadyGame").GetComponent<ReadyGame_Local1P>().SelectColor_prefab(this.gameObject);
+        }
+        else if ( gameObject.transform.parent.name == "2PColor")
+        {
+            GameObject.Find("ReadyGame").GetComponent<ReadyGame_Local2P>().SelectColor_prefab(this.gameObject);
+        }
     }
 }

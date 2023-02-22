@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3579539174825112745}
   - component: {fileID: 8917650851462924334}
-  - component: {fileID: 4140817404913098731}
+  - component: {fileID: 1711485971305058666}
   - component: {fileID: 2182989606778116916}
   m_Layer: 5
   m_Name: SKIN_Temp1
@@ -47,7 +47,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1702663830927483069}
   m_CullTransparentMesh: 1
---- !u!114 &4140817404913098731
+--- !u!114 &1711485971305058666
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,15 +56,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1702663830927483069}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46ae1adc33d0f074e8fda8bd0a172fab, type: 3}
+  m_Script: {fileID: 11500000, guid: 788be1193ba53f04da27fb0e43a4039f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ColorPalette: {fileID: 0}
-  ColorPrefab: {fileID: 0}
-  ColorPalette_Object: []
   Color_List:
-  - {r: 0, g: 1, b: 1, a: 0.5}
-  - {r: 1, g: 0, b: 0, a: 0.5}
+  - {r: 0, g: 0.8918011, b: 1, a: 1}
+  - {r: 0.15817451, g: 1, b: 0, a: 1}
   Animation_List: []
 --- !u!114 &2182989606778116916
 MonoBehaviour:
