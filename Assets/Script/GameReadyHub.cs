@@ -29,11 +29,78 @@ public class GameReadyHub : MonoBehaviour
                 break;
         }
 
+        
+
     }
 
 
     public GameObject Final_Skin_1P;                       // ReadyGame_Local1P
     public GameObject Final_Skin_2P;                       // ReadyGame_Local2P
+
+    public Animator controller;
+
+
+    public void Finish_SelectSkin()
+    {
+        controller.SetBool("Finish", true);
+        ShowMapPalette();
+    }
+
+    // +++ MAP +++ //
+    // Map Prefab : MapName(Str) + MapImg(Img) + MapRule(Script)
+    private List<GameObject> Map = new List<GameObject>();
+    public int MapIndex = 0;
+
+    public GameObject MapPalette;                      // Start : Find
+    public GameObject newMap;                          // Start : Instantiate
+
+    public GameObject Selected_MapPalette;
+    public GameObject Selected_Map;
+
+
+    public void ShowMapPalette()
+    {
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/MAP1"));  
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/MAP2"));
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/MAP3")); 
+
+        MapPalette = GameObject.Find("MAP");
+        Selected_MapPalette = GameObject.Find("Finish MAP");
+
+        // Set initiate Map Prefab
+        newMap = Instantiate(Map[0], new Vector3(0, 0, 0), Quaternion.identity);
+        newMap.transform.SetParent(MapPalette.transform, false);
+
+    }
+
+    public void MapIndexUp()
+    {
+        Destroy(newMap);
+        if (MapIndex == Map.Count - 1){ MapIndex = 0; }
+        else { MapIndex++; }
+
+        newMap = Instantiate(Map[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
+        newMap.transform.SetParent(MapPalette.transform, false);
+    }
+
+
+    public void MapIndexDown()
+    {
+        Destroy(newMap); 
+        if (MapIndex == 0){ MapIndex = 2; }
+        else { MapIndex--; }
+
+        newMap = Instantiate(Map[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
+        newMap.transform.SetParent(MapPalette.transform, false);
+    }
+
+    public void Finish_SelectMap()
+    {
+        if (Selected_Map != null){ Destroy(Selected_Map); }
+        
+        Selected_Map = Instantiate(newMap, new Vector3(0, -500, 0), Quaternion.identity);
+        Selected_Map.transform.SetParent(Selected_MapPalette.transform, false);
+    }
 
 
     void Update()

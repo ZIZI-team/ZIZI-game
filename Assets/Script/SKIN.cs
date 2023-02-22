@@ -42,4 +42,9 @@ public class SKIN : MonoBehaviour
     {
         
     }
+
+
+    // Animation을 리스트로 관리하는 것을 만들고 싶음
+
+
 }

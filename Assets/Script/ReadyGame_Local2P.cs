@@ -29,11 +29,6 @@ public class ReadyGame_Local2P : MonoBehaviour
     public Color Final_SkinColor;                       // SelectSkin() : Selected_Color         
 
 
-    // +++ MAP +++ //
-    // Map Prefab : MapName(Str) + MapImg(Img) + MapRule(Script)
-    private List<GameObject> Map = new List<GameObject>();
-
-
     void Start()
     {
         // +++ SKIN +++ //
@@ -52,15 +47,10 @@ public class ReadyGame_Local2P : MonoBehaviour
         MySkin.Add(Resources.Load<GameObject>("SKIN_Prefab/"+"SKIN_Temp1"));
         MySkin.Add(Resources.Load<GameObject>("SKIN_Prefab/"+"SKIN_Temp2"));
 
-        // Set initiate SKIN Prefab #1
+        // Set initiate SKIN Prefab
         newSkin = Instantiate(MySkin[0], new Vector3(0, 0, 0), Quaternion.identity);
         newSkin.transform.SetParent(SkinPalette.transform, false);
         GetSKINColor();
-
-// ------------------------------------------------------------------------ //
-
-        // +++ MAP +++ //
-        Map.Add(Resources.Load<GameObject>("MAP_Prefab/MAP1"));  
     }
 
     public void GetSKINColor()
