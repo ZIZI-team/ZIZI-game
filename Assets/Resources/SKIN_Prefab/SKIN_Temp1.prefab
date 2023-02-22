@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8917650851462924334}
   - component: {fileID: 1711485971305058666}
   - component: {fileID: 2182989606778116916}
+  - component: {fileID: -2450290728638471429}
   m_Layer: 5
   m_Name: SKIN_Temp1
   m_TagString: Untagged
@@ -62,7 +63,9 @@ MonoBehaviour:
   Color_List:
   - {r: 0, g: 0.8918011, b: 1, a: 1}
   - {r: 0.15817451, g: 1, b: 0, a: 1}
-  Animation_List: []
+  Animation_List:
+  - {fileID: 665388937749936875, guid: 7c5cd44ddf61ccb49b67f3093d6e7abb, type: 3}
+  controller: {fileID: 0}
 --- !u!114 &2182989606778116916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,3 +96,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &-2450290728638471429
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702663830927483069}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

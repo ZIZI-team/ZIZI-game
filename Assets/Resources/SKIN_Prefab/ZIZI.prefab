@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9173919387316441689}
   - component: {fileID: 7856285277388253050}
   - component: {fileID: 1934887969581793603}
+  - component: {fileID: 4046603680594120993}
   m_Layer: 5
   m_Name: ZIZI
   m_TagString: Untagged
@@ -63,7 +64,9 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 0.6283473, g: 1, b: 0, a: 1}
   - {r: 0, g: 1, b: 0.7726824, a: 1}
-  Animation_List: []
+  Animation_List:
+  - {fileID: 665388937749936875, guid: 7c5cd44ddf61ccb49b67f3093d6e7abb, type: 3}
+  controller: {fileID: 0}
 --- !u!114 &1934887969581793603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,3 +97,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &4046603680594120993
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1382746492186278602}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
