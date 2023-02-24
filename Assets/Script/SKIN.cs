@@ -20,7 +20,8 @@ public class SKIN : MonoBehaviour
 
     // +++ Animation +++ //
     // public List<Animator> Animation_List = new List<Animator>();
-    public Animator controller;
+
+    public Animator controller;         // Start : GetComponent
 
 
     // +++ SKILL +++ //    

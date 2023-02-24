@@ -47,6 +47,12 @@ public class ReadyGame_Local2P : MonoBehaviour
         MySkin.Add(Resources.Load<GameObject>("SKIN_Prefab/"+"SKIN_Temp1"));
         MySkin.Add(Resources.Load<GameObject>("SKIN_Prefab/"+"SKIN_Temp2"));
 
+        //if(GameObject.Find("ReadyGame").GetComponent<GameReadyHub>().StartSKIN == true){ Initiate_SKIN(); }
+        Initiate_SKIN();
+    }
+
+    public void Initiate_SKIN()
+    {
         // Set initiate SKIN Prefab
         newSkin = Instantiate(MySkin[0], new Vector3(0, 0, 0), Quaternion.identity);
         newSkin.transform.SetParent(SkinPalette.transform, false);
@@ -62,7 +68,7 @@ public class ReadyGame_Local2P : MonoBehaviour
         ShowColorPalette();
     }
 
-    // Color Prefab Onclick
+    // Unity Prefab : Color Prefab Onclick
     public void SelectColor_prefab(GameObject colorPrefab)
     {
         Selected_Color = colorPrefab.GetComponent<Image>().color;             // ¼öÁ¤
@@ -99,6 +105,7 @@ public class ReadyGame_Local2P : MonoBehaviour
     }
 
 
+    // Unity : UPButton 2P Onclick
     public void SkinIndexUp()
     {
         Destroy(newSkin);
@@ -111,6 +118,7 @@ public class ReadyGame_Local2P : MonoBehaviour
     }
 
 
+    // Unity : DownButton 2P Onclick
     public void SkinIndexDown()
     {
         Destroy(newSkin); 
@@ -123,7 +131,7 @@ public class ReadyGame_Local2P : MonoBehaviour
     }
 
 
-    // Select Button Onclick
+    // Unity : Select Button 2P Onclick
     public void SelectSkin()
     {
         // Destroy Final Skin

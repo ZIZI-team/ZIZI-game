@@ -19,27 +19,24 @@ public class GameReadyHub : MonoBehaviour
         
         switch(PlayerPrefs.GetInt("PlayerMode")){
             case 1 :
-                Destroy(GameObject.Find("ReadyGame").GetComponent<ReadyGame_Local2P>());
+                Destroy(GameObject.Find("2PScript").GetComponent<ReadyGame_Local2P>());
                 break;
             case 2 :
-                // Destroy(GameObject.Find("ReadyGame").GetComponent<ReadyGame_Local1P>());
+                // Destroy(GameObject.Find("2PScript").GetComponent<ReadyGame_Local1P>());
                 break;
             case 3 :
                 // Add Online script 
                 break;
         }
-
-        
-
     }
 
+    public GameObject Final_Skin_1P;                       // ReadyGame_Local1P >> Hub
+    public GameObject Final_Skin_2P;                       // ReadyGame_Local2P >> Hub
 
-    public GameObject Final_Skin_1P;                       // ReadyGame_Local1P
-    public GameObject Final_Skin_2P;                       // ReadyGame_Local2P
-
-    public Animator controller;
+    public Animator controller;                            // Unity : Inspector : Animator : ReadyGame, Controller : SelectMap
 
 
+    // Unity : Finish Skin Onclick
     public void Finish_SelectSkin()
     {
         controller.SetBool("Finish", true);
@@ -54,8 +51,8 @@ public class GameReadyHub : MonoBehaviour
     public GameObject MapPalette;                      // Start : Find
     public GameObject newMap;                          // Start : Instantiate
 
-    public GameObject Selected_MapPalette;
-    public GameObject Selected_Map;
+    public GameObject Selected_MapPalette;             // ShowMapPalette() : Find 
+    public GameObject Selected_Map;                    // Finish_SelectMap()
 
 
     public void ShowMapPalette()
@@ -83,7 +80,6 @@ public class GameReadyHub : MonoBehaviour
         newMap.transform.SetParent(MapPalette.transform, false);
     }
 
-
     public void MapIndexDown()
     {
         Destroy(newMap); 
@@ -94,6 +90,7 @@ public class GameReadyHub : MonoBehaviour
         newMap.transform.SetParent(MapPalette.transform, false);
     }
 
+    // Unity : Selected_MapPalette Onclick
     public void Finish_SelectMap()
     {
         if (Selected_Map != null){ Destroy(Selected_Map); }
@@ -102,6 +99,14 @@ public class GameReadyHub : MonoBehaviour
         Selected_Map.transform.SetParent(Selected_MapPalette.transform, false);
     }
 
+    public GameObject Game;     // Unity : Inspector
+
+    // Unity : Start Game Onclick
+    public void StartGame()
+    {
+        Game.SetActive(true);
+        gameObject.SetActive(false);
+    }
 
     void Update()
     {

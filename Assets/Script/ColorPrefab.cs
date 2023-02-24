@@ -21,11 +21,11 @@ public class ColorPrefab : MonoBehaviour
     {
         if ( gameObject.transform.parent.name == "1PColor")
         {
-            GameObject.Find("ReadyGame").GetComponent<ReadyGame_Local1P>().SelectColor_prefab(this.gameObject);
+            GameObject.Find("1PScript").GetComponent<ReadyGame_Local1P>().SelectColor_prefab(this.gameObject);
         }
         else if ( gameObject.transform.parent.name == "2PColor")
         {
-            GameObject.Find("ReadyGame").GetComponent<ReadyGame_Local2P>().SelectColor_prefab(this.gameObject);
+            GameObject.Find("2PScript").GetComponent<ReadyGame_Local2P>().SelectColor_prefab(this.gameObject);
         }
     }
 }

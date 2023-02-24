@@ -1,0 +1,77 @@
+Inspector
+
+< Game Scene > 
+
+1. ReadyGame > Select Skin > 1P > 1PSelect 
+Button / 
+(1) 1PScript : ReadyGame_Local1P : SelectSkin()
+
+2. ReadyGame > Select Skin > 2P > 2PSelect 
+Button / 
+(1) 2PScript : ReadyGame_Local2P : SelectSkin()
+
+3. ReadyGame > Select Skin > 1P > 1PSkin > SkinIndexUP
+Button / 
+(1) 1PScript : ReadyGame_Local1P : SkinIndexUp()
+
+4. ReadyGame > Select Skin > 2P > 2PSkin > SkinIndexUP
+Button / 
+(1) 2PScript : ReadyGame_Local2P : SkinIndexUp()
+
+5. ReadyGame > Select Skin > 1P > 1PSkin > SkinIndexDOWN
+Button / 
+(1) 1PScript : ReadyGame_Local1P : SkinIndexDown()
+
+6. ReadyGame > Select Skin > 2P > 2PSkin > SkinIndexDOWN
+Button / 
+(1) 2PScript : ReadyGame_Local2P : SkinIndexDown()
+
+7. ReadyGame > Select Skin > Finish Skin
+Button / 
+(1) ReadyGame : GameReadyHub : Finish_SelectSkin()
+
+8. ReadyGame > Select Map > Finish MAP
+Button / 
+(1) ReadyGame : GameReadyHub : Finish_SelectMap()
+
+9. ReadyGame > Select Map > Start Game
+Button / 
+(1) ReadyGame : GameReadyHub : StartGame()
+
+10. ReadyGame > Select Map > Map > SkinIndexUP
+Button / 
+(1) ReadyGame : GameReadyHub : MapIndexUp()
+
+11. ReadyGame > Select Map > Map > SkinIndexDown
+Button / 
+(1) ReadyGame : GameReadyHub : MapIndexDown()
+
+12. ReadyGame
+Script /
+(1) GameReadyHub : Controller : ReadyGame > Animator
+(2) GameReadyHub : Game (GameObject) : Game
+
+
+13. Prefab : ColorPrefab : 
+Button / 
+(1) Script(Asset) : ColorPrefab : ColorPrefab_Onclick()
+
+14. Prefab : ClickCanvas
+Button/
+(1) Game : Game Scene System : PanelOnclick()
+
+
+15. Game
+Script /
+(1) Game : Game Scene System : Edge Spot (GameObject) : Game > ZIZIPoint_1
+(2) Game : Game Scene System : Edge Spot (GameObject) : Game > ZIZIPoint_2
+(3) Game : Game Scene System : Edge Spot (GameObject) : Game > ZIZIPoint_3
+
+(4) Game : Game Scene System : Stone_b (GameObject) : BlackZIZI (Prefab)
+(5) Game : Game Scene System : Stone_w (GameObject) : WhiteZIZI (Prefab) 
+(6) Game : Game Scene System : Game (GameObject)  : Game (Unity)
+
+< Title Scene > 
+
+
+
