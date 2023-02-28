@@ -12,8 +12,11 @@ public class GameSceneSystem : MonoBehaviour
 // +++ Stone +++ //
 
     GameObject Stone; 
+
     public GameObject Stone_b, Stone_w;     // Unity : Inspector
-    
+    RectTransform rectTransform_b;
+    RectTransform rectTransform_w;
+
     public GameObject[] Black;
     public GameObject[] White;
 
@@ -29,7 +32,6 @@ public class GameSceneSystem : MonoBehaviour
 
     public int blackStoneCount = 0;
     public int whiteStoneCount = 0;
-    int stoneWinner;
 
     // public GameObject Line;
     // GameObject[] Black_line;
@@ -37,8 +39,6 @@ public class GameSceneSystem : MonoBehaviour
 
 
 // +++ Position +++ //
-
-    // float GapSize;
 
     float GapSize_x;
     float GapSize_y;
@@ -70,54 +70,26 @@ public class GameSceneSystem : MonoBehaviour
 
 // +++ Map List +++ //
 
-    [SerializeField] public int[,] ColorBoard = new int[15+8, 15+8]; // ê¸°ë¡
+    [SerializeField] public int[,] ColorBoard = new int[15+8, 15+8]; // ±â·Ï
     public int mapGridNum_x;
     public int mapGridNum_y;
     
-    public List<List<int>> assignedList = new List<List<int>>();    // ì¤‘ë³µ íŒë³„
+    public List<List<int>> assignedList = new List<List<int>>();    // Áßº¹ ÆÇº°
 
 
     void Start()
     {
-        // ì¢Œí‘œì˜ ê¸°ì¤€ì´ ë˜ëŠ” ì˜¤ë¸Œì íŠ¸ì˜ ìœ„ì¹˜ ê°€ì ¸ì˜¤ê¸° : in unity
-        // edgeSpot_1 = GameObject.Find("ZIZIPoint");
-        // edgeSpot_x = edgeSpot_1.transform.position.x;  // : negative
-        // edgeSpot_y = edgeSpot_1.transform.position.y;  // : negative
-
-        // edgeSpot_x = Screen.width  / 2 + edgeSpot_1.GetComponent<RectTransform>().position.x;  // : by EventPosition
-        // edgeSpot_y = Screen.height / 2 + edgeSpot_1.GetComponent<RectTransform>().position.y;  // : by EventPosition
-
-        edgeSpot_x = edgeSpot_1.GetComponent<RectTransform>().position.x;  // : by EventPosition
-        edgeSpot_y = edgeSpot_1.GetComponent<RectTransform>().position.y;  // : by EventPosition
-
-        // GapSize = edgeSpot_2.GetComponent<RectTransform>().position.y - edgeSpot_y;
-
-        GapSize_x = edgeSpot_2.GetComponent<RectTransform>().position.x - edgeSpot_x;
-        GapSize_y = edgeSpot_3.GetComponent<RectTransform>().position.y - edgeSpot_y;
+        // Set Stone Size > Small Stone
+        rectTransform_b = Stone_b.GetComponent<RectTransform>();
+        rectTransform_b.sizeDelta = new Vector2(100f, 100f);
+        
+        rectTransform_w = Stone_w.GetComponent<RectTransform>();
+        rectTransform_w.sizeDelta = new Vector2(100f, 100f);
 
 
-        // edgeSpot_1.GetComponent<RectTransform>().localPosition.x
-        // edgeSpot_1.GetComponent<RectTransform>().localPosition.y
-
-/*
-
-í•„ìš”í•œ ê²ƒ : zizi point position -- > Position ë³€ê²½
-
-ì´ë¯¸ì§€ : 0, 0 ê°€ìš´ë°
-mouse : EventPosition : ì˜¤ë¥¸ìª½ ì•„ë˜ 0, 0
-Panel Onclick
-
-
-ì¡°ê±´ : Map Image, Map Grid ** : Image
-
-
-*/
-
-
-
-
-        // mapGridNum_x = (int)((edgeSpot_x * (-1) * 2) / GapSize_x) + 1;    // : positive  // ëŒ€ì¹­ì¼ ê²½ìš°ë§Œ ì‹ì´ ì„±ë¦½í•¨ // 15
-        // mapGridNum_y = (int)((edgeSpot_y * (-1) * 2) / GapSize_y) + 1;    // : positive  // ëŒ€ì¹­ì¼ ê²½ìš°ë§Œ ì‹ì´ ì„±ë¦½í•¨ // 15
+        // Set Initiate Color Board
+        // mapGridNum_x = (int)((edgeSpot_x * (-1) * 2) / GapSize_x) + 1;    // : positive  // ´ëÄªÀÏ °æ¿ì¸¸ ½ÄÀÌ ¼º¸³ÇÔ // 15
+        // mapGridNum_y = (int)((edgeSpot_y * (-1) * 2) / GapSize_y) + 1;    // : positive  // ´ëÄªÀÏ °æ¿ì¸¸ ½ÄÀÌ ¼º¸³ÇÔ // 15
 
         mapGridNum_x = 15;
         mapGridNum_y = 15;
@@ -136,39 +108,29 @@ Panel Onclick
     {
         Black = GameObject.FindGameObjectsWithTag("b_zizi");
         White = GameObject.FindGameObjectsWithTag("w_zizi");
-        if (stoneWinner == 1)
-        {
-            Debug.Log("YongJoo is the winner");
-            GameOver();
-        }
-        else if (stoneWinner == 2)
-        {
-            Debug.Log("Sohui cheated!!!!!!!!!!!!!!");
-            GameOver();
-        }
-        else
-        {
-            
-        }
+
+        // ÁÂÇ¥ÀÇ ±âÁØÀÌ µÇ´Â ¿ÀºêÁ§Æ®ÀÇ À§Ä¡ °¡Á®¿À±â : in unity
+        // edgePoint 1, 2, 3 : Game > Map Prefab
+
+        edgeSpot_1 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(0).gameObject;
+        edgeSpot_2 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(1).gameObject;
+        edgeSpot_3 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(2).gameObject;
+
+        edgeSpot_x = edgeSpot_1.GetComponent<RectTransform>().position.x;  // : by EventPosition
+        edgeSpot_y = edgeSpot_1.GetComponent<RectTransform>().position.y;  // : by EventPosition
+
+        GapSize_x = edgeSpot_2.GetComponent<RectTransform>().position.x - edgeSpot_x;
+        GapSize_y = edgeSpot_3.GetComponent<RectTransform>().position.y - edgeSpot_y;
+
+
+        // edgeSpot_1.GetComponent<RectTransform>().localPosition.x
+        // edgeSpot_1.GetComponent<RectTransform>().localPosition.y
     }
 
 
     public void PanelOnclick()
     {
-
-        Debug.Log("ScreenW : " + Screen.width / 2 );
-        Debug.Log("ScreenH : " + Screen.height / 2 );
-
-        // Debug.Log("edge x : " + edgeSpot.GetComponent<RectTransform>().localPosition.x);
-        // Debug.Log("edge y : " + edgeSpot.GetComponent<RectTransform>().localPosition.y);
-
-        Debug.Log("edgeSpot_x : " + edgeSpot_x);
-        Debug.Log("edgeSpot_y : " + edgeSpot_y);
-
-        Debug.Log("click!!!");
-
         inMap = true;
-        Debug.Log(inMap);
 
     // Get Mouse Position
         // InputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -178,48 +140,36 @@ Panel Onclick
         xPos = InputPos.x;
         yPos = InputPos.y;
         
-        Debug.Log("xPos : " + xPos);
-        Debug.Log("yPos : " + yPos);
-
         xNamuji = (xPos - edgeSpot_x) % GapSize_x; // xNamuji = 0.0f ~ < GapSize
         yNamuji = (yPos - edgeSpot_y) % GapSize_y; // yNamuji = 0.0f ~ < GapSize
 
-    // ì´ˆê¸° ì‘ì—…            
+
+    // ÃÊ±â ÀÛ¾÷            
         xGapNum = (int)((xPos - edgeSpot_x) / GapSize_x);  // int, Grid Index
         yGapNum = (int)((yPos - edgeSpot_y) / GapSize_y);  // int, Grid Index
 
 
-
-        Debug.Log("xNamuji : " + xNamuji);
-        Debug.Log("yNamuji : " + yNamuji);
-
-        Debug.Log("xGapNum : " + xGapNum);
-        Debug.Log("yGapNum : " + yGapNum);
-
-
-
-
-    // ë³´ì • ì‘ì—… (inMap)
-        xGapNum += Correction(xNamuji, GapSize_x); // xGapNum ì •ìƒ : 0 ~ 14  // 0 : ì™¼ìª½ ì•„ë˜ 
-        yGapNum += Correction(yNamuji, GapSize_y); // yGapNum ì •ìƒ : 0 ~ 14 
+    // º¸Á¤ ÀÛ¾÷ (inMap)
+        xGapNum += Correction(xNamuji, GapSize_x); // xGapNum Á¤»ó : 0 ~ 14  // 0 : ¿ŞÂÊ ¾Æ·¡ 
+        yGapNum += Correction(yNamuji, GapSize_y); // yGapNum Á¤»ó : 0 ~ 14 
 
         /* Correction() : 
-            ì¸¡ì •ëœ ë‚˜ë¨¸ì§€ê°€ ê·¸ë¦¬ë“œì˜
-            40% ì´í•˜ : 0 return
-            60% ì´ìƒ : 1 return,  GapNum += 1
+            ÃøÁ¤µÈ ³ª¸ÓÁö°¡ ±×¸®µåÀÇ
+            40% ÀÌÇÏ : 0 return
+            60% ÀÌ»ó : 1 return,  GapNum += 1
 
-            // inMap : Instantiate ê´€ë¦¬, #1    
-            40% ~ 60% : inMap = false ë¡œ ë°”ê¾¼ë‹¤ : Instantiate ì•ˆë˜ë„ë¡ í•œë‹¤
+            // inMap : Instantiate °ü¸®, #1    
+            40% ~ 60% : inMap = false ·Î ¹Ù²Û´Ù : Instantiate ¾ÈµÇµµ·Ï ÇÑ´Ù
         */            
             
-            // inMap : Instantiate ê´€ë¦¬, #2
-            // GapNumì´ 0 ë¯¸ë§Œ 15 ì´ìƒì¸ ê²½ìš° : ì¦‰, ë§µ ë°”ê¹¥ìœ¼ë¡œ ë„˜ì–´ê°€ê²Œ ë  ê²½ìš° ë§ì„ ìƒì„±í•˜ì§€ ëª»í•˜ë„ë¡ ë§Œë“¦
+            // inMap : Instantiate °ü¸®, #2
+            // GapNumÀÌ 0 ¹Ì¸¸ 15 ÀÌ»óÀÎ °æ¿ì : Áï, ¸Ê ¹Ù±ùÀ¸·Î ³Ñ¾î°¡°Ô µÉ °æ¿ì ¸»À» »ı¼ºÇÏÁö ¸øÇÏµµ·Ï ¸¸µê
 
             // mapGridNum = 15 
-                if (xGapNum < 0 || xGapNum >= mapGridNum_x){ inMap = false; } // xGapNum ì •ìƒ : 0 ~ 14,  xGapNum ë¹„ì •ìƒ ì¼ ë•Œ      
-                if (yGapNum < 0 || yGapNum >= mapGridNum_y){ inMap = false; } // yGapNum ì •ìƒ : 0 ~ 14,  yGapNum ë¹„ì •ìƒ
+                if (xGapNum < 0 || xGapNum >= mapGridNum_x){ inMap = false; } // xGapNum Á¤»ó : 0 ~ 14,  xGapNum ºñÁ¤»ó ÀÏ ¶§      
+                if (yGapNum < 0 || yGapNum >= mapGridNum_y){ inMap = false; } // yGapNum Á¤»ó : 0 ~ 14,  yGapNum ºñÁ¤»ó
 
-            // ê²½ê³„ì„  ë°”ê¹¥ì„ í´ë¦­í–ˆì„ ê²½ìš° ë³´ì • (ë‚˜ë¨¸ì§€ê°€ ìŒìˆ˜ì¼ ê²½ìš°)
+            // °æ°è¼± ¹Ù±ùÀ» Å¬¸¯ÇßÀ» °æ¿ì º¸Á¤ (³ª¸ÓÁö°¡ À½¼öÀÏ °æ¿ì)
                 if ((xNamuji < 0 && xGapNum == 0) && (yGapNum > 0 && yGapNum < mapGridNum_y)){ inMap = true; }
                 if ((yNamuji < 0 && yGapNum == 0) && (xGapNum > 0 && xGapNum < mapGridNum_x)){ inMap = true; }
 
@@ -227,21 +177,6 @@ Panel Onclick
     // Set zizi Position
         x_correction = xGapNum * GapSize_x + edgeSpot_x - Screen.width/2;  // Grid Position for zizi 
         y_correction = yGapNum * GapSize_y + edgeSpot_y - Screen.height/2;  // Grid Position for zizi 
-
-
-        Debug.Log("xPos : " + xPos);
-        Debug.Log("yPos : " + yPos);
-
-        Debug.Log("xNamuji : " + xNamuji);
-        Debug.Log("yNamuji : " + yNamuji);
-
-        Debug.Log("xGapNum : " + xGapNum);
-        Debug.Log("yGapNum : " + yGapNum);
-
-        Debug.Log("x_correction : " + x_correction);
-        Debug.Log("y_correction : " + y_correction);
-
-        Debug.Log(inMap);
 
 
     // Set Stone Condition
@@ -252,9 +187,6 @@ Panel Onclick
 
     // Instantiate
         if (inMap == true){ AddListAndSpawn(); }        
-
-    // Win Condition
-        stoneWinner = winCondition(ColorBoard);
     }
 
 
@@ -281,7 +213,7 @@ Panel Onclick
         else if (Namuji >= GapSize * 0.4f && Namuji < GapSize * 0.6f)
         { 
             Debug.Log("nononono");
-            inMap = false;              // ë§ì´ ìƒì„±ë˜ì§€ ì•ŠìŒ
+            inMap = false;              // ¸»ÀÌ »ı¼ºµÇÁö ¾ÊÀ½
             return 0;
         }
 
@@ -296,7 +228,7 @@ Panel Onclick
         else
         {
             Debug.Log("what's wrong?");
-            inMap = false;              // ë§ì´ ìƒì„±ë˜ì§€ ì•ŠìŒ
+            inMap = false;              // ¸»ÀÌ »ı¼ºµÇÁö ¾ÊÀ½
             return 0;
         }
     }
@@ -304,27 +236,56 @@ Panel Onclick
 
     public GameObject Game;                     // Unity : Inspector
 
+    public bool stoneWinner = false;
+    public GameObject Player1Win;                     // Unity : Inspector
+    public GameObject Player2Win;                     // Unity : Inspector
+    public int StoneCount = 0;
+
+    public int ThreeByThree_line = 0;
+
+
+    // AddListAndSpawn ¿¡¼­ ÆÇº° ³ÖÀ½
+    public ThreeByThree_line()
+    {
+
+        ThreeByThree_num += 1;
+    }
+
+
     public void Set_And_RecordPosition()
     {
 
-    // í˜„ì¬ ë†“ì—¬ì§„ ë§ì˜ ì¢Œí‘œì— ëŒ€í•œ ì •ë³´ ê¸°ë¡, ë§ ìƒì„±
+    // ÇöÀç ³õ¿©Áø ¸»ÀÇ ÁÂÇ¥¿¡ ´ëÇÑ Á¤º¸ ±â·Ï, ¸» »ı¼º
         assignedList.Add(new List<int> {xGapNum, yGapNum});  
-        Debug.Log(assignedList);
             
         GameObject instance = Instantiate(Stone, new Vector3(x_correction, y_correction, -0.2f), Quaternion.identity) as GameObject;
         instance.transform.SetParent(Game.transform, false);
 
-    // ê° ì¢Œí‘œì˜ ë§ ìƒ‰ìƒ ì •ë³´
+    // °¢ ÁÂÇ¥ÀÇ ¸» »ö»ó Á¤º¸
         ColorBoard[yGapNum + 4, xGapNum + 4] = isBlack ? 1 : 2;  // 1 : Black, 2 : White
 
-        Debug.Log("Board add : " + ColorBoard[yGapNum + 4, xGapNum + 4]);
-        Debug.Log(ColorBoard);
+    // Win Condition
+        stoneWinner = winCondition(yGapNum + 4, xGapNum + 4, isBlack);
+
+        if (StoneCount == 5 && stoneWinner == true && isBlack == true)
+        {
+            Debug.Log("Player1 Win!");
+            Player1Win.SetActive(true);
+            GameOver();
+        }
+        else if (StoneCount == 5 && stoneWinner == true && isBlack == false)
+        {
+            Debug.Log("Player 2 Win!");
+            Player2Win.SetActive(true); 
+            GameOver();
+        }
+        else { Debug.Log("Pass"); }
     }
 
 
     public void changePlayer()
     {
-    // ë§ì„ ë†“ìœ¼ë©´ ë‹¤ìŒ ë§ì˜ ìƒ‰ìƒì„ ë³€ê²½í•¨
+    // ¸»À» ³õÀ¸¸é ´ÙÀ½ ¸»ÀÇ »ö»óÀ» º¯°æÇÔ
         if (isBlack) { isBlack = false; } //made by Sohui
         else { isBlack = true; } //made by Sohui
     }
@@ -332,7 +293,7 @@ Panel Onclick
 
     public void AddListAndSpawn()
     {
-    // zizi ì¤‘ë³µ íŒë³„
+    // zizi Áßº¹ ÆÇº°
         if (assignedList.Count == 0) 
         {
             Set_And_RecordPosition();
@@ -340,6 +301,9 @@ Panel Onclick
         }
         else
         {
+
+            // Player 1 ThreeByThree_line() ÆÇº° ÇÊ¿ä
+
             bool isDuplicated = false;
             for(int i = 0; i < assignedList.Count; i++)
             {
@@ -364,120 +328,79 @@ Panel Onclick
         }
     }
 
-    
-    public int winCondition(int[ , ] _winStatus)
+    public bool winCondition(int indexY, int indexX, bool StoneColor) // 5°³°¡ µÇ¸é ÀÌ±â´Â °ÍÀ¸·Î ÆÇ´Ü
     {
-        for (int i = 0; i < _winStatus.GetLength(0); i++)
-        {
-            for (int j = 0; j < _winStatus.GetLength(1); j++)
-            {
-                if (_winStatus[i, j] == 1)
-                {
-                    blackStoneCount += 1;
-                    if (blackStoneCount == 5)
-                    {
-                        return 1;
-                    }
-                }
-                else
-                {
-                    blackStoneCount = 0;
-                }
-                if(_winStatus[i, j] == 2)
-                {
-                    whiteStoneCount += 1;
-                    if (blackStoneCount == 5)
-                    {
-                        return 2;
-                    }
-                }
-                else
-                {
-                    whiteStoneCount = 0;
-                    
-                }
-            }
-        }
-        for (int i = 0; i < _winStatus.GetLength(0); i++)
-        {
-            for (int j = 0; j < _winStatus.GetLength(1); j++)
-            {
-                if (_winStatus[j, i] == 1)
-                {
-                    blackStoneCount += 1;
-                    if (blackStoneCount == 5)
-                    {
-                        return 1;
-                    }
-                }
-                else
-                {
-                    blackStoneCount = 0;
-                }
-                if(_winStatus[i, j] == 2)
-                {
-                    whiteStoneCount += 1;
-                    if (blackStoneCount == 5)
-                    {
-                        return 2;
-                    }
-                }
-                else
-                {
-                    whiteStoneCount = 0;
-                }
-            }
-        }
-        for (int i = 0; i < _winStatus.GetLength(0); i++)
-        {
-            for (int j = 0; j < _winStatus.GetLength(1); j++)
-            {
-                if (i + 4 < _winStatus.GetLength(0) && j + 4 < _winStatus.GetLength(1) 
-                && _winStatus[i, j] == 1
-                && _winStatus[i + 1, j + 1] == 1
-                && _winStatus[i + 2, j + 2] == 1
-                && _winStatus[i + 3, j + 3] == 1
-                && _winStatus[i + 4, j + 4] == 1)
-                {
-                    return 1;
-                }
-                if (i + 4 < _winStatus.GetLength(0) && j + 4 < _winStatus.GetLength(1)
-                && _winStatus[i, j] == 2
-                && _winStatus[i + 1, j + 1] == 2
-                && _winStatus[i + 2, j + 2] == 2
-                && _winStatus[i + 3, j + 3] == 2
-                && _winStatus[i + 4, j + 4] == 2)
-                {
-                    return 2;
-                }
-                if (i + 4 < _winStatus.GetLength(0) && j + 4 < _winStatus.GetLength(1)
-                && _winStatus[i, j] == 1
-                && _winStatus[i + 1, j - 1] == 1
-                && _winStatus[i + 2, j - 2] == 1
-                && _winStatus[i + 3, j - 3] == 1
-                && _winStatus[i + 4, j - 4] == 1)
-                {
-                    return 1;
-                }
-                if (i + 4 < _winStatus.GetLength(0) && j + 4 < _winStatus.GetLength(1)
-                && _winStatus[i, j] == 2
-                && _winStatus[i + 1, j - 1] == 2
-                && _winStatus[i + 2, j - 2] == 2
-                && _winStatus[i + 3, j - 3] == 2
-                && _winStatus[i + 4, j - 4] == 2)
-                {
-                    return 2;
-                }
+        // return true : Win, return false : Pass
 
-            }
-        }
-        return 0;
+        int color;  // 1 : Black, 2 : White
+        if (StoneColor == true){ color = 1; }
+        else { color = 2; }
 
-        
+        bool winflag = false;
+
+        for (int k = -4; k <= 0; k++)
+        {
+            winflag = Check_Y_Plus(indexY + k, indexX, color);
+            if (winflag == true) { return true; }
+            winflag = Check_X_Plus(indexY, indexX + k, color);
+            if (winflag == true) { return true; }
+            winflag = Check_XY_Plus(indexY + k, indexX + k, color);
+            if (winflag == true) { return true; }
+            winflag = Check_XY_Minus(indexY + k, indexX + k, color);
+            if (winflag == true) { return true; }
+        }
+        return false;
     }
+
+    public bool Check_Y_Plus(int startPointY, int StartPointX, int color)
+    {
+        StoneCount = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            if (ColorBoard[startPointY + i, StartPointX] == color){ StoneCount += 1; }
+            else { StoneCount = 0; return false; }
+        }
+        return true;
+    }
+
+    public bool Check_X_Plus(int startPointY, int StartPointX, int color)
+    {
+        StoneCount = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            if (ColorBoard[startPointY, StartPointX + i] == color){ StoneCount += 1; }
+            else { StoneCount = 0; return false; }
+        }
+        return true;
+    }
+
+    public bool Check_XY_Plus(int startPointY, int StartPointX, int color)
+    {
+        StoneCount = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            if (ColorBoard[startPointY + i, StartPointX + i] == color){ StoneCount += 1; }
+            else { StoneCount = 0; return false; }
+        }
+        return true;
+    }
+
+    public bool Check_XY_Minus(int startPointY, int StartPointX, int color)
+    {
+        StoneCount = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            if (ColorBoard[startPointY + i, StartPointX - i] == color){ StoneCount += 1; }
+            else { StoneCount = 0; return false; }
+        }
+        return true;
+    }
+
+
     public void GameOver()
     {
-        
+        // Player1Win.SetActive(false);
+        // Player2Win.SetActive(false);        
     }
 
 

@@ -149,5 +149,6 @@ public class ReadyGame_Local2P : MonoBehaviour
         Final_Skin.GetComponent<Image>().color = Final_SkinColor;
 
         GameObject.Find("ReadyGame").GetComponent<GameReadyHub>().Final_Skin_2P = Final_Skin;
+        GameObject.Find("ReadyGame").GetComponent<GameReadyHub>().DidYouSelect_Skin2 = true;
     }
 }

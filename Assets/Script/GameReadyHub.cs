@@ -4,9 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameReadyHub : MonoBehaviour
-{    
+{   
+
+    public GameObject Final_Skin_1P;                       // ReadyGame_Local1P >> Hub
+    public GameObject Final_Skin_2P;                       // ReadyGame_Local2P >> Hub
+
+    public Animator controller;                            // Unity : Inspector : Animator : ReadyGame, Controller : SelectMap
+
     void Start()
     {
+        // Set Initiate Skin
+        Final_Skin_1P = Resources.Load<GameObject>("SKIN_Prefab/"+"SKIN_Temp1");
+        Final_Skin_2P = Resources.Load<GameObject>("SKIN_Prefab/"+"SKIN_Temp2");
+        
+
         // PlayerPrefs : PlayerMode
         // 1 : Single_1P
         // 2 : LocalM_2P
@@ -30,17 +41,22 @@ public class GameReadyHub : MonoBehaviour
         }
     }
 
-    public GameObject Final_Skin_1P;                       // ReadyGame_Local1P >> Hub
-    public GameObject Final_Skin_2P;                       // ReadyGame_Local2P >> Hub
-
-    public Animator controller;                            // Unity : Inspector : Animator : ReadyGame, Controller : SelectMap
-
-
     // Unity : Finish Skin Onclick
+    public bool DidYouSelect_Skin1 = false;
+    public bool DidYouSelect_Skin2 = false;
     public void Finish_SelectSkin()
     {
-        controller.SetBool("Finish", true);
-        ShowMapPalette();
+        if (PlayerPrefs.GetInt("PlayerMode") == 1 && DidYouSelect_Skin1 == true)
+        {
+            controller.SetBool("Finish", true);
+            ShowMapPalette();
+        }
+        else if (PlayerPrefs.GetInt("PlayerMode") == 2 && DidYouSelect_Skin1 == true && DidYouSelect_Skin2 == true)
+        {
+            controller.SetBool("Finish", true);
+            ShowMapPalette();
+        }
+        else return;
     }
 
     // +++ MAP +++ //
@@ -67,7 +83,7 @@ public class GameReadyHub : MonoBehaviour
         // Set initiate Map Prefab
         newMap = Instantiate(Map[0], new Vector3(0, 0, 0), Quaternion.identity);
         newMap.transform.SetParent(MapPalette.transform, false);
-
+        SetMapSize(newMap, 900f, 900f);
     }
 
     public void MapIndexUp()
@@ -78,6 +94,7 @@ public class GameReadyHub : MonoBehaviour
 
         newMap = Instantiate(Map[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
         newMap.transform.SetParent(MapPalette.transform, false);
+        SetMapSize(newMap, 900f, 900f);
     }
 
     public void MapIndexDown()
@@ -88,24 +105,55 @@ public class GameReadyHub : MonoBehaviour
 
         newMap = Instantiate(Map[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
         newMap.transform.SetParent(MapPalette.transform, false);
+        SetMapSize(newMap, 900f, 900f);
     }
 
+
+    public GameObject Game;     // Unity : Inspector
+
+
     // Unity : Selected_MapPalette Onclick
+    public bool DidYouSelect_Map = false;
+    public GameObject GameMap;
     public void Finish_SelectMap()
     {
         if (Selected_Map != null){ Destroy(Selected_Map); }
         
         Selected_Map = Instantiate(newMap, new Vector3(0, -500, 0), Quaternion.identity);
         Selected_Map.transform.SetParent(Selected_MapPalette.transform, false);
+        SetMapSize(Selected_Map, 900f, 900f);
+
+        // Must Select Map
+        DidYouSelect_Map = true;
+
+
+        // Set Map In Game Panel
+        if (Selected_Map != null){ Destroy(GameMap); }
+        GameMap = Instantiate(Map[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
+        GameMap.transform.SetParent(Game.transform, false);
+        GameMap.transform.SetSiblingIndex(0);
     }
 
-    public GameObject Game;     // Unity : Inspector
+    RectTransform rectTransform_Map;
+    public void SetMapSize(GameObject Map, float width, float height)
+    {
+        rectTransform_Map = Map.GetComponent<RectTransform>();
+        rectTransform_Map.sizeDelta = new Vector2(width, height);
+    }
+
 
     // Unity : Start Game Onclick
     public void StartGame()
     {
-        Game.SetActive(true);
-        gameObject.SetActive(false);
+        if (DidYouSelect_Map == true)
+        {
+            Game.SetActive(true);
+            gameObject.SetActive(false);
+        }
+
+        GameObject.Find("Game").GetComponent<GameSceneSystem>().Stone_b = Final_Skin_1P;
+        GameObject.Find("Game").GetComponent<GameSceneSystem>().Stone_w = Final_Skin_2P;
+        
     }
 
     void Update()

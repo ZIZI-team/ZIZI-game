@@ -67,9 +67,11 @@ Script /
 (2) Game : Game Scene System : Edge Spot (GameObject) : Game > ZIZIPoint_2
 (3) Game : Game Scene System : Edge Spot (GameObject) : Game > ZIZIPoint_3
 
-(4) Game : Game Scene System : Stone_b (GameObject) : BlackZIZI (Prefab)
-(5) Game : Game Scene System : Stone_w (GameObject) : WhiteZIZI (Prefab) 
+(4) Game : Game Scene System : Player1Win
+(5) Game : Game Scene System : Player2Win 
 (6) Game : Game Scene System : Game (GameObject)  : Game (Unity)
+
+
 
 < Title Scene > 
 

@@ -26,24 +26,40 @@ public class TotalScript : MonoBehaviour
         PlayerPrefs.SetInt("GameMode", 0);
     }
 
+
     // Onclick Select Playermode Button
+    public bool DidYouSelect_PlayerMode = false;
     public void PlayerMode (GameObject PlayerModeObj) 
     {
         PlayerPrefs.SetInt("PlayerMode", PlayerModeObj.transform.GetSiblingIndex() + 1);
         Debug.Log("Selected PlayerMode : " + PlayerPrefs.GetInt("PlayerMode"));
+
+
+        // Must Select PlayerMode
+        DidYouSelect_PlayerMode = true;
     }
 
+
     // Onclick Select Gamemode Button
+    public bool DidYouSelect_GameMode = false;
     public void GameMode (GameObject GameModeObj) 
     {
         PlayerPrefs.SetInt("GameMode", GameModeObj.transform.GetSiblingIndex() + 1);
         Debug.Log("Selected GameMode : " + PlayerPrefs.GetInt("GameMode"));
+
+
+        // Must Select GameMode
+        DidYouSelect_GameMode = true;
     }
+
 
     // Onclick Start Game Button
     public void StartGame()
     {
-        SceneManager.LoadScene("GameScene");
+        if (DidYouSelect_PlayerMode == true && DidYouSelect_GameMode == true)
+        {
+            SceneManager.LoadScene("GameScene");
+        }
     }
 
 }
