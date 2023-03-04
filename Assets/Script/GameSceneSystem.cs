@@ -286,18 +286,6 @@ public class GameSceneSystem : MonoBehaviour
     public int StoneCount = 0;
 
    
-
-    // public int ThreeByThree_line = 0;
-
-
-    // AddListAndSpawn ���� �Ǻ� ����
-    // public ThreeByThree_line()
-    // {
-
-    //     ThreeByThree_num += 1;
-    // }
-
-
     public void Set_And_RecordPosition()
     {
 
@@ -366,9 +354,6 @@ public class GameSceneSystem : MonoBehaviour
         }
         else
         {
-
-            // Player 1 ThreeByThree_line() �Ǻ� �ʿ�
-
             bool isDuplicated = false;
             for(int i = 0; i < assignedList.Count; i++)
             {
