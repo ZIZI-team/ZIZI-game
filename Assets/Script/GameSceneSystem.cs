@@ -101,6 +101,8 @@ public class GameSceneSystem : MonoBehaviour
     [Header("Each Players Stone Spawn Status")]
     public Text firstPlayerStoneStatus;
     public Text secondPlayerStoneStatus;
+    public int player1StoneCounting = 0;
+    public int player2StoneCounting = 0;
 
     [Header("Game Result Panel")]
     public GameObject GameResultBox;
@@ -144,6 +146,8 @@ public class GameSceneSystem : MonoBehaviour
     {
         Black = GameObject.FindGameObjectsWithTag("b_zizi");
         White = GameObject.FindGameObjectsWithTag("w_zizi");
+        firstPlayerStoneStatus.text = "Player1 Stone Counting : " + Black.Length.ToString();
+        secondPlayerStoneStatus.text = "Player2 Stone Counting : " + White.Length.ToString();
 
         Debug.Log($"{Black.Length}, {White.Length}");
 
@@ -337,15 +341,15 @@ public class GameSceneSystem : MonoBehaviour
             isBlack = false;
             
             
-            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
-            second = 10f;
+            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(370f, 55.1f,-0.02f);
+            second = 5f;
         }
         else 
         {
             isBlack = true;
 
-            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(370f, 55.1f,-0.02f);
-            second = 10;
+            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
+            second = 5f;
         } //made by Sohui
     }
 
@@ -357,6 +361,8 @@ public class GameSceneSystem : MonoBehaviour
         {
             Set_And_RecordPosition();
             changePlayer();
+            
+
         }
         else
         {
@@ -377,7 +383,6 @@ public class GameSceneSystem : MonoBehaviour
             {
                 Set_And_RecordPosition();
                 changePlayer();
-                
                 Debug.Log(ColorBoard[yGapNum + 4, xGapNum + 4]);
             }
             else
@@ -497,9 +502,13 @@ public class GameSceneSystem : MonoBehaviour
         {
             Destroy(White[j]);
         }
+        isBlack = true;
+        playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
+        Time.timeScale = 1f;
+        second = 5f;
         Player1Win.SetActive(false);
         Player2Win.SetActive(false);
-        Time.timeScale = 0f;
+        
         GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
 
 

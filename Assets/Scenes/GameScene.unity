@@ -238,8 +238,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -531, y: -170.1}
-  m_SizeDelta: {x: 160, y: 52.4286}
+  m_AnchoredPosition: {x: -364.59747, y: -170.1}
+  m_SizeDelta: {x: 492.8051, y: 52.4286}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &110479011
 MonoBehaviour:
@@ -274,7 +274,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 'Player2 Stone Counting : '
 --- !u!222 &110479012
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4592,8 +4592,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -531, y: -99.814}
-  m_SizeDelta: {x: 160, y: 52.428}
+  m_AnchoredPosition: {x: -364.6, y: -99.814}
+  m_SizeDelta: {x: 492.81, y: 52.428}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1525736006
 MonoBehaviour:
@@ -4628,7 +4628,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 'Player1 Stone Counting : '
 --- !u!222 &1525736007
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4942,8 +4942,10 @@ MonoBehaviour:
   playerTurnIcon: {fileID: 1829211570}
   AssignedMapPosition: {fileID: 220542454}
   PauseBox: {fileID: 1310822649}
-  firstPlayerStoneStatus: {fileID: 0}
-  secondPlayerStoneStatus: {fileID: 0}
+  firstPlayerStoneStatus: {fileID: 1525736006}
+  secondPlayerStoneStatus: {fileID: 110479011}
+  player1StoneCounting: 0
+  player2StoneCounting: 0
   GameResultBox: {fileID: 2096628736}
   mostTopCanvas: {fileID: 154772601}
   Game: {fileID: 1574242314}
@@ -6086,7 +6088,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 370.04, y: 71}
+  m_AnchoredPosition: {x: 545, y: 71}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1871216472
