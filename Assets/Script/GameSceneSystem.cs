@@ -87,6 +87,12 @@ public class GameSceneSystem : MonoBehaviour
     [Header("Gameplay Panel")]
     public GameObject GameplayUI;
 
+    [Header("Gameplay Panel with item slot")]
+    public GameObject GameplayItemSlotUI;
+    public GameObject[] leafItemSlotForPlayerOne;
+    public GameObject[] DotoriItemSlotForPlayerOne;
+
+
 
     [Header("PlayerTurn Function")]
 
@@ -108,13 +114,19 @@ public class GameSceneSystem : MonoBehaviour
     public GameObject GameResultBox;
     public GameObject mostTopCanvas;                  // This object is declared for 'ClickCanvas'
 
+     // [Header("Game Result Panel")]
+
 
 
 
     void Start()
     {
         //Gameplay UI active
-        GameplayUI.SetActive(true);
+        GameplayUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 790f, -0.4f);
+
+        //make if statement for determine whether is classic mod or original mod
+        GameplayItemSlotUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 397.5f, -0.4f);
+
 
 
         // Set Stone Size > Small Stone
@@ -530,6 +542,5 @@ public class GameSceneSystem : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene("TitleScene");
         GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
-
     }
 }
