@@ -64,8 +64,6 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 0.6283473, g: 1, b: 0, a: 1}
   - {r: 0, g: 1, b: 0.7726824, a: 1}
-  Animation_List:
-  - {fileID: 665388937749936875, guid: 7c5cd44ddf61ccb49b67f3093d6e7abb, type: 3}
   controller: {fileID: 0}
 --- !u!114 &1934887969581793603
 MonoBehaviour:

@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Linq;
+using UnityEngine.SceneManagement;
+
 
 
 public class GameSceneSystem : MonoBehaviour
@@ -82,7 +84,7 @@ public class GameSceneSystem : MonoBehaviour
     public Text gameText;
     public float second = 5f;
     
-    [Header("GameplayPanel")]
+    [Header("Gameplay Panel")]
     public GameObject GameplayUI;
 
 
@@ -92,8 +94,19 @@ public class GameSceneSystem : MonoBehaviour
 
     [Header("Pause Menu")]
 
+    public GameObject AssignedMapPosition;
     public GameObject PauseBox;
     bool pauseIsOnSight = false;
+
+    [Header("Each Players Stone Spawn Status")]
+    public Text firstPlayerStoneStatus;
+    public Text secondPlayerStoneStatus;
+
+    [Header("Game Result Panel")]
+    public GameObject GameResultBox;
+    public GameObject mostTopCanvas;                  // This object is declared for 'ClickCanvas'
+
+
 
 
     void Start()
@@ -131,6 +144,8 @@ public class GameSceneSystem : MonoBehaviour
     {
         Black = GameObject.FindGameObjectsWithTag("b_zizi");
         White = GameObject.FindGameObjectsWithTag("w_zizi");
+
+        Debug.Log($"{Black.Length}, {White.Length}");
 
         // ��ǥ�� ������ �Ǵ� ������Ʈ�� ��ġ �������� : in unity
         // edgePoint 1, 2, 3 : Game > Map Prefab
@@ -266,6 +281,8 @@ public class GameSceneSystem : MonoBehaviour
     public GameObject Player2Win;                     // Unity : Inspector
     public int StoneCount = 0;
 
+   
+
     // public int ThreeByThree_line = 0;
 
 
@@ -283,7 +300,8 @@ public class GameSceneSystem : MonoBehaviour
     // ���� ������ ���� ��ǥ�� ���� ���� ���, �� ����
         assignedList.Add(new List<int> {xGapNum, yGapNum});  
             
-        GameObject instance = Instantiate(Stone, new Vector3(x_correction, y_correction, -0.2f), Quaternion.identity) as GameObject;
+        GameObject instance = Instantiate(Stone, new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
+        instance.tag = isBlack? "b_zizi" : "w_zizi"; 
         instance.transform.SetParent(Game.transform, false);
 
     // �� ��ǥ�� �� ���� ����
@@ -296,12 +314,15 @@ public class GameSceneSystem : MonoBehaviour
         {
             Debug.Log("Player1 Win!");
             Player1Win.SetActive(true);
+            // Player1Win.transform.parent.transform.parent.transform.SetAsLastSibling();
+            mostTopCanvas.transform.SetAsLastSibling();
             GameOver();
         }
         else if (StoneCount == 5 && stoneWinner == true && isBlack == false)
         {
             Debug.Log("Player 2 Win!");
-            Player2Win.SetActive(true); 
+            Player2Win.SetActive(true);
+            mostTopCanvas.transform.SetAsLastSibling(); 
             GameOver();
         }
         else { Debug.Log("Pass"); }
@@ -449,21 +470,38 @@ public class GameSceneSystem : MonoBehaviour
     public void GameOver()
     {
         // Player1Win.SetActive(false);
-        // Player2Win.SetActive(false);        
+        // Player2Win.SetActive(false);
+        if (GameResultBox.transform.position != AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position)
+        {
+            Time.timeScale = 0f;
+            GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, -425f, -0.4f);
+        }
+        else
+        {
+            Time.timeScale = 0f;
+            GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0.04f);
+        }
+
+
     }
 
 
     public void OnClickReset()
     {
-        for(int i = 0; i < Black.Length; i++)
+        assignedList.Clear();
+        for(int j = 0; j < Black.Length; j++)
         {
-            Destroy(Black[i]);
+            Destroy(Black[j]);
         }
-
         for(int j = 0; j < White.Length; j++)
         {
             Destroy(White[j]);
         }
+        Player1Win.SetActive(false);
+        Player2Win.SetActive(false);
+        Time.timeScale = 0f;
+        GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
+
 
         // for(int k = 0; k < Black_line.Length; k++)
         // {
@@ -480,14 +518,24 @@ public class GameSceneSystem : MonoBehaviour
         if (pauseIsOnSight == false)
         {
             pauseIsOnSight = true;
-            PauseBox.transform.position = new Vector3( (Screen.width / 2), (Screen.height / 2), -0.02f);
+            PauseBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position;
+
+            Time.timeScale = 0f;
+
         }
         else
         {
             Time.timeScale = 1f;
             pauseIsOnSight = false;   
-            PauseBox.transform.position = new Vector3( (Screen.width / 2) + -1620, (Screen.height / 2), -0.02f);
+            PauseBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 0f, 0f);
         }
+
+    }
+    public void OnClickMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("TitleScene");
+        GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
 
     }
 }
