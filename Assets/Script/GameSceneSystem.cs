@@ -241,16 +241,6 @@ public class GameSceneSystem : MonoBehaviour
     public GameObject Player2Win;                     // Unity : Inspector
     public int StoneCount = 0;
 
-    public int ThreeByThree_line = 0;
-
-
-    // AddListAndSpawn 에서 판별 넣음
-    public ThreeByThree_line()
-    {
-
-        ThreeByThree_num += 1;
-    }
-
 
     public void Set_And_RecordPosition()
     {
@@ -301,9 +291,6 @@ public class GameSceneSystem : MonoBehaviour
         }
         else
         {
-
-            // Player 1 ThreeByThree_line() 판별 필요
-
             bool isDuplicated = false;
             for(int i = 0; i < assignedList.Count; i++)
             {
