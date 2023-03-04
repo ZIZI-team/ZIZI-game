@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using System.Linq;
+using UnityEngine.SceneManagement;
+
 
 
 public class GameSceneSystem : MonoBehaviour
@@ -70,15 +72,51 @@ public class GameSceneSystem : MonoBehaviour
 
 // +++ Map List +++ //
 
-    [SerializeField] public int[,] ColorBoard = new int[15+8, 15+8]; // ±â·Ï
+    [SerializeField] public int[,] ColorBoard = new int[15+8, 15+8]; // ï¿½ï¿½ï¿½
     public int mapGridNum_x;
     public int mapGridNum_y;
     
-    public List<List<int>> assignedList = new List<List<int>>();    // Áßº¹ ÆÇº°
+    public List<List<int>> assignedList = new List<List<int>>();    // ï¿½ßºï¿½ ï¿½Çºï¿½
+
+    [Header("Timer")]
+
+    public int setTime;
+    public Text gameText;
+    public float second = 5f;
+    
+    [Header("Gameplay Panel")]
+    public GameObject GameplayUI;
+
+
+    [Header("PlayerTurn Function")]
+
+    public GameObject playerTurnIcon;
+
+    [Header("Pause Menu")]
+
+    public GameObject AssignedMapPosition;
+    public GameObject PauseBox;
+    bool pauseIsOnSight = false;
+
+    [Header("Each Players Stone Spawn Status")]
+    public Text firstPlayerStoneStatus;
+    public Text secondPlayerStoneStatus;
+    public int player1StoneCounting = 0;
+    public int player2StoneCounting = 0;
+
+    [Header("Game Result Panel")]
+    public GameObject GameResultBox;
+    public GameObject mostTopCanvas;                  // This object is declared for 'ClickCanvas'
+
+
 
 
     void Start()
     {
+        //Gameplay UI active
+        GameplayUI.SetActive(true);
+
+
         // Set Stone Size > Small Stone
         rectTransform_b = Stone_b.GetComponent<RectTransform>();
         rectTransform_b.sizeDelta = new Vector2(100f, 100f);
@@ -88,8 +126,8 @@ public class GameSceneSystem : MonoBehaviour
 
 
         // Set Initiate Color Board
-        // mapGridNum_x = (int)((edgeSpot_x * (-1) * 2) / GapSize_x) + 1;    // : positive  // ´ëÄªÀÏ °æ¿ì¸¸ ½ÄÀÌ ¼º¸³ÇÔ // 15
-        // mapGridNum_y = (int)((edgeSpot_y * (-1) * 2) / GapSize_y) + 1;    // : positive  // ´ëÄªÀÏ °æ¿ì¸¸ ½ÄÀÌ ¼º¸³ÇÔ // 15
+        // mapGridNum_x = (int)((edgeSpot_x * (-1) * 2) / GapSize_x) + 1;    // : positive  // ï¿½ï¿½Äªï¿½ï¿½ ï¿½ï¿½ì¸¸ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ // 15
+        // mapGridNum_y = (int)((edgeSpot_y * (-1) * 2) / GapSize_y) + 1;    // : positive  // ï¿½ï¿½Äªï¿½ï¿½ ï¿½ï¿½ì¸¸ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ // 15
 
         mapGridNum_x = 15;
         mapGridNum_y = 15;
@@ -108,8 +146,12 @@ public class GameSceneSystem : MonoBehaviour
     {
         Black = GameObject.FindGameObjectsWithTag("b_zizi");
         White = GameObject.FindGameObjectsWithTag("w_zizi");
+        firstPlayerStoneStatus.text = "Player1 Stone Counting : " + Black.Length.ToString();
+        secondPlayerStoneStatus.text = "Player2 Stone Counting : " + White.Length.ToString();
 
-        // ÁÂÇ¥ÀÇ ±âÁØÀÌ µÇ´Â ¿ÀºêÁ§Æ®ÀÇ À§Ä¡ °¡Á®¿À±â : in unity
+        Debug.Log($"{Black.Length}, {White.Length}");
+
+        // ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : in unity
         // edgePoint 1, 2, 3 : Game > Map Prefab
 
         edgeSpot_1 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(0).gameObject;
@@ -121,6 +163,8 @@ public class GameSceneSystem : MonoBehaviour
 
         GapSize_x = edgeSpot_2.GetComponent<RectTransform>().position.x - edgeSpot_x;
         GapSize_y = edgeSpot_3.GetComponent<RectTransform>().position.y - edgeSpot_y;
+
+        Timer();
 
 
         // edgeSpot_1.GetComponent<RectTransform>().localPosition.x
@@ -144,32 +188,32 @@ public class GameSceneSystem : MonoBehaviour
         yNamuji = (yPos - edgeSpot_y) % GapSize_y; // yNamuji = 0.0f ~ < GapSize
 
 
-    // ÃÊ±â ÀÛ¾÷            
+    // ï¿½Ê±ï¿½ ï¿½Û¾ï¿½            
         xGapNum = (int)((xPos - edgeSpot_x) / GapSize_x);  // int, Grid Index
         yGapNum = (int)((yPos - edgeSpot_y) / GapSize_y);  // int, Grid Index
 
 
-    // º¸Á¤ ÀÛ¾÷ (inMap)
-        xGapNum += Correction(xNamuji, GapSize_x); // xGapNum Á¤»ó : 0 ~ 14  // 0 : ¿ÞÂÊ ¾Æ·¡ 
-        yGapNum += Correction(yNamuji, GapSize_y); // yGapNum Á¤»ó : 0 ~ 14 
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Û¾ï¿½ (inMap)
+        xGapNum += Correction(xNamuji, GapSize_x); // xGapNum ï¿½ï¿½ï¿½ï¿½ : 0 ~ 14  // 0 : ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ 
+        yGapNum += Correction(yNamuji, GapSize_y); // yGapNum ï¿½ï¿½ï¿½ï¿½ : 0 ~ 14 
 
         /* Correction() : 
-            ÃøÁ¤µÈ ³ª¸ÓÁö°¡ ±×¸®µåÀÇ
-            40% ÀÌÇÏ : 0 return
-            60% ÀÌ»ó : 1 return,  GapNum += 1
+            ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ï¿½ï¿½
+            40% ï¿½ï¿½ï¿½ï¿½ : 0 return
+            60% ï¿½Ì»ï¿½ : 1 return,  GapNum += 1
 
-            // inMap : Instantiate °ü¸®, #1    
-            40% ~ 60% : inMap = false ·Î ¹Ù²Û´Ù : Instantiate ¾ÈµÇµµ·Ï ÇÑ´Ù
+            // inMap : Instantiate ï¿½ï¿½ï¿½ï¿½, #1    
+            40% ~ 60% : inMap = false ï¿½ï¿½ ï¿½Ù²Û´ï¿½ : Instantiate ï¿½ÈµÇµï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½
         */            
             
-            // inMap : Instantiate °ü¸®, #2
-            // GapNumÀÌ 0 ¹Ì¸¸ 15 ÀÌ»óÀÎ °æ¿ì : Áï, ¸Ê ¹Ù±ùÀ¸·Î ³Ñ¾î°¡°Ô µÉ °æ¿ì ¸»À» »ý¼ºÇÏÁö ¸øÇÏµµ·Ï ¸¸µê
+            // inMap : Instantiate ï¿½ï¿½ï¿½ï¿½, #2
+            // GapNumï¿½ï¿½ 0 ï¿½Ì¸ï¿½ 15 ï¿½Ì»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ : ï¿½ï¿½, ï¿½ï¿½ ï¿½Ù±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
             // mapGridNum = 15 
-                if (xGapNum < 0 || xGapNum >= mapGridNum_x){ inMap = false; } // xGapNum Á¤»ó : 0 ~ 14,  xGapNum ºñÁ¤»ó ÀÏ ¶§      
-                if (yGapNum < 0 || yGapNum >= mapGridNum_y){ inMap = false; } // yGapNum Á¤»ó : 0 ~ 14,  yGapNum ºñÁ¤»ó
+                if (xGapNum < 0 || xGapNum >= mapGridNum_x){ inMap = false; } // xGapNum ï¿½ï¿½ï¿½ï¿½ : 0 ~ 14,  xGapNum ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½      
+                if (yGapNum < 0 || yGapNum >= mapGridNum_y){ inMap = false; } // yGapNum ï¿½ï¿½ï¿½ï¿½ : 0 ~ 14,  yGapNum ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-            // °æ°è¼± ¹Ù±ùÀ» Å¬¸¯ÇßÀ» °æ¿ì º¸Á¤ (³ª¸ÓÁö°¡ À½¼öÀÏ °æ¿ì)
+            // ï¿½ï¿½è¼± ï¿½Ù±ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½)
                 if ((xNamuji < 0 && xGapNum == 0) && (yGapNum > 0 && yGapNum < mapGridNum_y)){ inMap = true; }
                 if ((yNamuji < 0 && yGapNum == 0) && (xGapNum > 0 && xGapNum < mapGridNum_x)){ inMap = true; }
 
@@ -213,7 +257,7 @@ public class GameSceneSystem : MonoBehaviour
         else if (Namuji >= GapSize * 0.4f && Namuji < GapSize * 0.6f)
         { 
             Debug.Log("nononono");
-            inMap = false;              // ¸»ÀÌ »ý¼ºµÇÁö ¾ÊÀ½
+            inMap = false;              // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             return 0;
         }
 
@@ -228,7 +272,7 @@ public class GameSceneSystem : MonoBehaviour
         else
         {
             Debug.Log("what's wrong?");
-            inMap = false;              // ¸»ÀÌ »ý¼ºµÇÁö ¾ÊÀ½
+            inMap = false;              // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             return 0;
         }
     }
@@ -241,27 +285,18 @@ public class GameSceneSystem : MonoBehaviour
     public GameObject Player2Win;                     // Unity : Inspector
     public int StoneCount = 0;
 
-    public int ThreeByThree_line = 0;
-
-
-    // AddListAndSpawn ¿¡¼­ ÆÇº° ³ÖÀ½
-    public ThreeByThree_line()
-    {
-
-        ThreeByThree_num += 1;
-    }
-
-
+   
     public void Set_And_RecordPosition()
     {
 
-    // ÇöÀç ³õ¿©Áø ¸»ÀÇ ÁÂÇ¥¿¡ ´ëÇÑ Á¤º¸ ±â·Ï, ¸» »ý¼º
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½, ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         assignedList.Add(new List<int> {xGapNum, yGapNum});  
             
-        GameObject instance = Instantiate(Stone, new Vector3(x_correction, y_correction, -0.2f), Quaternion.identity) as GameObject;
+        GameObject instance = Instantiate(Stone, new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
+        instance.tag = isBlack? "b_zizi" : "w_zizi"; 
         instance.transform.SetParent(Game.transform, false);
 
-    // °¢ ÁÂÇ¥ÀÇ ¸» »ö»ó Á¤º¸
+    // ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         ColorBoard[yGapNum + 4, xGapNum + 4] = isBlack ? 1 : 2;  // 1 : Black, 2 : White
 
     // Win Condition
@@ -271,12 +306,15 @@ public class GameSceneSystem : MonoBehaviour
         {
             Debug.Log("Player1 Win!");
             Player1Win.SetActive(true);
+            // Player1Win.transform.parent.transform.parent.transform.SetAsLastSibling();
+            mostTopCanvas.transform.SetAsLastSibling();
             GameOver();
         }
         else if (StoneCount == 5 && stoneWinner == true && isBlack == false)
         {
             Debug.Log("Player 2 Win!");
-            Player2Win.SetActive(true); 
+            Player2Win.SetActive(true);
+            mostTopCanvas.transform.SetAsLastSibling(); 
             GameOver();
         }
         else { Debug.Log("Pass"); }
@@ -285,25 +323,37 @@ public class GameSceneSystem : MonoBehaviour
 
     public void changePlayer()
     {
-    // ¸»À» ³õÀ¸¸é ´ÙÀ½ ¸»ÀÇ »ö»óÀ» º¯°æÇÔ
-        if (isBlack) { isBlack = false; } //made by Sohui
-        else { isBlack = true; } //made by Sohui
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        if (isBlack) 
+        {
+            isBlack = false;
+            
+            
+            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(370f, 55.1f,-0.02f);
+            second = 5f;
+        }
+        else 
+        {
+            isBlack = true;
+
+            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
+            second = 5f;
+        } //made by Sohui
     }
 
 
     public void AddListAndSpawn()
     {
-    // zizi Áßº¹ ÆÇº°
+    // zizi ï¿½ßºï¿½ ï¿½Çºï¿½
         if (assignedList.Count == 0) 
         {
             Set_And_RecordPosition();
             changePlayer();
+            
+
         }
         else
         {
-
-            // Player 1 ThreeByThree_line() ÆÇº° ÇÊ¿ä
-
             bool isDuplicated = false;
             for(int i = 0; i < assignedList.Count; i++)
             {
@@ -318,7 +368,6 @@ public class GameSceneSystem : MonoBehaviour
             {
                 Set_And_RecordPosition();
                 changePlayer();
-                
                 Debug.Log(ColorBoard[yGapNum + 4, xGapNum + 4]);
             }
             else
@@ -328,7 +377,7 @@ public class GameSceneSystem : MonoBehaviour
         }
     }
 
-    public bool winCondition(int indexY, int indexX, bool StoneColor) // 5°³°¡ µÇ¸é ÀÌ±â´Â °ÍÀ¸·Î ÆÇ´Ü
+    public bool winCondition(int indexY, int indexX, bool StoneColor) // 5ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¸ï¿½ ï¿½Ì±ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½
     {
         // return true : Win, return false : Pass
 
@@ -396,25 +445,57 @@ public class GameSceneSystem : MonoBehaviour
         return true;
     }
 
+    public void Timer()
+    {
+        second -= Time.deltaTime;
+        gameText.text = "íƒ€ì´ë¨¸ : " + second.ToString("F1");
+        if (second <= 0)
+        {
+            changePlayer();
+            
+        }
+    }
+
 
     public void GameOver()
     {
         // Player1Win.SetActive(false);
-        // Player2Win.SetActive(false);        
+        // Player2Win.SetActive(false);
+        if (GameResultBox.transform.position != AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position)
+        {
+            Time.timeScale = 0f;
+            GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, -425f, -0.4f);
+        }
+        else
+        {
+            Time.timeScale = 0f;
+            GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0.04f);
+        }
+
+
     }
 
 
-    public void Reset()
+    public void OnClickReset()
     {
-        for(int i = 1; i < Black.Length; i++)
+        assignedList.Clear();
+        for(int j = 0; j < Black.Length; j++)
         {
-            Destroy(Black[i]);
+            Destroy(Black[j]);
         }
-
-        for(int j = 1; j < White.Length; j++)
+        for(int j = 0; j < White.Length; j++)
         {
             Destroy(White[j]);
         }
+        isBlack = true;
+        playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
+        Time.timeScale = 1f;
+        second = 5f;
+        Player1Win.SetActive(false);
+        Player2Win.SetActive(false);
+        
+        GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
+
 
         // for(int k = 0; k < Black_line.Length; k++)
         // {
@@ -425,5 +506,30 @@ public class GameSceneSystem : MonoBehaviour
         // {
         //     Destroy(White_line[l]);
         // }
+    }
+    public void OnClickPause()
+    {
+        if (pauseIsOnSight == false)
+        {
+            pauseIsOnSight = true;
+            PauseBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position;
+
+            Time.timeScale = 0f;
+
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            pauseIsOnSight = false;   
+            PauseBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 0f, 0f);
+        }
+
+    }
+    public void OnClickMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("TitleScene");
+        GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
+
     }
 }
