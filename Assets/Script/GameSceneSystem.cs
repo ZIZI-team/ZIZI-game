@@ -143,7 +143,10 @@ public class GameSceneSystem : MonoBehaviour
 
         mapGridNum_x = 15;
         mapGridNum_y = 15;
+        clearBoard();
+    }
 
+    void clearBoard() {
         for (int i = 0; i < mapGridNum_y + 8; i++)
         {
             for (int j = 0; j < mapGridNum_x + 8; j++)
@@ -399,18 +402,33 @@ public class GameSceneSystem : MonoBehaviour
 
         bool winflag = false;
 
-        for (int k = -4; k <= 0; k++)
-        {
-            winflag = Check_Y_Plus(indexY + k, indexX, color);
-            if (winflag == true) { return true; }
-            winflag = Check_X_Plus(indexY, indexX + k, color);
-            if (winflag == true) { return true; }
-            winflag = Check_XY_Plus(indexY + k, indexX + k, color);
-            if (winflag == true) { return true; }
-            winflag = Check_XY_Minus(indexY + k, indexX + k, color);
-            if (winflag == true) { return true; }
+        try {
+
+            for (int k = -4; k <= 0; k++)
+            {
+                winflag = Check_Y_Plus(indexY + k, indexX, color);
+                if (winflag == true) { return true; }
+                winflag = Check_X_Plus(indexY, indexX + k, color);
+                if (winflag == true) { return true; }
+                winflag = Check_XY_Plus(indexY + k, indexX + k, color);
+                if (winflag == true) { return true; }
+                winflag = Check_XY_Minus(indexY + k, indexX - k, color);
+                if (winflag == true) { return true; }
+            }
+            return false;
+        } finally {
+            if(winflag) {
+                string board = "";
+                for (int i = 0; i < 23; i++) {
+                    string line = "";
+                    for (int j = 0; j < 23; j++) {
+                        line += ColorBoard[i, j] + " ";
+                    }
+                    board += line + "\n";
+                }
+                Debug.Log("Game ended\n" + board);
+            }
         }
-        return false;
     }
 
     public bool Check_Y_Plus(int startPointY, int StartPointX, int color)
@@ -491,6 +509,7 @@ public class GameSceneSystem : MonoBehaviour
     public void OnClickReset()
     {
         assignedList.Clear();
+        clearBoard();
         for(int j = 0; j < Black.Length; j++)
         {
             Destroy(Black[j]);
