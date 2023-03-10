@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 using UnityEngine.SceneManagement;
 
 // 기존 자신의 스킨 모양 저장
@@ -61,5 +62,4 @@ public class TotalScript : MonoBehaviour
             SceneManager.LoadScene("GameScene");
         }
     }
-
 }

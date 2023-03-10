@@ -74,6 +74,14 @@ Script /
 
 
 < Title Scene > 
+1. EventSytstem : Script(Total System)
+2. ZIZI : Script(ZIZIAnim)
 
+2. Title2/Joystick : R, L, D, U : Button > Script > Operator(gameObject)
+
+3. Title2/ZIZI : Animator > TitleZIZI
+
+4. ZIZI Animation 4 --> End + ZIZIAnim (OffAnim())
+ 
 
 
