@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using UnityEngine.Random;
 
 
 
@@ -87,11 +88,30 @@ public class GameSceneSystem : MonoBehaviour
     [Header("Gameplay Panel")]
     public GameObject GameplayUI;
 
-    [Header("Gameplay Panel with item slot")]
-    public GameObject GameplayItemSlotUI;
-    public GameObject[] leafItemSlotForPlayerOne;
-    public GameObject[] DotoriItemSlotForPlayerOne;
+    [Header("Gameplay Item System")]
+    public GameObject ActualMapPosition;    // this needs to replace 'AssignedMapPosition' in last
+    public GameObject firstPlayerGameplayItemSlotUI;
+    public GameObject secondPlayerGameplayItemSlotUI;
+    public GameObject leaf;
+    public GameObject dotori;
+    
+    [SerializeField] private int leafItemForPlayerOne = 0;
+    [SerializeField] private int dotoriItemForPlayerOne = 0;
+    [SerializeField] private int leafItemForPlayerTwo = 0;
+    [SerializeField] private int dotoriItemForPlayerTwo = 0;
 
+    [SerializeField] private GameObject[] leafItemSlotForPlayerOne;
+    [SerializeField] private GameObject[] DotoriItemSlotForPlayerOne;
+    [SerializeField] private GameObject[] leafItemSlotForPlayerTwo;
+    [SerializeField] private GameObject[] DotoriItemSlotForPlayerTwo;
+    [SerializeField] public int[,] ItemBoard = new int[15+8, 15+8];
+    
+    
+    [Header("BushList Load Object")]
+
+    public int[,] mapBushList = new int[15+8, 15+8];
+
+    public GameObject bushSpawn;
 
 
     [Header("PlayerTurn Function")]
@@ -100,7 +120,7 @@ public class GameSceneSystem : MonoBehaviour
 
     [Header("Pause Menu")]
 
-    public GameObject AssignedMapPosition;
+    public GameObject AssignedMapPosition;  // This object is for 'Ready Game', and this needs be replaced by 'ActualMapPosition' later
     public GameObject PauseBox;
     bool pauseIsOnSight = false;
 
@@ -113,8 +133,9 @@ public class GameSceneSystem : MonoBehaviour
     [Header("Game Result Panel")]
     public GameObject GameResultBox;
     public GameObject mostTopCanvas;                  // This object is declared for 'ClickCanvas'
+    
 
-     // [Header("Game Result Panel")]
+   
 
 
 
@@ -124,8 +145,24 @@ public class GameSceneSystem : MonoBehaviour
         //Gameplay UI active
         GameplayUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 790f, -0.4f);
 
+
+
+
         //make if statement for determine whether is classic mod or original mod
-        GameplayItemSlotUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 397.5f, -0.4f);
+    
+        firstPlayerGameplayItemSlotUI.transform.position = ActualMapPosition.transform.GetChild(0).transform.position + new Vector3(0f, 813f, -0.4f);
+        secondPlayerGameplayItemSlotUI.transform.position = ActualMapPosition.transform.GetChild(0).transform.position + new Vector3(0f, -793f, -0.4f);
+
+        mapBushList = bushSpawn.GetComponent<MapBushSpawnSystem>().BushBoard;
+
+        
+
+
+
+        GameObject temp = Instantiate(leaf);
+        temp.transform.SetParent(firstPlayerGameplayItemSlotUI.transform);
+        temp.transform.position =  firstPlayerGameplayItemSlotUI.transform.position + new Vector3(-626, -30, -0.5f);
+
 
 
 
@@ -143,18 +180,56 @@ public class GameSceneSystem : MonoBehaviour
 
         mapGridNum_x = 15;
         mapGridNum_y = 15;
-        clearBoard();
+        clearBoardAndAddItemRandomly();
+    }
+    void clearBoardAndAddItemRandomly() 
+    {
+        for (int i = 0; i < mapGridNum_y + 8; i++)
+        {
+            for (int j = 0; j < mapGridNum_x + 8; j++)
+            { 
+                int itemNumber = Random.Range(0, 10)
+                if (mapBushList == 5)
+                {
+                    mapBushList[i, j] = itemNumber == 0? 3 : 0; 
+                    map[i, j] = itemNumber == 1? 4 : 0; 
+                }
+            }
+        }
     }
 
-    void clearBoard() {
+
+
+
+
+
+    void clearBoardAndAddItemRandomly() {
+        Random rand = new Random();
         for (int i = 0; i < mapGridNum_y + 8; i++)
         {
             for (int j = 0; j < mapGridNum_x + 8; j++)
             {
-                ColorBoard[i, j] = 0;
+                int itemNumber = Random.Range(0, 10)
+                
+
             }
         }
     }
+    void ItemRandomSpawnOnMap()
+    {
+        for (int i = 0; i < length; i++)
+        {
+            for (int j = 0; j < length; j++)
+            {
+                ColorBoard[i, j] = itemNumber == 0? 3 : 0;  //'0'is for leaf item
+                Instantiate(leaf) 
+                ColorBoard[i, j] = itemNumber == 1? 4 : 0;  //'1'is for dotori item 
+            }
+        }
+
+    }
+
+    
 
 
     void Update()
@@ -561,5 +636,12 @@ public class GameSceneSystem : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene("TitleScene");
         GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
+    }
+    public void OnCollisionStay2D(OnCollisionStay2D collision)
+    {
+        if (collision.gameobject.tag == "b_zizi" || "w_zizi")
+        {
+            Debug.Log("working")
+        }
     }
 }
