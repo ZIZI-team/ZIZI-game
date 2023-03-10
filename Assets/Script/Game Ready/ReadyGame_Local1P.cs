@@ -40,7 +40,7 @@ public class ReadyGame_Local1P : MonoBehaviour
         ColorPalette = GameObject.Find("1P/1PColor");
 
         // declare Color (Child)
-        ColorPrefab = Resources.Load<GameObject>("ColorPrefab");
+        ColorPrefab = Resources.Load<GameObject>("Color_Prefab/"+"ColorPrefab");
 
         // MY SKIN (Own)
         MySkin.Add(Resources.Load<GameObject>("SKIN_Prefab/"+"ZIZI"));
