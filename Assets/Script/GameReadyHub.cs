@@ -11,6 +11,7 @@ public class GameReadyHub : MonoBehaviour
 
     public Animator controller;                            // Unity : Inspector : Animator : ReadyGame, Controller : SelectMap
 
+
     void Start()
     {
         // Set Initiate Skin
