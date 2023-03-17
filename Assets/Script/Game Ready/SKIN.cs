@@ -21,7 +21,7 @@ public class SKIN : MonoBehaviour
     // +++ Animation +++ //
     // public List<Animator> Animation_List = new List<Animator>();
 
-    public Animator controller;         // Start : GetComponent
+    // public Animator controller;         // Start : GetComponent
 
 
     // +++ SKILL +++ //    
@@ -32,11 +32,12 @@ public class SKIN : MonoBehaviour
     
     void Start()
     {
-        if (PlayerPrefs.GetInt("GameMode") == 1 || PlayerPrefs.GetInt("GameMode") == 3)     // Original, Dynamic
-        {
-            controller = gameObject.GetComponent<Animator>();
-            controller.runtimeAnimatorController = Resources.Load("SKIN_Anim/"+"Controller_Hop1") as RuntimeAnimatorController; 
-        }
+        // // Default Animation
+        // if (PlayerPrefs.GetInt("GameMode") == 1 || PlayerPrefs.GetInt("GameMode") == 3)     // Original, Dynamic
+        // {
+        //     controller = gameObject.GetComponent<Animator>();
+        //     controller.runtimeAnimatorController = Resources.Load("SKIN_Anim/"+"Controller_Hop1") as RuntimeAnimatorController; 
+        // }
     }
 
     void Update()

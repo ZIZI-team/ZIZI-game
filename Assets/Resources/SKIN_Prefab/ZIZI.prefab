@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3836082589436948190}
   - component: {fileID: 9173919387316441689}
   - component: {fileID: 7856285277388253050}
+  - component: {fileID: 5810722856033562543}
   - component: {fileID: 1934887969581793603}
   - component: {fileID: 4046603680594120993}
   m_Layer: 5
@@ -38,7 +39,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 700, y: 700}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9173919387316441689
 CanvasRenderer:
@@ -64,8 +65,18 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 0.6283473, g: 1, b: 0, a: 1}
   - {r: 0, g: 1, b: 0.7726824, a: 1}
-  Animation_List:
-  - {fileID: 665388937749936875, guid: 7c5cd44ddf61ccb49b67f3093d6e7abb, type: 3}
+--- !u!114 &5810722856033562543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1382746492186278602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ccef46268ee694d9da2f6a98667907, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   controller: {fileID: 0}
 --- !u!114 &1934887969581793603
 MonoBehaviour:
@@ -87,7 +98,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: fde5f9b70971605439023741faa45621, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6fdbee6b0340a3c41a9281f3136015c3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

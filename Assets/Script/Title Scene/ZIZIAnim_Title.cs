@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
-public class ZIZIAnim : MonoBehaviour
+public class ZIZIAnim_Title : MonoBehaviour
 {
     // Animation
     public GameObject ZIZI_Parent;
@@ -12,9 +13,11 @@ public class ZIZIAnim : MonoBehaviour
     public Animator ZIZIcontroller;
 
     public RectTransform ZIZIParentRect;
-    public RectTransform ZIZIRect;
+    // public RectTransform ZIZIRect;
 
     public string KEY;
+
+    public List<string> AnimList = new List<string>();
 
     void Start()
     {
@@ -23,23 +26,59 @@ public class ZIZIAnim : MonoBehaviour
         ZIZI = GameObject.Find("ZIZI");
         ZIZIcontroller = ZIZI.GetComponent<Animator>(); 
         ZIZIParentRect = ZIZI_Parent.GetComponent<RectTransform>();
-        ZIZIRect = ZIZI.GetComponent<RectTransform>();
+        // ZIZIRect = ZIZI.GetComponent<RectTransform>();
         KEY = "Start";
     }
     
+    void Update()
+    {
+        Check_SelectState();
+
+        if (AnimList.Count != 0)
+        {
+            ZIZIcontroller.SetBool(AnimList[0], true); 
+            ZIZIcontroller.SetBool("Empty", true);
+            KEY = AnimList[0];
+        }
+    }
+
+    public void Check_SelectState()
+    {
+        if(ZIZIParentRect.localPosition.x >= 399f) // 조건 수정 필요
+        {
+            PlayerMode();
+        }
+        else if(ZIZIParentRect.localPosition.y >= 599f)
+        {
+            StartGame();
+        }
+
+    }
+
+    bool DidYouSelect_PlayerMode = false;
+    public void PlayerMode()
+    {
+        PlayerPrefs.SetInt("PlayerMode", 2); 
+        Debug.Log("2P"); 
+        DidYouSelect_PlayerMode = true;
+    }
+
+    public void StartGame()
+    {
+        if(DidYouSelect_PlayerMode == true)
+        { 
+            SceneManager.LoadScene("GameScene"); 
+            Debug.Log("SG"); 
+        } 
+    }
+
+
+// Animation
+
     // Animation Operator
     public void Operator(GameObject button)
     {
-        ZIZIcontroller.SetBool(button.name, true); 
-        ZIZIcontroller.SetBool("Empty", true);
-        KEY = button.name;
-    }
-
-    public void OffAnim() // End of L, R, U, D
-    { 
-        // ZIZIRect.localPosition = new Vector3(0f, 0f, 0f);  
-        // ZIZIcontroller.SetBool("Empty", false);
-        Debug.Log("OffAnim");
+        AnimList.Add(button.name);        
     }
 
     // Animation ++++ End of L, R, U, D
@@ -57,7 +96,7 @@ public class ZIZIAnim : MonoBehaviour
         ZIZIParentRect.localPosition += new Vector3(0f, DownPos[index_DownPos + 1] - DownPos[index_DownPos] , 0f); 
         index_DownPos++; 
         if (index_DownPos >= DownPos.Count - 1){ index_DownPos = 0; }
-        Debug.Log(DownPos.Count );
+        //Debug.Log(DownPos.Count );
     } 
 
     int index_RightPosX = 0;  
@@ -70,10 +109,10 @@ public class ZIZIAnim : MonoBehaviour
         index_RightPosX++; 
         index_RightPosY++; 
         if (index_RightPosX >= RightPosX.Count - 1){ index_RightPosX = 0; index_RightPosY = 0; }
-        Debug.Log(RightPosX.Count );
-        Debug.Log(RightPosY.Count );
+        //Debug.Log(RightPosX.Count );
+        //Debug.Log(RightPosY.Count );
         
-        Debug.Log("R : " + ZIZIParentRect.localPosition + " " + index_RightPosX + " " + index_RightPosY);
+        //Debug.Log("R : " + ZIZIParentRect.localPosition + " " + index_RightPosX + " " + index_RightPosY);
     } 
 
     int index_LeftPosX = 0;    
@@ -86,19 +125,21 @@ public class ZIZIAnim : MonoBehaviour
         index_LeftPosX++; 
         index_LeftPosY++; 
         if (index_LeftPosX >= LeftPosX.Count - 1){ index_LeftPosX = 0; index_LeftPosY = 0; }
-        Debug.Log("L : " + ZIZIParentRect.localPosition + " " + index_LeftPosX + " " + index_LeftPosY);
+        //Debug.Log("L : " + ZIZIParentRect.localPosition + " " + index_LeftPosX + " " + index_LeftPosY);
     } 
-
+    
+    public void OffAnim() // End of L, R, U, D
+    { 
+        // ZIZIRect.localPosition = new Vector3(0f, 0f, 0f);  
+        // ZIZIcontroller.SetBool("Empty", false);
+        //Debug.Log("OffAnim");
+    }
 
     public void Stop() // End of Stop
     {
-        Debug.Log("Stop");
+        //Debug.Log("Stop");
         ZIZIcontroller.SetBool(KEY, false);
-    }
-
-    public void Select()
-    {
-
+        AnimList.RemoveAt(0);
     }
 
 
