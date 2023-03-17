@@ -57,6 +57,9 @@ public class GameSceneSystem : MonoBehaviour
     [SerializeField] public int[,] BushBoard = new int[11+8, 11+8]; 
     [SerializeField] public int[,] ItemBoard = new int[11+8, 11+8]; 
 
+    List<GameObject> ItemList = new List<GameObject>();
+    List<GameObject> ZIZIList = new List<GameObject>();
+
     public int mapGridNum_x;
     public int mapGridNum_y;
     
@@ -203,39 +206,51 @@ public class GameSceneSystem : MonoBehaviour
             White = GameObject.FindGameObjectsWithTag("w_zizi");
 
             firstPlayerStoneStatus.text = "Player1 Stone Counting : " + Black.Length.ToString();
-            secondPlayerStoneStatus.text = "Player2 Stone Counting : " + White.Length.ToString();
+            secondPlayerStoneStatus.text = "Player2 Stone Counting : " + White.Length.ToString();   
+
+        // 3. Make Initiate Board (Record Initiate Information)
+            Reset_Item();   
+    }
+
+
+    void Reset_Item()
+    {    
+        // mapGridNum_x = (int)((edgeSpot_x * (-1) * 2) / GapSize_x) + 1;    // : positive  // 10
+        // mapGridNum_y = (int)((edgeSpot_y * (-1) * 2) / GapSize_y) + 1;    // : positive  // 10
+
+        mapGridNum_x = 11;
+        mapGridNum_y = 11;
+        for (int i = 0; i < mapGridNum_y + 8; i++) // will reset ZIZIBoard by 0, and designate items randomly
+        {
+            for (int j = 0; j < mapGridNum_x + 8; j++)
+            {
+                ZIZIBoard[i, j] = 0;
+                RockBoard[i, j] = 0;
+                BushBoard[i, j] = 0;
+                ItemBoard[i, j] = 0;
+            }
+        }
+
+        for(int i = 0; i < Game.transform.GetChild(2).childCount + Game.transform.GetChild(3).childCount; i++){ Destroy(ItemList[i]); }
+        for(int i = 0; i < ZIZIList.Count; i++){ Destroy(ZIZIList[i]); }
+
+        ItemList = new List<GameObject>();
+        ZIZIList = new List<GameObject>();
+        
+        GameObject Rock = Map.transform.GetChild(0).transform.GetChild(0).gameObject;
+        GameObject Bush = Map.transform.GetChild(0).transform.GetChild(1).gameObject;
+        
+        int RockNum = Map.transform.GetChild(0).transform.GetChild(0).childCount;
+        int BushNum = Map.transform.GetChild(0).transform.GetChild(1).childCount;
 
         
-        // 3. Make Initiate Board (Record Initiate Information)
-            // mapGridNum_x = (int)((edgeSpot_x * (-1) * 2) / GapSize_x) + 1;    // : positive  // 10
-            // mapGridNum_y = (int)((edgeSpot_y * (-1) * 2) / GapSize_y) + 1;    // : positive  // 10
 
-            mapGridNum_x = 11;
-            mapGridNum_y = 11;
-            for (int i = 0; i < mapGridNum_y + 8; i++) // will reset ZIZIBoard by 0, and designate items randomly
-            {
-                for (int j = 0; j < mapGridNum_x + 8; j++)
-                {
-                    ZIZIBoard[i, j] = 0;
-                    RockBoard[i, j] = 0;
-                    BushBoard[i, j] = 0;
-                    ItemBoard[i, j] = 0;
-                }
-            }
+        for(int i = 0; i < RockNum; i++){ Get_BoardItem_Index(Rock.transform.GetChild(i).gameObject, RockBoard); } // Record Rock in Board
+        for(int i = 0; i < BushNum; i++){ Get_BoardItem_Index(Bush.transform.GetChild(i).gameObject, BushBoard, true); } // Record Bush in Board
 
-            GameObject Rock = Map.transform.GetChild(0).transform.GetChild(0).gameObject;
-            GameObject Bush = Map.transform.GetChild(0).transform.GetChild(1).gameObject;
-            
-            int RockNum = Map.transform.GetChild(0).transform.GetChild(0).childCount;
-            int BushNum = Map.transform.GetChild(0).transform.GetChild(1).childCount;
-
-            for(int i = 0; i < RockNum; i++){ Get_BoardItem_Index(Rock.transform.GetChild(i).gameObject, RockBoard); } // Record Rock in Board
-            for(int i = 0; i < BushNum; i++){ Get_BoardItem_Index(Bush.transform.GetChild(i).gameObject, BushBoard, true); } // Record Bush in Board
-
-            // Debug.Log("==================================");
-            // Debug.Log(RockBoard[0,0]);
-            // Debug.Log(BushBoard[0,0]);
-            
+        // Debug.Log("==================================");
+        // Debug.Log(RockBoard[0,0]);
+        // Debug.Log(BushBoard[0,0]);
     }
 
     void Get_BoardItem_Index(GameObject BoardItem, int[,] Board, bool IsBushBoard = false)
@@ -264,19 +279,21 @@ public class GameSceneSystem : MonoBehaviour
         if(IsBushBoard == true)
         { 
             ItemBoard[yGapNum, xGapNum] = Random.Range(1, 4);
-
+            
                 x_correction = xGapNum * GapSize_x + edgeSpot_x - Screen.width/2;  
                 y_correction = yGapNum * GapSize_y + edgeSpot_y - Screen.height/2;
 
             if(ItemBoard[yGapNum, xGapNum] == 2)
             {
                 GameObject Dotori = Instantiate(Resources.Load("Item_Prefab/"+"dotori"), new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
-                Dotori.transform.SetParent(Game.transform.GetChild(1).transform, false);
+                Dotori.transform.SetParent(Game.transform.GetChild(2).transform, false);
+                ItemList.Add(Dotori);
             }
             else if(ItemBoard[yGapNum, xGapNum] == 3)
             {
                 GameObject Leaf = Instantiate(Resources.Load("Item_Prefab/"+"leaf"), new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
-                Leaf.transform.SetParent(Game.transform.GetChild(2).transform, false);
+                Leaf.transform.SetParent(Game.transform.GetChild(3).transform, false);
+                ItemList.Add(Leaf);
             }
             // None : 1
             // Dotori : 2
@@ -287,7 +304,6 @@ public class GameSceneSystem : MonoBehaviour
     
     void Update()
     {
-
         // Set Stone Size > Small Stone
         rectTransform_b = Stone_b.GetComponent<RectTransform>();
         rectTransform_b.sizeDelta = new Vector2(120f, 120f);
@@ -322,7 +338,7 @@ public class GameSceneSystem : MonoBehaviour
     public void OnClickReset()
     {
         assignedList.Clear();
-        clearBoard();
+        Reset_Item();
         for(int j = 0; j < Black.Length; j++){ Destroy(Black[j]); }
         for(int j = 0; j < White.Length; j++){ Destroy(White[j]); }
 
@@ -334,30 +350,7 @@ public class GameSceneSystem : MonoBehaviour
         Player2Win.SetActive(false);
         
         GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
-
-
-        // for(int k = 0; k < Black_line.Length; k++)
-        // {
-        //     Destroy(Black_line[k]);
-        // }
-
-        // for(int l = 0; l < White_line.Length; l++)
-        // {
-        //     Destroy(White_line[l]);
-        // }
     }
-
-    void clearBoard()
-    {
-        for (int i = 0; i < mapGridNum_y + 8; i++) // will reset ZIZIBoard by 0, and designate items randomly
-        {
-            for (int j = 0; j < mapGridNum_x + 8; j++)
-            {
-                ZIZIBoard[i, j] = 0; 
-            }
-        }
-    }
-
 
     public void OnClickPause()
     {
@@ -545,7 +538,8 @@ public class GameSceneSystem : MonoBehaviour
         assignedList.Add(new List<int> {xGapNum, yGapNum});  
             
         GameObject ZIZILand = Instantiate(Resources.Load("SKIN_Prefab/"+"ZIZILand"), new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
-        ZIZILand.transform.SetParent(Game.transform.GetChild(0).transform, false);
+        ZIZILand.transform.SetParent(Game.transform.GetChild(1).transform, false);
+        ZIZIList.Add(ZIZILand);
 
         GameObject ZIZI_instance = Instantiate(Stone, new Vector3(0f, 0f, -0.01f), Quaternion.identity) as GameObject;
         ZIZI_instance.transform.SetParent(ZIZILand.transform, false);
