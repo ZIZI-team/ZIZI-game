@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 
 
 
+
 public class GameSceneSystem : MonoBehaviour
 {
 
@@ -42,8 +43,8 @@ public class GameSceneSystem : MonoBehaviour
 
 // +++ Position +++ //
 
-    float GapSize_x;
-    float GapSize_y;
+    public float GapSize_x;
+    public float GapSize_y;
 
 
     Vector3 InputPos;  // PanelOnclick(), Camera view position
@@ -64,8 +65,8 @@ public class GameSceneSystem : MonoBehaviour
     public GameObject edgeSpot_2;  // Map Grid  Starting Point // Unity : Inspector
     public GameObject edgeSpot_3;  // Map Grid  Starting Point // Unity : Inspector
 
-    float edgeSpot_x;
-    float edgeSpot_y;
+    public float edgeSpot_x;
+    public float edgeSpot_y;
 
     bool inMap = true; // is Mouse position is in map
 
@@ -87,6 +88,33 @@ public class GameSceneSystem : MonoBehaviour
     [Header("Gameplay Panel")]
     public GameObject GameplayUI;
 
+    [Header("Gameplay Item System")]
+    public GameObject ActualMapPosition;    // this needs to replace 'AssignedMapPosition' in last
+    public GameObject firstPlayerGameplayItemSlotUI;
+    public GameObject secondPlayerGameplayItemSlotUI;
+    public GameObject leaf;
+    public GameObject dotori;
+    
+    // [SerializeField] private int leafItemForPlayerOne = 0;
+    // [SerializeField] private int dotoriItemForPlayerOne = 0;
+    // [SerializeField] private int leafItemForPlayerTwo = 0;
+    // [SerializeField] private int dotoriItemForPlayerTwo = 0;
+
+    // [SerializeField] private GameObject[] leafItemSlotForPlayerOne;
+    // [SerializeField] private GameObject[] DotoriItemSlotForPlayerOne;
+    // [SerializeField] private GameObject[] leafItemSlotForPlayerTwo;
+    // [SerializeField] private GameObject[] DotoriItemSlotForPlayerTwo;
+    [SerializeField] public int[,] itemBoard = new int[15+8, 15+8];
+    
+    
+    [Header("BushList Load Object")]
+
+    public int[,] mapBushList;
+    public int[,] newMapBushList = new int[15+8, 15+8];
+
+    public GameObject bushSpawn;
+    // public Game GameThing;
+
 
     [Header("PlayerTurn Function")]
 
@@ -94,7 +122,7 @@ public class GameSceneSystem : MonoBehaviour
 
     [Header("Pause Menu")]
 
-    public GameObject AssignedMapPosition;
+    public GameObject AssignedMapPosition;  // This object is for 'Ready Game', and this needs be replaced by 'ActualMapPosition' later
     public GameObject PauseBox;
     bool pauseIsOnSight = false;
 
@@ -107,6 +135,9 @@ public class GameSceneSystem : MonoBehaviour
     [Header("Game Result Panel")]
     public GameObject GameResultBox;
     public GameObject mostTopCanvas;                  // This object is declared for 'ClickCanvas'
+    
+
+   
 
 
 
@@ -114,7 +145,36 @@ public class GameSceneSystem : MonoBehaviour
     void Start()
     {
         //Gameplay UI active
-        GameplayUI.SetActive(true);
+        GameplayUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 790f, -0.4f);
+
+
+
+
+        //make if statement for determine whether is classic mod or original mod
+    
+        firstPlayerGameplayItemSlotUI.transform.position = ActualMapPosition.transform.GetChild(0).transform.position + new Vector3(0f, 813f, -0.4f);
+        secondPlayerGameplayItemSlotUI.transform.position = ActualMapPosition.transform.GetChild(0).transform.position + new Vector3(0f, -793f, -0.4f);
+        
+        
+        
+        GameObject temp_bush = Instantiate(bushSpawn);
+//        temp_bush.transform.parent.transform.parent = Game.transform;
+
+
+        temp_bush.transform.SetParent(Game.transform.GetChild(1).transform, false);
+
+
+        // mapBushList = temp_bush.GetComponent<MapBushSpawnSystem>().BushBoard.Clone() as int[,];
+        // Debug.Log($"Clone 2,3 : {mapBushList[2,2]}");
+        // Debug.Log($"Clone 2,3 : {temp_bush.GetComponent<MapBushSpawnSystem>().BushBoard[2,2]}");
+
+        
+
+        GameObject temp = Instantiate(leaf);
+        temp.transform.SetParent(firstPlayerGameplayItemSlotUI.transform);
+        temp.transform.position =  firstPlayerGameplayItemSlotUI.transform.position + new Vector3(-626, -30, -0.5f);
+
+
 
 
         // Set Stone Size > Small Stone
@@ -131,15 +191,52 @@ public class GameSceneSystem : MonoBehaviour
 
         mapGridNum_x = 15;
         mapGridNum_y = 15;
+        
+        clearBoardAndAddItemRandomly();
+    }
 
+
+
+
+
+    void clearBoardAndAddItemRandomly() //this will reset colorboard by 0, and designate items randomly
+    {
+        
         for (int i = 0; i < mapGridNum_y + 8; i++)
         {
             for (int j = 0; j < mapGridNum_x + 8; j++)
             {
-                ColorBoard[i, j] = 0;
+                ColorBoard[i, j] = 0; 
+
+
             }
         }
     }
+    // void itemSpawn()
+    // {
+
+
+    //     for (int i = 0; i < mapGridNum_y + 8; i++)
+    //     {
+           
+    //         for (int j = 0; j < mapGridNum_x + 8; j++)
+    //         {
+    //             Debug.Log("not inside");
+    //             if (itemBoard[i, j] == 3)
+    //             {
+    //                 Debug.Log("working?");
+    //                 Instantiate(leaf, new Vector3((j - 4) * GapSize_x, (i - 4) * GapSize_y, -0.01f), Quaternion.identity);
+    //             }
+    //             if (itemBoard[i, j] == 4)
+    //             {
+    //                 Debug.Log("working?");
+    //                 Instantiate(dotori, new Vector3((j - 4) * GapSize_x, (i - 4) * GapSize_y, -0.01f), Quaternion.identity);
+    //             }
+    //         }
+    //     }
+    // }
+
+    
 
 
     void Update()
@@ -350,7 +447,6 @@ public class GameSceneSystem : MonoBehaviour
             Set_And_RecordPosition();
             changePlayer();
             
-
         }
         else
         {
@@ -387,18 +483,33 @@ public class GameSceneSystem : MonoBehaviour
 
         bool winflag = false;
 
-        for (int k = -4; k <= 0; k++)
-        {
-            winflag = Check_Y_Plus(indexY + k, indexX, color);
-            if (winflag == true) { return true; }
-            winflag = Check_X_Plus(indexY, indexX + k, color);
-            if (winflag == true) { return true; }
-            winflag = Check_XY_Plus(indexY + k, indexX + k, color);
-            if (winflag == true) { return true; }
-            winflag = Check_XY_Minus(indexY + k, indexX + k, color);
-            if (winflag == true) { return true; }
+        try {
+
+            for (int k = -4; k <= 0; k++)
+            {
+                winflag = Check_Y_Plus(indexY + k, indexX, color);
+                if (winflag == true) { return true; }
+                winflag = Check_X_Plus(indexY, indexX + k, color);
+                if (winflag == true) { return true; }
+                winflag = Check_XY_Plus(indexY + k, indexX + k, color);
+                if (winflag == true) { return true; }
+                winflag = Check_XY_Minus(indexY + k, indexX - k, color);
+                if (winflag == true) { return true; }
+            }
+            return false;
+        } finally {
+            if(winflag) {
+                string board = "";
+                for (int i = 0; i < 23; i++) {
+                    string line = "";
+                    for (int j = 0; j < 23; j++) {
+                        line += ColorBoard[i, j] + " ";
+                    }
+                    board += line + "\n";
+                }
+                Debug.Log("Game ended\n" + board);
+            }
         }
-        return false;
     }
 
     public bool Check_Y_Plus(int startPointY, int StartPointX, int color)
@@ -479,6 +590,7 @@ public class GameSceneSystem : MonoBehaviour
     public void OnClickReset()
     {
         assignedList.Clear();
+        clearBoardAndAddItemRandomly();
         for(int j = 0; j < Black.Length; j++)
         {
             Destroy(Black[j]);
@@ -530,6 +642,5 @@ public class GameSceneSystem : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene("TitleScene");
         GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
-
     }
 }

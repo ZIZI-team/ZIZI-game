@@ -6,6 +6,8 @@ TagManager:
   tags:
   - b_zizi
   - w_zizi
+  - leaf_item
+  - doroti_item
   layers:
   - Default
   - TransparentFX
