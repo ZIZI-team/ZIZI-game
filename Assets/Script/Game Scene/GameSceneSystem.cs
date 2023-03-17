@@ -7,13 +7,10 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 
 
-
-
 public class GameSceneSystem : MonoBehaviour
 {
 
 // +++ Stone +++ //
-
     GameObject Stone; 
 
     public GameObject Stone_b, Stone_w;     // Unity : Inspector
@@ -32,7 +29,6 @@ public class GameSceneSystem : MonoBehaviour
 
 
 // +++ Win Condition +++ //
-
     public int blackStoneCount = 0;
     public int whiteStoneCount = 0;
 
@@ -42,10 +38,8 @@ public class GameSceneSystem : MonoBehaviour
 
 
 // +++ Position +++ //
-
     public float GapSize_x;
     public float GapSize_y;
-
 
     Vector3 InputPos;  // PanelOnclick(), Camera view position
     float xPos = 0f;   // InputPos.x
@@ -72,12 +66,11 @@ public class GameSceneSystem : MonoBehaviour
 
 
 // +++ Map List +++ //
-
-    [SerializeField] public int[,] ColorBoard = new int[15+8, 15+8]; // ���
+    [SerializeField] public int[,] ColorBoard = new int[15+8, 15+8]; 
     public int mapGridNum_x;
     public int mapGridNum_y;
     
-    public List<List<int>> assignedList = new List<List<int>>();    // �ߺ� �Ǻ�
+    public List<List<int>> assignedList = new List<List<int>>();    
 
     [Header("Timer")]
 
@@ -137,10 +130,6 @@ public class GameSceneSystem : MonoBehaviour
     public GameObject mostTopCanvas;                  // This object is declared for 'ClickCanvas'
     
 
-   
-
-
-
 
     void Start()
     {
@@ -148,34 +137,23 @@ public class GameSceneSystem : MonoBehaviour
         GameplayUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 790f, -0.4f);
 
 
-
-
         //make if statement for determine whether is classic mod or original mod
-    
         firstPlayerGameplayItemSlotUI.transform.position = ActualMapPosition.transform.GetChild(0).transform.position + new Vector3(0f, 813f, -0.4f);
         secondPlayerGameplayItemSlotUI.transform.position = ActualMapPosition.transform.GetChild(0).transform.position + new Vector3(0f, -793f, -0.4f);
-        
-        
         
         GameObject temp_bush = Instantiate(bushSpawn);
 //        temp_bush.transform.parent.transform.parent = Game.transform;
 
-
         temp_bush.transform.SetParent(Game.transform.GetChild(1).transform, false);
-
 
         // mapBushList = temp_bush.GetComponent<MapBushSpawnSystem>().BushBoard.Clone() as int[,];
         // Debug.Log($"Clone 2,3 : {mapBushList[2,2]}");
         // Debug.Log($"Clone 2,3 : {temp_bush.GetComponent<MapBushSpawnSystem>().BushBoard[2,2]}");
 
-        
 
         GameObject temp = Instantiate(leaf);
         temp.transform.SetParent(firstPlayerGameplayItemSlotUI.transform);
         temp.transform.position =  firstPlayerGameplayItemSlotUI.transform.position + new Vector3(-626, -30, -0.5f);
-
-
-
 
         // Set Stone Size > Small Stone
         rectTransform_b = Stone_b.GetComponent<RectTransform>();
@@ -186,18 +164,14 @@ public class GameSceneSystem : MonoBehaviour
 
 
         // Set Initiate Color Board
-        // mapGridNum_x = (int)((edgeSpot_x * (-1) * 2) / GapSize_x) + 1;    // : positive  // ��Ī�� ��츸 ���� ������ // 15
-        // mapGridNum_y = (int)((edgeSpot_y * (-1) * 2) / GapSize_y) + 1;    // : positive  // ��Ī�� ��츸 ���� ������ // 15
+        // mapGridNum_x = (int)((edgeSpot_x * (-1) * 2) / GapSize_x) + 1;    // : positive  // 15
+        // mapGridNum_y = (int)((edgeSpot_y * (-1) * 2) / GapSize_y) + 1;    // : positive  // 15
 
         mapGridNum_x = 15;
         mapGridNum_y = 15;
         
         clearBoardAndAddItemRandomly();
     }
-
-
-
-
 
     void clearBoardAndAddItemRandomly() //this will reset colorboard by 0, and designate items randomly
     {
@@ -237,8 +211,6 @@ public class GameSceneSystem : MonoBehaviour
     // }
 
     
-
-
     void Update()
     {
         Black = GameObject.FindGameObjectsWithTag("b_zizi");
@@ -248,7 +220,7 @@ public class GameSceneSystem : MonoBehaviour
 
         Debug.Log($"{Black.Length}, {White.Length}");
 
-        // ��ǥ�� ������ �Ǵ� ������Ʈ�� ��ġ �������� : in unity
+        // : in unity
         // edgePoint 1, 2, 3 : Game > Map Prefab
 
         edgeSpot_1 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(0).gameObject;
@@ -263,7 +235,6 @@ public class GameSceneSystem : MonoBehaviour
 
         Timer();
 
-
         // edgeSpot_1.GetComponent<RectTransform>().localPosition.x
         // edgeSpot_1.GetComponent<RectTransform>().localPosition.y
     }
@@ -277,22 +248,19 @@ public class GameSceneSystem : MonoBehaviour
         // InputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         InputPos = Input.mousePosition;     // EventSystem : Position
 
-
         xPos = InputPos.x;
         yPos = InputPos.y;
         
         xNamuji = (xPos - edgeSpot_x) % GapSize_x; // xNamuji = 0.0f ~ < GapSize
         yNamuji = (yPos - edgeSpot_y) % GapSize_y; // yNamuji = 0.0f ~ < GapSize
-
-
-    // �ʱ� �۾�            
+       
         xGapNum = (int)((xPos - edgeSpot_x) / GapSize_x);  // int, Grid Index
         yGapNum = (int)((yPos - edgeSpot_y) / GapSize_y);  // int, Grid Index
 
 
-    // ���� �۾� (inMap)
-        xGapNum += Correction(xNamuji, GapSize_x); // xGapNum ���� : 0 ~ 14  // 0 : ���� �Ʒ� 
-        yGapNum += Correction(yNamuji, GapSize_y); // yGapNum ���� : 0 ~ 14 
+    // (inMap)
+        xGapNum += Correction(xNamuji, GapSize_x); // xGapNum : 0 ~ 14  // 0 : 
+        yGapNum += Correction(yNamuji, GapSize_y); // yGapNum : 0 ~ 14 
 
         /* Correction() : 
             ������ �������� �׸�����

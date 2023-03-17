@@ -4269,12 +4269,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MySkinIndex: 0
   SkinPalette: {fileID: 0}
+  ZIZI_Parent: {fileID: 0}
   newSkin: {fileID: 0}
   ColorPalette_Object: []
   Skincolor_list: []
   ColorPalette: {fileID: 0}
   ColorPrefab: {fileID: 0}
   Selected_Color: {r: 0, g: 0, b: 0, a: 0}
+  ZIZIPAPA: {fileID: 0}
   Final_Skin: {fileID: 0}
   Final_SkinColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!224 &1410543646
@@ -4833,12 +4835,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MySkinIndex: 0
   SkinPalette: {fileID: 0}
+  ZIZI_Parent: {fileID: 0}
   newSkin: {fileID: 0}
   ColorPalette_Object: []
   Skincolor_list: []
   ColorPalette: {fileID: 0}
   ColorPrefab: {fileID: 0}
   Selected_Color: {r: 0, g: 0, b: 0, a: 0}
+  ZIZIPAPA: {fileID: 0}
   Final_Skin: {fileID: 0}
   Final_SkinColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!224 &1526037874

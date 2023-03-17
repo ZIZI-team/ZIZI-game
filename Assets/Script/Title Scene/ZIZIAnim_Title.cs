@@ -44,11 +44,11 @@ public class ZIZIAnim_Title : MonoBehaviour
 
     public void Check_SelectState()
     {
-        if(ZIZIParentRect.localPosition.x >= 399f) // 조건 수정 필요
+        if(ZIZIParentRect.localPosition.x <= 405f && ZIZIParentRect.localPosition.x >= 395f && ZIZIParentRect.localPosition.y <= 5f && ZIZIParentRect.localPosition.y >= -5f) // 조건 수정 필요
         {
             PlayerMode();
         }
-        else if(ZIZIParentRect.localPosition.y >= 599f)
+        else if(ZIZIParentRect.localPosition.x <= 5f && ZIZIParentRect.localPosition.x >= -5f && ZIZIParentRect.localPosition.y <= 605f && ZIZIParentRect.localPosition.y >= 595f)
         {
             StartGame();
         }

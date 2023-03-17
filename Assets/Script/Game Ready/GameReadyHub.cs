@@ -62,7 +62,9 @@ public class GameReadyHub : MonoBehaviour
 
     // +++ MAP +++ //
     // Map Prefab : MapName(Str) + MapImg(Img) + MapRule(Script)
+    private List<GameObject> MapImg = new List<GameObject>();
     private List<GameObject> Map = new List<GameObject>();
+    
     public int MapIndex = 0;
 
     public GameObject MapPalette;                      // Start : Find
@@ -74,28 +76,32 @@ public class GameReadyHub : MonoBehaviour
 
     public void ShowMapPalette()
     {
-        Map.Add(Resources.Load<GameObject>("MAP_Prefab/MAP1"));  
-        Map.Add(Resources.Load<GameObject>("MAP_Prefab/MAP2"));
-        Map.Add(Resources.Load<GameObject>("MAP_Prefab/MAP3")); 
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP1"));  
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP2"));
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP3")); 
+
+        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/BushMap1"));  
+        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/BushMap2"));
+        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/BushMap3")); 
 
         MapPalette = GameObject.Find("MAP");
         Selected_MapPalette = GameObject.Find("Finish MAP");
 
         // Set initiate Map Prefab
-        newMap = Instantiate(Map[0], new Vector3(0, 0, 0), Quaternion.identity);
+        newMap = Instantiate(MapImg[0], new Vector3(0, 0, 0), Quaternion.identity);
         newMap.transform.SetParent(MapPalette.transform, false);
-        SetMapSize(newMap, 900f, 900f);
+        SetMapSize(newMap, 600f, 600f);
     }
 
     public void MapIndexUp()
     {
         Destroy(newMap);
-        if (MapIndex == Map.Count - 1){ MapIndex = 0; }
+        if (MapIndex == MapImg.Count - 1){ MapIndex = 0; }
         else { MapIndex++; }
 
-        newMap = Instantiate(Map[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
+        newMap = Instantiate(MapImg[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
         newMap.transform.SetParent(MapPalette.transform, false);
-        SetMapSize(newMap, 900f, 900f);
+        SetMapSize(newMap, 600f, 600f);
     }
 
     public void MapIndexDown()
@@ -104,9 +110,9 @@ public class GameReadyHub : MonoBehaviour
         if (MapIndex == 0){ MapIndex = 2; }
         else { MapIndex--; }
 
-        newMap = Instantiate(Map[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
+        newMap = Instantiate(MapImg[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
         newMap.transform.SetParent(MapPalette.transform, false);
-        SetMapSize(newMap, 900f, 900f);
+        SetMapSize(newMap, 600f, 600f);
     }
 
 
@@ -122,7 +128,7 @@ public class GameReadyHub : MonoBehaviour
         
         Selected_Map = Instantiate(newMap, new Vector3(0, -500, 0), Quaternion.identity);
         Selected_Map.transform.SetParent(Selected_MapPalette.transform, false);
-        SetMapSize(Selected_Map, 900f, 900f);
+        SetMapSize(Selected_Map, 500f, 500f);
 
         // Must Select Map
         DidYouSelect_Map = true;
