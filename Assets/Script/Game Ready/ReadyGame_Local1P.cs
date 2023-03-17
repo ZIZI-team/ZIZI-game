@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 using System.Linq;
 
-public class ReadyGame_Local2P : MonoBehaviour
-{    
+public class ReadyGame_Local1P : MonoBehaviour
+{
     // +++ SKIN +++ //
     // Skin Prefab : SkinName(Str) + SkinImg(Img) + Color(Script) + Anim(Script) + Skill(Script)
     private List<GameObject> MySkin = new List<GameObject>();   // Start : Add
@@ -34,13 +34,13 @@ public class ReadyGame_Local2P : MonoBehaviour
         // +++ SKIN +++ //
 
         // declare Skin Palette (Parent)
-        SkinPalette = GameObject.Find("2P/2PSkin");
+        SkinPalette = GameObject.Find("1P/1PSkin");
 
         // declare Color Palette (Parent)
-        ColorPalette = GameObject.Find("2P/2PColor");
+        ColorPalette = GameObject.Find("1P/1PColor");
 
         // declare Color (Child)
-        ColorPrefab = Resources.Load<GameObject>("ColorPrefab");
+        ColorPrefab = Resources.Load<GameObject>("Color_Prefab/"+"ColorPrefab");
 
         // MY SKIN (Own)
         MySkin.Add(Resources.Load<GameObject>("SKIN_Prefab/"+"ZIZI"));
@@ -71,7 +71,7 @@ public class ReadyGame_Local2P : MonoBehaviour
     // Unity Prefab : Color Prefab Onclick
     public void SelectColor_prefab(GameObject colorPrefab)
     {
-        Selected_Color = colorPrefab.GetComponent<Image>().color;             // ¼öÁ¤
+        Selected_Color = colorPrefab.GetComponent<Image>().color;             // ??
 
         // Change Selected Color
         newSkin.GetComponent<Image>().color = Selected_Color;
@@ -105,7 +105,7 @@ public class ReadyGame_Local2P : MonoBehaviour
     }
 
 
-    // Unity : UPButton 2P Onclick
+    // Unity : UPButton 1P Onclick
     public void SkinIndexUp()
     {
         Destroy(newSkin);
@@ -118,7 +118,7 @@ public class ReadyGame_Local2P : MonoBehaviour
     }
 
 
-    // Unity : DownButton 2P Onclick
+    // Unity : DownButton 1P Onclick
     public void SkinIndexDown()
     {
         Destroy(newSkin); 
@@ -131,24 +131,24 @@ public class ReadyGame_Local2P : MonoBehaviour
     }
 
 
-    // Unity : Select Button 2P Onclick
+    // Unity : Select Button 1P Onclick
     public void SelectSkin()
     {
         // Destroy Final Skin
         if (Final_Skin != null){ Destroy(Final_Skin); }
 
         // Select Object : Parent Object For Instantiate
-        GameObject SelectPanel = GameObject.Find("2P/2PSelect");
+        GameObject SelectPanel = GameObject.Find("1P/1PSelect");
 
         // Final Skin
-        Final_Skin = Instantiate(newSkin, new Vector3(200, -300, 0), Quaternion.identity);
+        Final_Skin = Instantiate(newSkin, new Vector3(-200, -300, 0), Quaternion.identity);
         Final_Skin.transform.SetParent(SelectPanel.transform, false);
 
         // Set Final Skin Color
         Final_SkinColor = Selected_Color;
         Final_Skin.GetComponent<Image>().color = Final_SkinColor;
 
-        GameObject.Find("ReadyGame").GetComponent<GameReadyHub>().Final_Skin_2P = Final_Skin;
-        GameObject.Find("ReadyGame").GetComponent<GameReadyHub>().DidYouSelect_Skin2 = true;
+        GameObject.Find("ReadyGame").GetComponent<GameReadyHub>().Final_Skin_1P = Final_Skin;
+        GameObject.Find("ReadyGame").GetComponent<GameReadyHub>().DidYouSelect_Skin1 = true;
     }
 }
