@@ -10,7 +10,60 @@ using UnityEngine.SceneManagement;
 public class GameSceneSystem : MonoBehaviour
 {
 
-// +++ Stone +++ //
+
+// +++++ UI +++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+
+
+    [Header("Timer")]
+    public int setTime;
+    public Text gameText;
+    public float second = 5f;
+    
+    [Header("Gameplay Panel")]
+    public GameObject GameplayUI;
+
+
+    [Header("PlayerTurn Function")]
+    public GameObject playerTurnIcon;
+
+    [Header("Pause Menu")]
+    public GameObject AssignedMapPosition;  // This object is for 'Ready Game', and this needs be replaced by 'ActualMapPosition' later
+    public GameObject PauseBox;
+    bool pauseIsOnSight = false;
+
+    [Header("Each Players Stone Spawn Status")]
+    public Text firstPlayerStoneStatus;
+    public Text secondPlayerStoneStatus;
+    public int player1StoneCounting = 0;
+    public int player2StoneCounting = 0;
+
+    [Header("Game Result Panel")]
+    public GameObject GameResultBox;
+    public GameObject mostTopCanvas;                  // This object is declared for 'ClickCanvas'
+
+
+
+
+
+// +++++ Map +++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+
+
+    [SerializeField] public int[,] ColorBoard = new int[15+8, 15+8]; 
+    public int mapGridNum_x;
+    public int mapGridNum_y;
+    
+    public List<List<int>> assignedList = new List<List<int>>();    
+
+
+
+
+
+// +++++ Stone +++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+  
+
     GameObject Stone; 
 
     public GameObject Stone_b, Stone_w;     // Unity : Inspector
@@ -28,18 +81,50 @@ public class GameSceneSystem : MonoBehaviour
     // public Text b_num, w_num;
 
 
-// +++ Win Condition +++ //
-    public int blackStoneCount = 0;
-    public int whiteStoneCount = 0;
-
-    // public GameObject Line;
-    // GameObject[] Black_line;
-    // GameObject[] White_line;
 
 
-// +++ Position +++ //
+
+// +++++ Item List +++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+
+
+    [Header("Gameplay Item System")]
+    public GameObject ActualMapPosition;    // this needs to replace 'AssignedMapPosition' in last
+    public GameObject firstPlayerGameplayItemSlotUI;
+    public GameObject secondPlayerGameplayItemSlotUI;
+    public GameObject leaf;
+    public GameObject dotori;
+    
+    // [SerializeField] private int leafItemForPlayerOne = 0;
+    // [SerializeField] private int dotoriItemForPlayerOne = 0;
+    // [SerializeField] private int leafItemForPlayerTwo = 0;
+    // [SerializeField] private int dotoriItemForPlayerTwo = 0;
+
+    // [SerializeField] private GameObject[] leafItemSlotForPlayerOne;
+    // [SerializeField] private GameObject[] DotoriItemSlotForPlayerOne;
+    // [SerializeField] private GameObject[] leafItemSlotForPlayerTwo;
+    // [SerializeField] private GameObject[] DotoriItemSlotForPlayerTwo;
+    [SerializeField] public int[,] itemBoard = new int[15+8, 15+8];
+    
+    
+    [Header("BushList Load Object")]
+    public int[,] mapBushList;
+    public int[,] newMapBushList = new int[15+8, 15+8];
+
+    public GameObject bushSpawn;
+    // public Game GameThing;
+    
+
+
+
+
+// +++++ InPut & Stone Position +++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+
+
     public float GapSize_x;
     public float GapSize_y;
+
 
     Vector3 InputPos;  // PanelOnclick(), Camera view position
     float xPos = 0f;   // InputPos.x
@@ -65,131 +150,109 @@ public class GameSceneSystem : MonoBehaviour
     bool inMap = true; // is Mouse position is in map
 
 
-// +++ Map List +++ //
-    [SerializeField] public int[,] ColorBoard = new int[15+8, 15+8]; 
-    public int mapGridNum_x;
-    public int mapGridNum_y;
-    
-    public List<List<int>> assignedList = new List<List<int>>();    
-
-    [Header("Timer")]
-
-    public int setTime;
-    public Text gameText;
-    public float second = 5f;
-    
-    [Header("Gameplay Panel")]
-    public GameObject GameplayUI;
-
-    [Header("Gameplay Item System")]
-    public GameObject ActualMapPosition;    // this needs to replace 'AssignedMapPosition' in last
-    public GameObject firstPlayerGameplayItemSlotUI;
-    public GameObject secondPlayerGameplayItemSlotUI;
-    public GameObject leaf;
-    public GameObject dotori;
-    
-    // [SerializeField] private int leafItemForPlayerOne = 0;
-    // [SerializeField] private int dotoriItemForPlayerOne = 0;
-    // [SerializeField] private int leafItemForPlayerTwo = 0;
-    // [SerializeField] private int dotoriItemForPlayerTwo = 0;
-
-    // [SerializeField] private GameObject[] leafItemSlotForPlayerOne;
-    // [SerializeField] private GameObject[] DotoriItemSlotForPlayerOne;
-    // [SerializeField] private GameObject[] leafItemSlotForPlayerTwo;
-    // [SerializeField] private GameObject[] DotoriItemSlotForPlayerTwo;
-    [SerializeField] public int[,] itemBoard = new int[15+8, 15+8];
-    
-    
-    [Header("BushList Load Object")]
-
-    public int[,] mapBushList;
-    public int[,] newMapBushList = new int[15+8, 15+8];
-
-    public GameObject bushSpawn;
-    // public Game GameThing;
 
 
-    [Header("PlayerTurn Function")]
 
-    public GameObject playerTurnIcon;
+// +++++ Win Condition +++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
-    [Header("Pause Menu")]
 
-    public GameObject AssignedMapPosition;  // This object is for 'Ready Game', and this needs be replaced by 'ActualMapPosition' later
-    public GameObject PauseBox;
-    bool pauseIsOnSight = false;
+    public int blackStoneCount = 0;
+    public int whiteStoneCount = 0;
 
-    [Header("Each Players Stone Spawn Status")]
-    public Text firstPlayerStoneStatus;
-    public Text secondPlayerStoneStatus;
-    public int player1StoneCounting = 0;
-    public int player2StoneCounting = 0;
+    // public GameObject Line;
+    // GameObject[] Black_line;
+    // GameObject[] White_line;
 
-    [Header("Game Result Panel")]
-    public GameObject GameResultBox;
-    public GameObject mostTopCanvas;                  // This object is declared for 'ClickCanvas'
-    
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------ //
 
 
     void Start()
     {
-        //Gameplay UI active
-        GameplayUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 790f, -0.4f);
 
 
+
+// YJ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         //make if statement for determine whether is classic mod or original mod
-        firstPlayerGameplayItemSlotUI.transform.position = ActualMapPosition.transform.GetChild(0).transform.position + new Vector3(0f, 813f, -0.4f);
-        secondPlayerGameplayItemSlotUI.transform.position = ActualMapPosition.transform.GetChild(0).transform.position + new Vector3(0f, -793f, -0.4f);
+        /// firstPlayerGameplayItemSlotUI.transform.position = ActualMapPosition.transform.GetChild(0).transform.position + new Vector3(0f, 813f, -0.4f);
+        /// secondPlayerGameplayItemSlotUI.transform.position = ActualMapPosition.transform.GetChild(0).transform.position + new Vector3(0f, -793f, -0.4f);
         
-        GameObject temp_bush = Instantiate(bushSpawn);
+        /// GameObject temp_bush = Instantiate(bushSpawn);
 //        temp_bush.transform.parent.transform.parent = Game.transform;
 
-        temp_bush.transform.SetParent(Game.transform.GetChild(1).transform, false);
+        /// temp_bush.transform.SetParent(Game.transform.GetChild(1).transform, false);
 
         // mapBushList = temp_bush.GetComponent<MapBushSpawnSystem>().BushBoard.Clone() as int[,];
         // Debug.Log($"Clone 2,3 : {mapBushList[2,2]}");
         // Debug.Log($"Clone 2,3 : {temp_bush.GetComponent<MapBushSpawnSystem>().BushBoard[2,2]}");
 
 
-        GameObject temp = Instantiate(leaf);
-        temp.transform.SetParent(firstPlayerGameplayItemSlotUI.transform);
-        temp.transform.position =  firstPlayerGameplayItemSlotUI.transform.position + new Vector3(-626, -30, -0.5f);
-
-        // Set Stone Size > Small Stone
-        rectTransform_b = Stone_b.GetComponent<RectTransform>();
-        rectTransform_b.sizeDelta = new Vector2(100f, 100f);
-        
-        rectTransform_w = Stone_w.GetComponent<RectTransform>();
-        rectTransform_w.sizeDelta = new Vector2(100f, 100f);
+        /// GameObject temp = Instantiate(leaf);
+        /// temp.transform.SetParent(firstPlayerGameplayItemSlotUI.transform);
+        /// temp.transform.position =  firstPlayerGameplayItemSlotUI.transform.position + new Vector3(-626, -30, -0.5f);
+// YJ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-        // Set Initiate Color Board
-        // mapGridNum_x = (int)((edgeSpot_x * (-1) * 2) / GapSize_x) + 1;    // : positive  // 15
-        // mapGridNum_y = (int)((edgeSpot_y * (-1) * 2) / GapSize_y) + 1;    // : positive  // 15
+// >> [1] Set UI Panel
+        GameplayUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 790f, -0.4f);
 
-        mapGridNum_x = 15;
-        mapGridNum_y = 15;
-        
-        clearBoardAndAddItemRandomly();
-    }
 
-    void clearBoardAndAddItemRandomly() //this will reset colorboard by 0, and designate items randomly
-    {
-        
-        for (int i = 0; i < mapGridNum_y + 8; i++)
-        {
-            for (int j = 0; j < mapGridNum_x + 8; j++)
+// >> [2] Set Map Grid & Stone (Initiate state)
+
+        // 1. Make Initiate Color Board
+            // mapGridNum_x = (int)((edgeSpot_x * (-1) * 2) / GapSize_x) + 1;    // : positive  // 15
+            // mapGridNum_y = (int)((edgeSpot_y * (-1) * 2) / GapSize_y) + 1;    // : positive  // 15
+
+            mapGridNum_x = 15;
+            mapGridNum_y = 15;
+            for (int i = 0; i < mapGridNum_y + 8; i++) // will reset colorboard by 0, and designate items randomly
             {
-                ColorBoard[i, j] = 0; 
-
-
+                for (int j = 0; j < mapGridNum_x + 8; j++)
+                {
+                    ColorBoard[i, j] = 0; 
+                }
             }
-        }
+
+
+        // 2. Calculate Grid Size with edgePoint 1, 2, 3 : Game > Map Prefab
+
+            edgeSpot_1 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(0).gameObject;
+            edgeSpot_2 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(1).gameObject;
+            edgeSpot_3 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(2).gameObject;
+
+            edgeSpot_x = edgeSpot_1.GetComponent<RectTransform>().position.x;  // : by EventPosition
+            edgeSpot_y = edgeSpot_1.GetComponent<RectTransform>().position.y;  // : by EventPosition
+
+            GapSize_x = edgeSpot_2.GetComponent<RectTransform>().position.x - edgeSpot_x;
+            GapSize_y = edgeSpot_3.GetComponent<RectTransform>().position.y - edgeSpot_y;
+
+
+
+        // 3. Set Stone Size > Small Stone
+            rectTransform_b = Stone_b.GetComponent<RectTransform>();
+            rectTransform_b.sizeDelta = new Vector2(100f, 100f);
+            
+            rectTransform_w = Stone_w.GetComponent<RectTransform>();
+            rectTransform_w.sizeDelta = new Vector2(100f, 100f);
+
+
+        // 4. Stone List & Tag
+
+            Black = GameObject.FindGameObjectsWithTag("b_zizi");
+            White = GameObject.FindGameObjectsWithTag("w_zizi");
+
+            firstPlayerStoneStatus.text = "Player1 Stone Counting : " + Black.Length.ToString();
+            secondPlayerStoneStatus.text = "Player2 Stone Counting : " + White.Length.ToString();
+
     }
+
+
     // void itemSpawn()
     // {
-
-
     //     for (int i = 0; i < mapGridNum_y + 8; i++)
     //     {
            
@@ -213,31 +276,100 @@ public class GameSceneSystem : MonoBehaviour
     
     void Update()
     {
-        Black = GameObject.FindGameObjectsWithTag("b_zizi");
-        White = GameObject.FindGameObjectsWithTag("w_zizi");
-        firstPlayerStoneStatus.text = "Player1 Stone Counting : " + Black.Length.ToString();
-        secondPlayerStoneStatus.text = "Player2 Stone Counting : " + White.Length.ToString();
 
         Debug.Log($"{Black.Length}, {White.Length}");
-
-        // : in unity
-        // edgePoint 1, 2, 3 : Game > Map Prefab
-
-        edgeSpot_1 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(0).gameObject;
-        edgeSpot_2 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(1).gameObject;
-        edgeSpot_3 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(2).gameObject;
-
-        edgeSpot_x = edgeSpot_1.GetComponent<RectTransform>().position.x;  // : by EventPosition
-        edgeSpot_y = edgeSpot_1.GetComponent<RectTransform>().position.y;  // : by EventPosition
-
-        GapSize_x = edgeSpot_2.GetComponent<RectTransform>().position.x - edgeSpot_x;
-        GapSize_y = edgeSpot_3.GetComponent<RectTransform>().position.y - edgeSpot_y;
 
         Timer();
 
         // edgeSpot_1.GetComponent<RectTransform>().localPosition.x
         // edgeSpot_1.GetComponent<RectTransform>().localPosition.y
     }
+
+
+
+
+// >> For UI << //
+// ------------------------------------------------------------------------------------------------------------------------ //
+
+
+    public void Timer()
+    {
+        second -= Time.deltaTime;
+        gameText.text = "타이머 : " + second.ToString("F1");
+        if (second <= 0){ changePlayer(); }
+    }
+
+
+    public void OnClickReset()
+    {
+        assignedList.Clear();
+        clearBoard();
+        for(int j = 0; j < Black.Length; j++){ Destroy(Black[j]); }
+        for(int j = 0; j < White.Length; j++){ Destroy(White[j]); }
+
+        isBlack = true;
+        playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
+        Time.timeScale = 1f;
+        second = 5f;
+        Player1Win.SetActive(false);
+        Player2Win.SetActive(false);
+        
+        GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
+
+
+        // for(int k = 0; k < Black_line.Length; k++)
+        // {
+        //     Destroy(Black_line[k]);
+        // }
+
+        // for(int l = 0; l < White_line.Length; l++)
+        // {
+        //     Destroy(White_line[l]);
+        // }
+    }
+
+    void clearBoard()
+    {
+        for (int i = 0; i < mapGridNum_y + 8; i++) // will reset colorboard by 0, and designate items randomly
+        {
+            for (int j = 0; j < mapGridNum_x + 8; j++)
+            {
+                ColorBoard[i, j] = 0; 
+            }
+        }
+    }
+
+
+    public void OnClickPause()
+    {
+        if (pauseIsOnSight == false)
+        {
+            pauseIsOnSight = true;
+            PauseBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position;
+
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            pauseIsOnSight = false;   
+            PauseBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 0f, 0f);
+        }
+    }
+
+
+    public void OnClickMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("TitleScene");
+        GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
+    }
+
+
+
+
+// >> Game (Click Panel) << //
+// ------------------------------------------------------------------------------------------------------------------------ //
 
 
     public void PanelOnclick()
@@ -254,31 +386,31 @@ public class GameSceneSystem : MonoBehaviour
         xNamuji = (xPos - edgeSpot_x) % GapSize_x; // xNamuji = 0.0f ~ < GapSize
         yNamuji = (yPos - edgeSpot_y) % GapSize_y; // yNamuji = 0.0f ~ < GapSize
        
+    // initiate working 
         xGapNum = (int)((xPos - edgeSpot_x) / GapSize_x);  // int, Grid Index
         yGapNum = (int)((yPos - edgeSpot_y) / GapSize_y);  // int, Grid Index
 
-
-    // (inMap)
+    // correction working (inMap)
         xGapNum += Correction(xNamuji, GapSize_x); // xGapNum : 0 ~ 14  // 0 : 
         yGapNum += Correction(yNamuji, GapSize_y); // yGapNum : 0 ~ 14 
 
         /* Correction() : 
-            ������ �������� �׸�����
-            40% ���� : 0 return
-            60% �̻� : 1 return,  GapNum += 1
+            Namuji by Grid :
+            40% >= x : 0 return
+            60% <= y> : 1 return,  GapNum += 1
 
-            // inMap : Instantiate ����, #1    
-            40% ~ 60% : inMap = false �� �ٲ۴� : Instantiate �ȵǵ��� �Ѵ�
+            // inMap : management Instantiate, #1    
+            40% ~ 60% : change to : inMap = false : Instantiate X
         */            
             
-            // inMap : Instantiate ����, #2
-            // GapNum�� 0 �̸� 15 �̻��� ��� : ��, �� �ٱ����� �Ѿ�� �� ��� ���� �������� ���ϵ��� ����
+            // inMap : management Instantiate, #2
+            // GapNum x < 0 && x >= 15 : outside the map, Instantiate X
 
             // mapGridNum = 15 
-                if (xGapNum < 0 || xGapNum >= mapGridNum_x){ inMap = false; } // xGapNum ���� : 0 ~ 14,  xGapNum ������ �� ��      
-                if (yGapNum < 0 || yGapNum >= mapGridNum_y){ inMap = false; } // yGapNum ���� : 0 ~ 14,  yGapNum ������
+                if (xGapNum < 0 || xGapNum >= mapGridNum_x){ inMap = false; } // normal xGapNum : 0 ~ 14,  xGapNum abnormal     
+                if (yGapNum < 0 || yGapNum >= mapGridNum_y){ inMap = false; } // normal yGapNum O : 0 ~ 14,  yGapNum abnormal 
 
-            // ��輱 �ٱ��� Ŭ������ ��� ���� (�������� ������ ���)
+            // clicked outside the map near the line : (Namuji < 0, negative)
                 if ((xNamuji < 0 && xGapNum == 0) && (yGapNum > 0 && yGapNum < mapGridNum_y)){ inMap = true; }
                 if ((yNamuji < 0 && yGapNum == 0) && (xGapNum > 0 && xGapNum < mapGridNum_x)){ inMap = true; }
 
@@ -322,7 +454,7 @@ public class GameSceneSystem : MonoBehaviour
         else if (Namuji >= GapSize * 0.4f && Namuji < GapSize * 0.6f)
         { 
             Debug.Log("nononono");
-            inMap = false;              // ���� �������� ����
+            inMap = false;              // Instantiate X
             return 0;
         }
 
@@ -337,84 +469,31 @@ public class GameSceneSystem : MonoBehaviour
         else
         {
             Debug.Log("what's wrong?");
-            inMap = false;              // ���� �������� ����
+            inMap = false;              // Instantiate X
             return 0;
         }
     }
 
 
-    public GameObject Game;                     // Unity : Inspector
+
+// >> Game : Set & Record << //
+// ------------------------------------------------------------------------------------------------------------------------ //
+
+
+    public GameObject Game;                           // Unity : Inspector
 
     public bool stoneWinner = false;
     public GameObject Player1Win;                     // Unity : Inspector
     public GameObject Player2Win;                     // Unity : Inspector
     public int StoneCount = 0;
 
-   
-    public void Set_And_RecordPosition()
-    {
-
-    // ���� ������ ���� ��ǥ�� ���� ���� ���, �� ����
-        assignedList.Add(new List<int> {xGapNum, yGapNum});  
-            
-        GameObject instance = Instantiate(Stone, new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
-        instance.tag = isBlack? "b_zizi" : "w_zizi"; 
-        instance.transform.SetParent(Game.transform, false);
-
-    // �� ��ǥ�� �� ���� ����
-        ColorBoard[yGapNum + 4, xGapNum + 4] = isBlack ? 1 : 2;  // 1 : Black, 2 : White
-
-    // Win Condition
-        stoneWinner = winCondition(yGapNum + 4, xGapNum + 4, isBlack);
-
-        if (StoneCount == 5 && stoneWinner == true && isBlack == true)
-        {
-            Debug.Log("Player1 Win!");
-            Player1Win.SetActive(true);
-            // Player1Win.transform.parent.transform.parent.transform.SetAsLastSibling();
-            mostTopCanvas.transform.SetAsLastSibling();
-            GameOver();
-        }
-        else if (StoneCount == 5 && stoneWinner == true && isBlack == false)
-        {
-            Debug.Log("Player 2 Win!");
-            Player2Win.SetActive(true);
-            mostTopCanvas.transform.SetAsLastSibling(); 
-            GameOver();
-        }
-        else { Debug.Log("Pass"); }
-    }
-
-
-    public void changePlayer()
-    {
-    // ���� ������ ���� ���� ������ ������
-        if (isBlack) 
-        {
-            isBlack = false;
-            
-            
-            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(370f, 55.1f,-0.02f);
-            second = 5f;
-        }
-        else 
-        {
-            isBlack = true;
-
-            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
-            second = 5f;
-        } //made by Sohui
-    }
-
-
     public void AddListAndSpawn()
     {
-    // zizi �ߺ� �Ǻ�
+    // Check Same Position of ZIZI list
         if (assignedList.Count == 0) 
         {
             Set_And_RecordPosition();
             changePlayer();
-            
         }
         else
         {
@@ -441,7 +520,64 @@ public class GameSceneSystem : MonoBehaviour
         }
     }
 
-    public bool winCondition(int indexY, int indexX, bool StoneColor) // 5���� �Ǹ� �̱�� ������ �Ǵ�
+    public void Set_And_RecordPosition()
+    {
+    // Record current ZIZI Information, Instantiate ZIZI
+        assignedList.Add(new List<int> {xGapNum, yGapNum});  
+            
+        GameObject instance = Instantiate(Stone, new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
+        instance.tag = isBlack? "b_zizi" : "w_zizi"; 
+        instance.transform.SetParent(Game.transform, false);
+
+    // Information of ZIZI Color in list
+        ColorBoard[yGapNum + 4, xGapNum + 4] = isBlack ? 1 : 2;  // 1 : Black, 2 : White
+
+    // Win Condition
+        stoneWinner = winCondition(yGapNum + 4, xGapNum + 4, isBlack);
+
+        if (StoneCount == 5 && stoneWinner == true && isBlack == true)
+        {
+            Debug.Log("Player1 Win!");
+            Player1Win.SetActive(true);
+            // Player1Win.transform.parent.transform.parent.transform.SetAsLastSibling();
+            mostTopCanvas.transform.SetAsLastSibling();
+            GameOver();
+        }
+        else if (StoneCount == 5 && stoneWinner == true && isBlack == false)
+        {
+            Debug.Log("Player 2 Win!");
+            Player2Win.SetActive(true);
+            mostTopCanvas.transform.SetAsLastSibling(); 
+            GameOver();
+        }
+        else { Debug.Log("Pass"); }
+    }
+
+    
+    public void changePlayer()
+    {
+    // Change ZIZI Color for Next turn
+        if (isBlack) 
+        {
+            isBlack = false;
+            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(370f, 55.1f,-0.02f);
+            second = 5f;
+        }
+        else 
+        {
+            isBlack = true;
+            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
+            second = 5f;
+        }
+    }
+
+
+
+// >> Win Condition << //
+// ------------------------------------------------------------------------------------------------------------------------ //
+
+
+    public bool winCondition(int indexY, int indexX, bool StoneColor) // make 5 : win
     {
         // return true : Win, return false : Pass
 
@@ -450,7 +586,6 @@ public class GameSceneSystem : MonoBehaviour
         else { color = 2; }
 
         bool winflag = false;
-
         try {
 
             for (int k = -4; k <= 0; k++)
@@ -523,18 +658,11 @@ public class GameSceneSystem : MonoBehaviour
         }
         return true;
     }
+  
 
-    public void Timer()
-    {
-        second -= Time.deltaTime;
-        gameText.text = "타이머 : " + second.ToString("F1");
-        if (second <= 0)
-        {
-            changePlayer();
-            
-        }
-    }
 
+// >> Game Over << //
+// ------------------------------------------------------------------------------------------------------------------------ //
 
     public void GameOver()
     {
@@ -550,65 +678,5 @@ public class GameSceneSystem : MonoBehaviour
             Time.timeScale = 0f;
             GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0.04f);
         }
-
-
-    }
-
-
-    public void OnClickReset()
-    {
-        assignedList.Clear();
-        clearBoardAndAddItemRandomly();
-        for(int j = 0; j < Black.Length; j++)
-        {
-            Destroy(Black[j]);
-        }
-        for(int j = 0; j < White.Length; j++)
-        {
-            Destroy(White[j]);
-        }
-        isBlack = true;
-        playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
-        Time.timeScale = 1f;
-        second = 5f;
-        Player1Win.SetActive(false);
-        Player2Win.SetActive(false);
-        
-        GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
-
-
-        // for(int k = 0; k < Black_line.Length; k++)
-        // {
-        //     Destroy(Black_line[k]);
-        // }
-
-        // for(int l = 0; l < White_line.Length; l++)
-        // {
-        //     Destroy(White_line[l]);
-        // }
-    }
-    public void OnClickPause()
-    {
-        if (pauseIsOnSight == false)
-        {
-            pauseIsOnSight = true;
-            PauseBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position;
-
-            Time.timeScale = 0f;
-
-        }
-        else
-        {
-            Time.timeScale = 1f;
-            pauseIsOnSight = false;   
-            PauseBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 0f, 0f);
-        }
-
-    }
-    public void OnClickMainMenu()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("TitleScene");
-        GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
     }
 }
