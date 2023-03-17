@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 
 public class GameSceneSystem : MonoBehaviour
@@ -49,15 +50,17 @@ public class GameSceneSystem : MonoBehaviour
 // +++++ Map +++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
+    public GameObject Map;
 
-    [SerializeField] public int[,] ColorBoard = new int[15+8, 15+8]; 
+    [SerializeField] public int[,] ZIZIBoard = new int[11+8, 11+8]; // ZIZI : B & W
+    [SerializeField] public int[,] RockBoard = new int[11+8, 11+8]; 
+    [SerializeField] public int[,] BushBoard = new int[11+8, 11+8]; 
+    [SerializeField] public int[,] ItemBoard = new int[11+8, 11+8]; 
+
     public int mapGridNum_x;
     public int mapGridNum_y;
     
     public List<List<int>> assignedList = new List<List<int>>();    
-
-
-
 
 
 // +++++ Stone +++++ //
@@ -88,31 +91,31 @@ public class GameSceneSystem : MonoBehaviour
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
 
-    [Header("Gameplay Item System")]
-    public GameObject ActualMapPosition;    // this needs to replace 'AssignedMapPosition' in last
-    public GameObject firstPlayerGameplayItemSlotUI;
-    public GameObject secondPlayerGameplayItemSlotUI;
-    public GameObject leaf;
-    public GameObject dotori;
+    // [Header("Gameplay Item System")]
+    // public GameObject ActualMapPosition;    // this needs to replace 'AssignedMapPosition' in last
+    // public GameObject firstPlayerGameplayItemSlotUI;
+    // public GameObject secondPlayerGameplayItemSlotUI;
+    // public GameObject leaf;
+    // public GameObject dotori;
     
-    // [SerializeField] private int leafItemForPlayerOne = 0;
-    // [SerializeField] private int dotoriItemForPlayerOne = 0;
-    // [SerializeField] private int leafItemForPlayerTwo = 0;
-    // [SerializeField] private int dotoriItemForPlayerTwo = 0;
+    // // [SerializeField] private int leafItemForPlayerOne = 0;
+    // // [SerializeField] private int dotoriItemForPlayerOne = 0;
+    // // [SerializeField] private int leafItemForPlayerTwo = 0;
+    // // [SerializeField] private int dotoriItemForPlayerTwo = 0;
 
-    // [SerializeField] private GameObject[] leafItemSlotForPlayerOne;
-    // [SerializeField] private GameObject[] DotoriItemSlotForPlayerOne;
-    // [SerializeField] private GameObject[] leafItemSlotForPlayerTwo;
-    // [SerializeField] private GameObject[] DotoriItemSlotForPlayerTwo;
-    [SerializeField] public int[,] itemBoard = new int[15+8, 15+8];
+    // // [SerializeField] private GameObject[] leafItemSlotForPlayerOne;
+    // // [SerializeField] private GameObject[] DotoriItemSlotForPlayerOne;
+    // // [SerializeField] private GameObject[] leafItemSlotForPlayerTwo;
+    // // [SerializeField] private GameObject[] DotoriItemSlotForPlayerTwo;
+    // // [SerializeField] public int[,] itemBoard = new int[11+8, 11+8];
     
     
-    [Header("BushList Load Object")]
-    public int[,] mapBushList;
-    public int[,] newMapBushList = new int[15+8, 15+8];
+    // // [Header("BushList Load Object")]
+    // // public int[,] mapBushList;
+    // // public int[,] newMapBushList = new int[11+8, 11+8];
 
-    public GameObject bushSpawn;
-    // public Game GameThing;
+    // public GameObject bushSpawn;
+    // // public Game GameThing;
     
 
 
@@ -167,35 +170,11 @@ public class GameSceneSystem : MonoBehaviour
 
 
 
-
 // ------------------------------------------------------------------------------------------------------------------------ //
 
 
     void Start()
     {
-
-
-
-// YJ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        //make if statement for determine whether is classic mod or original mod
-        /// firstPlayerGameplayItemSlotUI.transform.position = ActualMapPosition.transform.GetChild(0).transform.position + new Vector3(0f, 813f, -0.4f);
-        /// secondPlayerGameplayItemSlotUI.transform.position = ActualMapPosition.transform.GetChild(0).transform.position + new Vector3(0f, -793f, -0.4f);
-        
-        /// GameObject temp_bush = Instantiate(bushSpawn);
-//        temp_bush.transform.parent.transform.parent = Game.transform;
-
-        /// temp_bush.transform.SetParent(Game.transform.GetChild(1).transform, false);
-
-        // mapBushList = temp_bush.GetComponent<MapBushSpawnSystem>().BushBoard.Clone() as int[,];
-        // Debug.Log($"Clone 2,3 : {mapBushList[2,2]}");
-        // Debug.Log($"Clone 2,3 : {temp_bush.GetComponent<MapBushSpawnSystem>().BushBoard[2,2]}");
-
-
-        /// GameObject temp = Instantiate(leaf);
-        /// temp.transform.SetParent(firstPlayerGameplayItemSlotUI.transform);
-        /// temp.transform.position =  firstPlayerGameplayItemSlotUI.transform.position + new Vector3(-626, -30, -0.5f);
-// YJ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 
 // >> [1] Set UI Panel
         GameplayUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 790f, -0.4f);
@@ -203,26 +182,13 @@ public class GameSceneSystem : MonoBehaviour
 
 // >> [2] Set Map Grid & Stone (Initiate state)
 
-        // 1. Make Initiate Color Board
-            // mapGridNum_x = (int)((edgeSpot_x * (-1) * 2) / GapSize_x) + 1;    // : positive  // 15
-            // mapGridNum_y = (int)((edgeSpot_y * (-1) * 2) / GapSize_y) + 1;    // : positive  // 15
+        // 1. Calculate Grid Size with edgePoint 1, 2, 3 : Game > Map Prefab
 
-            mapGridNum_x = 15;
-            mapGridNum_y = 15;
-            for (int i = 0; i < mapGridNum_y + 8; i++) // will reset colorboard by 0, and designate items randomly
-            {
-                for (int j = 0; j < mapGridNum_x + 8; j++)
-                {
-                    ColorBoard[i, j] = 0; 
-                }
-            }
+            Map = GameObject.Find("Game").transform.GetChild(0).gameObject;
 
-
-        // 2. Calculate Grid Size with edgePoint 1, 2, 3 : Game > Map Prefab
-
-            edgeSpot_1 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(0).gameObject;
-            edgeSpot_2 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(1).gameObject;
-            edgeSpot_3 = GameObject.Find("Game").transform.GetChild(0).transform.GetChild(2).gameObject;
+            edgeSpot_1 = Map.transform.GetChild(1).gameObject;
+            edgeSpot_2 = Map.transform.GetChild(2).gameObject;
+            edgeSpot_3 = Map.transform.GetChild(3).gameObject;
 
             edgeSpot_x = edgeSpot_1.GetComponent<RectTransform>().position.x;  // : by EventPosition
             edgeSpot_y = edgeSpot_1.GetComponent<RectTransform>().position.y;  // : by EventPosition
@@ -231,16 +197,7 @@ public class GameSceneSystem : MonoBehaviour
             GapSize_y = edgeSpot_3.GetComponent<RectTransform>().position.y - edgeSpot_y;
 
 
-
-        // 3. Set Stone Size > Small Stone
-            rectTransform_b = Stone_b.GetComponent<RectTransform>();
-            rectTransform_b.sizeDelta = new Vector2(100f, 100f);
-            
-            rectTransform_w = Stone_w.GetComponent<RectTransform>();
-            rectTransform_w.sizeDelta = new Vector2(100f, 100f);
-
-
-        // 4. Stone List & Tag
+        // 2. Stone List & Tag
 
             Black = GameObject.FindGameObjectsWithTag("b_zizi");
             White = GameObject.FindGameObjectsWithTag("w_zizi");
@@ -248,34 +205,96 @@ public class GameSceneSystem : MonoBehaviour
             firstPlayerStoneStatus.text = "Player1 Stone Counting : " + Black.Length.ToString();
             secondPlayerStoneStatus.text = "Player2 Stone Counting : " + White.Length.ToString();
 
+        
+        // 3. Make Initiate Board (Record Initiate Information)
+            // mapGridNum_x = (int)((edgeSpot_x * (-1) * 2) / GapSize_x) + 1;    // : positive  // 10
+            // mapGridNum_y = (int)((edgeSpot_y * (-1) * 2) / GapSize_y) + 1;    // : positive  // 10
+
+            mapGridNum_x = 11;
+            mapGridNum_y = 11;
+            for (int i = 0; i < mapGridNum_y + 8; i++) // will reset ZIZIBoard by 0, and designate items randomly
+            {
+                for (int j = 0; j < mapGridNum_x + 8; j++)
+                {
+                    ZIZIBoard[i, j] = 0;
+                    RockBoard[i, j] = 0;
+                    BushBoard[i, j] = 0;
+                    ItemBoard[i, j] = 0;
+                }
+            }
+
+            GameObject Rock = Map.transform.GetChild(0).transform.GetChild(0).gameObject;
+            GameObject Bush = Map.transform.GetChild(0).transform.GetChild(1).gameObject;
+            
+            int RockNum = Map.transform.GetChild(0).transform.GetChild(0).childCount;
+            int BushNum = Map.transform.GetChild(0).transform.GetChild(1).childCount;
+
+            for(int i = 0; i < RockNum; i++){ Get_BoardItem_Index(Rock.transform.GetChild(i).gameObject, RockBoard); } // Record Rock in Board
+            for(int i = 0; i < BushNum; i++){ Get_BoardItem_Index(Bush.transform.GetChild(i).gameObject, BushBoard, true); } // Record Bush in Board
+
+            // Debug.Log("==================================");
+            // Debug.Log(RockBoard[0,0]);
+            // Debug.Log(BushBoard[0,0]);
+            
     }
 
+    void Get_BoardItem_Index(GameObject BoardItem, int[,] Board, bool IsBushBoard = false)
+    {
+        RectTransform BoardItemRect = BoardItem.GetComponent<RectTransform>();
 
-    // void itemSpawn()
-    // {
-    //     for (int i = 0; i < mapGridNum_y + 8; i++)
-    //     {
-           
-    //         for (int j = 0; j < mapGridNum_x + 8; j++)
-    //         {
-    //             Debug.Log("not inside");
-    //             if (itemBoard[i, j] == 3)
-    //             {
-    //                 Debug.Log("working?");
-    //                 Instantiate(leaf, new Vector3((j - 4) * GapSize_x, (i - 4) * GapSize_y, -0.01f), Quaternion.identity);
-    //             }
-    //             if (itemBoard[i, j] == 4)
-    //             {
-    //                 Debug.Log("working?");
-    //                 Instantiate(dotori, new Vector3((j - 4) * GapSize_x, (i - 4) * GapSize_y, -0.01f), Quaternion.identity);
-    //             }
-    //         }
-    //     }
-    // }
+        xPos = BoardItemRect.position.x;
+        yPos = BoardItemRect.position.y;
+        
+        xNamuji = (xPos - edgeSpot_x) % GapSize_x; // xNamuji = 0.0f ~ < GapSize
+        yNamuji = (yPos - edgeSpot_y) % GapSize_y; // yNamuji = 0.0f ~ < GapSize
+       
+    // initiate working 
+        xGapNum = (int)((xPos - edgeSpot_x) / GapSize_x);  // int, Grid Index
+        yGapNum = (int)((yPos - edgeSpot_y) / GapSize_y);  // int, Grid Index
+
+    // correction working (inMap)
+        xGapNum += Correction(xNamuji, GapSize_x); // xGapNum : 0 ~ 10  // 0 : 
+        yGapNum += Correction(yNamuji, GapSize_y); // yGapNum : 0 ~ 10
+
+    // Push Item To List
+        Board[yGapNum, xGapNum] = 1;
+
+
+    // Make Item (Dotori, Leaf) if Board is BushBoard
+        if(IsBushBoard == true)
+        { 
+            ItemBoard[yGapNum, xGapNum] = Random.Range(1, 4);
+
+                x_correction = xGapNum * GapSize_x + edgeSpot_x - Screen.width/2;  
+                y_correction = yGapNum * GapSize_y + edgeSpot_y - Screen.height/2;
+
+            if(ItemBoard[yGapNum, xGapNum] == 2)
+            {
+                GameObject Dotori = Instantiate(Resources.Load("Item_Prefab/"+"dotori"), new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
+                Dotori.transform.SetParent(Game.transform.GetChild(1).transform, false);
+            }
+            else if(ItemBoard[yGapNum, xGapNum] == 3)
+            {
+                GameObject Leaf = Instantiate(Resources.Load("Item_Prefab/"+"leaf"), new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
+                Leaf.transform.SetParent(Game.transform.GetChild(2).transform, false);
+            }
+            // None : 1
+            // Dotori : 2
+            // Leaf : 3
+        }
+    }
 
     
     void Update()
     {
+
+        // Set Stone Size > Small Stone
+        rectTransform_b = Stone_b.GetComponent<RectTransform>();
+        rectTransform_b.sizeDelta = new Vector2(120f, 120f);
+        
+        rectTransform_w = Stone_w.GetComponent<RectTransform>();
+        rectTransform_w.sizeDelta = new Vector2(120f, 120f);
+
 
         Debug.Log($"{Black.Length}, {White.Length}");
 
@@ -330,11 +349,11 @@ public class GameSceneSystem : MonoBehaviour
 
     void clearBoard()
     {
-        for (int i = 0; i < mapGridNum_y + 8; i++) // will reset colorboard by 0, and designate items randomly
+        for (int i = 0; i < mapGridNum_y + 8; i++) // will reset ZIZIBoard by 0, and designate items randomly
         {
             for (int j = 0; j < mapGridNum_x + 8; j++)
             {
-                ColorBoard[i, j] = 0; 
+                ZIZIBoard[i, j] = 0; 
             }
         }
     }
@@ -391,8 +410,8 @@ public class GameSceneSystem : MonoBehaviour
         yGapNum = (int)((yPos - edgeSpot_y) / GapSize_y);  // int, Grid Index
 
     // correction working (inMap)
-        xGapNum += Correction(xNamuji, GapSize_x); // xGapNum : 0 ~ 14  // 0 : 
-        yGapNum += Correction(yNamuji, GapSize_y); // yGapNum : 0 ~ 14 
+        xGapNum += Correction(xNamuji, GapSize_x); // xGapNum : 0 ~ 10  // 0 : 
+        yGapNum += Correction(yNamuji, GapSize_y); // yGapNum : 0 ~ 10 
 
         /* Correction() : 
             Namuji by Grid :
@@ -404,18 +423,18 @@ public class GameSceneSystem : MonoBehaviour
         */            
             
             // inMap : management Instantiate, #2
-            // GapNum x < 0 && x >= 15 : outside the map, Instantiate X
+            // GapNum x < 0 && x >= 11 : outside the map, Instantiate X
 
-            // mapGridNum = 15 
-                if (xGapNum < 0 || xGapNum >= mapGridNum_x){ inMap = false; } // normal xGapNum : 0 ~ 14,  xGapNum abnormal     
-                if (yGapNum < 0 || yGapNum >= mapGridNum_y){ inMap = false; } // normal yGapNum O : 0 ~ 14,  yGapNum abnormal 
+            // mapGridNum = 11
+                if (xGapNum < 0 || xGapNum >= mapGridNum_x){ inMap = false; } // normal xGapNum : 0 ~ 10,  xGapNum abnormal     
+                if (yGapNum < 0 || yGapNum >= mapGridNum_y){ inMap = false; } // normal yGapNum O : 0 ~ 10,  yGapNum abnormal 
 
             // clicked outside the map near the line : (Namuji < 0, negative)
                 if ((xNamuji < 0 && xGapNum == 0) && (yGapNum > 0 && yGapNum < mapGridNum_y)){ inMap = true; }
                 if ((yNamuji < 0 && yGapNum == 0) && (xGapNum > 0 && xGapNum < mapGridNum_x)){ inMap = true; }
 
 
-    // Set zizi Position
+    // Set correct ZIZI Position
         x_correction = xGapNum * GapSize_x + edgeSpot_x - Screen.width/2;  // Grid Position for zizi 
         y_correction = yGapNum * GapSize_y + edgeSpot_y - Screen.height/2;  // Grid Position for zizi 
 
@@ -511,7 +530,7 @@ public class GameSceneSystem : MonoBehaviour
             {
                 Set_And_RecordPosition();
                 changePlayer();
-                Debug.Log(ColorBoard[yGapNum + 4, xGapNum + 4]);
+                Debug.Log(ZIZIBoard[yGapNum + 4, xGapNum + 4]);
             }
             else
             {
@@ -525,12 +544,17 @@ public class GameSceneSystem : MonoBehaviour
     // Record current ZIZI Information, Instantiate ZIZI
         assignedList.Add(new List<int> {xGapNum, yGapNum});  
             
-        GameObject instance = Instantiate(Stone, new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
-        instance.tag = isBlack? "b_zizi" : "w_zizi"; 
-        instance.transform.SetParent(Game.transform, false);
+        GameObject ZIZILand = Instantiate(Resources.Load("SKIN_Prefab/"+"ZIZILand"), new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
+        ZIZILand.transform.SetParent(Game.transform.GetChild(0).transform, false);
+
+        GameObject ZIZI_instance = Instantiate(Stone, new Vector3(0f, 0f, -0.01f), Quaternion.identity) as GameObject;
+        ZIZI_instance.transform.SetParent(ZIZILand.transform, false);
+
+        ZIZI_instance.tag = isBlack? "b_zizi" : "w_zizi"; 
+
 
     // Information of ZIZI Color in list
-        ColorBoard[yGapNum + 4, xGapNum + 4] = isBlack ? 1 : 2;  // 1 : Black, 2 : White
+        ZIZIBoard[yGapNum + 4, xGapNum + 4] = isBlack ? 1 : 2;  // 1 : Black, 2 : White
 
     // Win Condition
         stoneWinner = winCondition(yGapNum + 4, xGapNum + 4, isBlack);
@@ -606,7 +630,7 @@ public class GameSceneSystem : MonoBehaviour
                 for (int i = 0; i < 23; i++) {
                     string line = "";
                     for (int j = 0; j < 23; j++) {
-                        line += ColorBoard[i, j] + " ";
+                        line += ZIZIBoard[i, j] + " ";
                     }
                     board += line + "\n";
                 }
@@ -620,7 +644,7 @@ public class GameSceneSystem : MonoBehaviour
         StoneCount = 0;
         for (int i = 0; i < 5; i++)
         {
-            if (ColorBoard[startPointY + i, StartPointX] == color){ StoneCount += 1; }
+            if (ZIZIBoard[startPointY + i, StartPointX] == color){ StoneCount += 1; }
             else { StoneCount = 0; return false; }
         }
         return true;
@@ -631,7 +655,7 @@ public class GameSceneSystem : MonoBehaviour
         StoneCount = 0;
         for (int i = 0; i < 5; i++)
         {
-            if (ColorBoard[startPointY, StartPointX + i] == color){ StoneCount += 1; }
+            if (ZIZIBoard[startPointY, StartPointX + i] == color){ StoneCount += 1; }
             else { StoneCount = 0; return false; }
         }
         return true;
@@ -642,7 +666,7 @@ public class GameSceneSystem : MonoBehaviour
         StoneCount = 0;
         for (int i = 0; i < 5; i++)
         {
-            if (ColorBoard[startPointY + i, StartPointX + i] == color){ StoneCount += 1; }
+            if (ZIZIBoard[startPointY + i, StartPointX + i] == color){ StoneCount += 1; }
             else { StoneCount = 0; return false; }
         }
         return true;
@@ -653,7 +677,7 @@ public class GameSceneSystem : MonoBehaviour
         StoneCount = 0;
         for (int i = 0; i < 5; i++)
         {
-            if (ColorBoard[startPointY + i, StartPointX - i] == color){ StoneCount += 1; }
+            if (ZIZIBoard[startPointY + i, StartPointX - i] == color){ StoneCount += 1; }
             else { StoneCount = 0; return false; }
         }
         return true;

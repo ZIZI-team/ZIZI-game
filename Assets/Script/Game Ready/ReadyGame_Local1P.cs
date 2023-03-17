@@ -45,7 +45,7 @@ public class ReadyGame_Local1P : MonoBehaviour
         ColorPrefab = Resources.Load<GameObject>("Color_Prefab/"+"ColorPrefab");
 
         // MY SKIN (Own)
-        ZIZI_Parent = Resources.Load<GameObject>("SKIN_Prefab/"+"ZIZI_Parent");
+        ZIZI_Parent = Resources.Load<GameObject>("SKIN_Prefab/"+"ZIZILand");
 
         MySkin.Add(Resources.Load<GameObject>("SKIN_Prefab/"+"ZIZI"));
         MySkin.Add(Resources.Load<GameObject>("SKIN_Prefab/"+"SKIN_Temp1"));
