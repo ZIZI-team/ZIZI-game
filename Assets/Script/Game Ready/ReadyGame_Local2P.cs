@@ -13,6 +13,7 @@ public class ReadyGame_Local2P : MonoBehaviour
     public int MySkinIndex = 0;
 
     public GameObject SkinPalette;                      // Start : Find
+    public GameObject ZIZI_Parent;                      // Start : Find  
     public GameObject newSkin;                          // Start : Instantiate
 
     // : Color
@@ -25,6 +26,7 @@ public class ReadyGame_Local2P : MonoBehaviour
     public Color Selected_Color;                        // GetSKINColor() : initiate, SelectColor_prefab()
     
     // : Final Skin
+    public GameObject ZIZIPAPA;
     public GameObject Final_Skin;                       // SelectSkin() : newSkin
     public Color Final_SkinColor;                       // SelectSkin() : Selected_Color         
 
@@ -43,6 +45,8 @@ public class ReadyGame_Local2P : MonoBehaviour
         ColorPrefab = Resources.Load<GameObject>("Color_Prefab/"+"ColorPrefab");
 
         // MY SKIN (Own)
+        ZIZI_Parent = Resources.Load<GameObject>("SKIN_Prefab/"+"ZIZILand");
+
         MySkin.Add(Resources.Load<GameObject>("SKIN_Prefab/"+"ZIZI"));
         MySkin.Add(Resources.Load<GameObject>("SKIN_Prefab/"+"SKIN_Temp1"));
         MySkin.Add(Resources.Load<GameObject>("SKIN_Prefab/"+"SKIN_Temp2"));
@@ -141,8 +145,11 @@ public class ReadyGame_Local2P : MonoBehaviour
         GameObject SelectPanel = GameObject.Find("2P/2PSelect");
 
         // Final Skin
-        Final_Skin = Instantiate(newSkin, new Vector3(200, -300, 0), Quaternion.identity);
-        Final_Skin.transform.SetParent(SelectPanel.transform, false);
+        ZIZIPAPA = Instantiate(ZIZI_Parent, new Vector3(0, -100, 0), Quaternion.identity);
+        ZIZIPAPA.transform.SetParent(SelectPanel.transform, false);
+
+        Final_Skin = Instantiate(newSkin, new Vector3(0, 0, 0), Quaternion.identity);
+        Final_Skin.transform.SetParent(ZIZIPAPA.transform, false);
 
         // Set Final Skin Color
         Final_SkinColor = Selected_Color;
