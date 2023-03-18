@@ -18,30 +18,31 @@ public class GameSceneSystem : MonoBehaviour
 
     [Header("Timer")]
     public int setTime;
-    public Text gameText;
-    public float second = 5f;
+    public Text gameText;                           // inspector
+    float time = 5f;
+    float fullTime = 5f;
     
     [Header("Gameplay Panel")]
-    public GameObject GameplayUI;
+    public GameObject GameplayUI;                   // inspector
 
 
     [Header("PlayerTurn Function")]
-    public GameObject playerTurnIcon;
+    public GameObject playerTurnIcon;               // inspector
 
     [Header("Pause Menu")]
-    public GameObject AssignedMapPosition;  // This object is for 'Ready Game', and this needs be replaced by 'ActualMapPosition' later
-    public GameObject PauseBox;
+    public GameObject AssignedMapPosition;          // inspector  // This object is for 'Ready Game', and this needs be replaced by 'ActualMapPosition' later
+    public GameObject PauseBox;                     // inspector
     bool pauseIsOnSight = false;
 
     [Header("Each Players Stone Spawn Status")]
-    public Text firstPlayerStoneStatus;
-    public Text secondPlayerStoneStatus;
+    public Text firstPlayerStoneStatus;             // inspector
+    public Text secondPlayerStoneStatus;            // inspector
     public int player1StoneCounting = 0;
     public int player2StoneCounting = 0;
 
     [Header("Game Result Panel")]
-    public GameObject GameResultBox;
-    public GameObject mostTopCanvas;                  // This object is declared for 'ClickCanvas'
+    public GameObject GameResultBox;                // inspector
+    public GameObject mostTopCanvas;                // This object is declared for 'ClickCanvas'
 
 
 
@@ -240,8 +241,8 @@ public class GameSceneSystem : MonoBehaviour
         GameObject Rock = Map.transform.GetChild(0).transform.GetChild(0).gameObject;
         GameObject Bush = Map.transform.GetChild(0).transform.GetChild(1).gameObject;
         
-        int RockNum = Map.transform.GetChild(0).transform.GetChild(0).childCount;
-        int BushNum = Map.transform.GetChild(0).transform.GetChild(1).childCount;
+        int RockNum = Map.transform.GetChild(0).transform.GetChild(0).childCount;  // index Max
+        int BushNum = Map.transform.GetChild(0).transform.GetChild(1).childCount;  // index Max
 
         
 
@@ -327,11 +328,14 @@ public class GameSceneSystem : MonoBehaviour
 // ------------------------------------------------------------------------------------------------------------------------ //
 
 
+    public GameObject TimerHand;                                           // inspector
     public void Timer()
     {
-        second -= Time.deltaTime;
-        gameText.text = "타이머 : " + second.ToString("F1");
-        if (second <= 0){ changePlayer(); }
+        time -= Time.deltaTime;
+        gameText.text = "타이머 : " + time.ToString("F1");
+        TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 360f*(fullTime-time)/fullTime);
+
+        if (time <= 0){ changePlayer(); }
     }
 
 
@@ -344,8 +348,11 @@ public class GameSceneSystem : MonoBehaviour
 
         isBlack = true;
         playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
+
         Time.timeScale = 1f;
-        second = 5f;
+        time = fullTime;
+        TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+
         Player1Win.SetActive(false);
         Player2Win.SetActive(false);
         
@@ -579,13 +586,15 @@ public class GameSceneSystem : MonoBehaviour
         {
             isBlack = false;
             playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(370f, 55.1f,-0.02f);
-            second = 5f;
+            time = fullTime;
+            TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
         }
         else 
         {
             isBlack = true;
             playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
-            second = 5f;
+            time = fullTime;
+            TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
         }
     }
 
