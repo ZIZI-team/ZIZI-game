@@ -279,8 +279,9 @@ public class GameSceneSystem : MonoBehaviour
     // Make Item (Dotori, Leaf) if Board is BushBoard
         if(IsBushBoard == true)
         { 
-            ItemBoard[yGapNum, xGapNum] = Random.Range(1, 4);
-            
+            List<int> ItemPercentage = new List<int>(){1, 1, 1, 1, 2, 2, 3, 3};
+            ItemBoard[yGapNum, xGapNum] = ItemPercentage[Random.Range(0, ItemPercentage.Count)];
+
                 x_correction = xGapNum * GapSize_x + edgeSpot_x - Screen.width/2;  
                 y_correction = yGapNum * GapSize_y + edgeSpot_y - Screen.height/2;
 
