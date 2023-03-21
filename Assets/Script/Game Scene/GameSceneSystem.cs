@@ -56,9 +56,9 @@ public class GameSceneSystem : MonoBehaviour
     [SerializeField] public int[,] ZIZIBoard = new int[11+8, 11+8]; // ZIZI : B & W
     [SerializeField] public int[,] RockBoard = new int[11+8, 11+8]; 
     [SerializeField] public int[,] BushBoard = new int[11+8, 11+8]; 
-    [SerializeField] public int[,] ItemBoard = new int[11+8, 11+8]; 
+    [SerializeField] public int[,,] ItemBoard = new int[11+8, 11+8, 2]; 
 
-    List<GameObject> ItemList = new List<GameObject>();
+    // List<GameObject> ItemList = new List<GameObject>();
     List<GameObject> ZIZIList = new List<GameObject>();
 
     public int mapGridNum_x;
@@ -111,7 +111,7 @@ public class GameSceneSystem : MonoBehaviour
     // // [SerializeField] private GameObject[] DotoriItemSlotForPlayerOne;
     // // [SerializeField] private GameObject[] leafItemSlotForPlayerTwo;
     // // [SerializeField] private GameObject[] DotoriItemSlotForPlayerTwo;
-    // // [SerializeField] public int[,] itemBoard = new int[11+8, 11+8];
+    // // [SerializeField] public int[,] itemBoard = new int[11+8, 11+8, 2];
     
     
     // // [Header("BushList Load Object")]
@@ -228,14 +228,17 @@ public class GameSceneSystem : MonoBehaviour
                 ZIZIBoard[i, j] = 0;
                 RockBoard[i, j] = 0;
                 BushBoard[i, j] = 0;
-                ItemBoard[i, j] = 0;
+                ItemBoard[i, j, 0] = 0;
+                ItemBoard[i, j, 1] = 0;
             }
         }
 
-        for(int i = 0; i < Game.transform.GetChild(2).childCount + Game.transform.GetChild(3).childCount; i++){ Destroy(ItemList[i]); }
-        for(int i = 0; i < ZIZIList.Count; i++){ Destroy(ZIZIList[i]); }
+        for (int i = 0; i < Game.transform.GetChild(2).childCount; i++){ Destroy(Game.transform.GetChild(2).transform.GetChild(i).gameObject); } // Dotori
+        for (int i = 0; i < Game.transform.GetChild(3).childCount; i++){ Destroy(Game.transform.GetChild(3).transform.GetChild(i).gameObject); } // Leaf
 
-        ItemList = new List<GameObject>();
+        for (int i = 0; i < ZIZIList.Count; i++){ Destroy(ZIZIList[i]); } // ZIZI
+
+        // ItemList = new List<GameObject>();
         ZIZIList = new List<GameObject>();
         
         GameObject Rock = Map.transform.GetChild(0).transform.GetChild(0).gameObject;
@@ -244,16 +247,20 @@ public class GameSceneSystem : MonoBehaviour
         int RockNum = Map.transform.GetChild(0).transform.GetChild(0).childCount;  // index Max
         int BushNum = Map.transform.GetChild(0).transform.GetChild(1).childCount;  // index Max
 
-        
+        Dotori_Count = 0;
+        Leaf_Count = 0;
 
-        for(int i = 0; i < RockNum; i++){ Get_BoardItem_Index(Rock.transform.GetChild(i).gameObject, RockBoard); } // Record Rock in Board
-        for(int i = 0; i < BushNum; i++){ Get_BoardItem_Index(Bush.transform.GetChild(i).gameObject, BushBoard, true); } // Record Bush in Board
+        for (int i = 0; i < RockNum; i++){ Get_BoardItem_Index(Rock.transform.GetChild(i).gameObject, RockBoard); } // Record Rock in Board
+        for (int i = 0; i < BushNum; i++){ Get_BoardItem_Index(Bush.transform.GetChild(i).gameObject, BushBoard, true); } // Record Bush in Board
 
-        // Debug.Log("==================================");
-        // Debug.Log(RockBoard[0,0]);
-        // Debug.Log(BushBoard[0,0]);
+        Debug.Log("==================================");
+        Debug.Log(RockBoard[0 + 4,0 + 4]);
+        Debug.Log(BushBoard[0 + 4,0 + 4]);
     }
 
+    public int Dotori_Count = 0;
+    public int Leaf_Count = 0;
+    
     void Get_BoardItem_Index(GameObject BoardItem, int[,] Board, bool IsBushBoard = false)
     {
         RectTransform BoardItemRect = BoardItem.GetComponent<RectTransform>();
@@ -273,29 +280,41 @@ public class GameSceneSystem : MonoBehaviour
         yGapNum += Correction(yNamuji, GapSize_y); // yGapNum : 0 ~ 10
 
     // Push Item To List
-        Board[yGapNum, xGapNum] = 1;
+        Board[yGapNum + 4, xGapNum + 4] = 1;
 
 
     // Make Item (Dotori, Leaf) if Board is BushBoard
-        if(IsBushBoard == true)
+        if (IsBushBoard == true)
         { 
             List<int> ItemPercentage = new List<int>(){1, 1, 1, 1, 2, 2, 3, 3};
-            ItemBoard[yGapNum, xGapNum] = ItemPercentage[Random.Range(0, ItemPercentage.Count)];
+            ItemBoard[yGapNum + 4, xGapNum + 4, 0] = ItemPercentage[Random.Range(0, ItemPercentage.Count)];
 
                 x_correction = xGapNum * GapSize_x + edgeSpot_x - Screen.width/2;  
                 y_correction = yGapNum * GapSize_y + edgeSpot_y - Screen.height/2;
 
-            if(ItemBoard[yGapNum, xGapNum] == 2)
+            if (ItemBoard[yGapNum + 4, xGapNum + 4, 0] == 2) // Dotori
             {
+                ItemBoard[yGapNum + 4, xGapNum + 4, 1] = Dotori_Count++;
                 GameObject Dotori = Instantiate(Resources.Load("Item_Prefab/"+"dotori"), new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
                 Dotori.transform.SetParent(Game.transform.GetChild(2).transform, false);
-                ItemList.Add(Dotori);
+
+        Debug.Log("================dotori==================");
+        Debug.Log(ItemBoard[yGapNum + 4, xGapNum + 4, 0]);
+        Debug.Log(ItemBoard[yGapNum + 4, xGapNum + 4, 1]);
+
+                // ItemList.Add(Dotori);
             }
-            else if(ItemBoard[yGapNum, xGapNum] == 3)
+            else if (ItemBoard[yGapNum + 4, xGapNum + 4, 0] == 3) // Leaf
             {
+                ItemBoard[yGapNum + 4, xGapNum + 4, 1] = Leaf_Count++;
                 GameObject Leaf = Instantiate(Resources.Load("Item_Prefab/"+"leaf"), new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
                 Leaf.transform.SetParent(Game.transform.GetChild(3).transform, false);
-                ItemList.Add(Leaf);
+
+        Debug.Log("================leaf==================");
+        Debug.Log(ItemBoard[yGapNum + 4, xGapNum + 4, 0]);
+        Debug.Log(ItemBoard[yGapNum + 4, xGapNum + 4, 1]);
+
+                // ItemList.Add(Leaf);
             }
             // None : 1
             // Dotori : 2
@@ -344,8 +363,8 @@ public class GameSceneSystem : MonoBehaviour
     {
         assignedList.Clear();
         Reset_Item();
-        for(int j = 0; j < Black.Length; j++){ Destroy(Black[j]); }
-        for(int j = 0; j < White.Length; j++){ Destroy(White[j]); }
+        for (int j = 0; j < Black.Length; j++){ Destroy(Black[j]); }
+        for (int j = 0; j < White.Length; j++){ Destroy(White[j]); }
 
         isBlack = true;
         playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
@@ -495,6 +514,33 @@ public class GameSceneSystem : MonoBehaviour
     }
 
 
+    public int Dotori_P1 = 0;
+    public int Dotori_P2 = 0;
+    public int Leaf_P1 = 0;
+    public int Leaf_P2 = 0;
+
+    public void BushOnclick()
+    {
+        if (BushBoard[yGapNum + 4, xGapNum + 4] == 1)
+        {
+            if (ItemBoard[yGapNum + 4, xGapNum + 4, 0] == 2) // Dotori
+            {
+                if (isBlack == true && Dotori_P1 >= 3 || isBlack == false && Dotori_P2 >= 3){ return; } // Can get Item Max 3
+                Dotori_P1 += isBlack ? 1 : 0;
+                Dotori_P2 += isBlack ? 0 : 1;
+                Game.transform.GetChild(2).transform.GetChild(ItemBoard[yGapNum + 4, xGapNum + 4, 1]).gameObject.SetActive(false);
+            }
+            else if (ItemBoard[yGapNum + 4, xGapNum + 4, 0] == 3) // Leaf
+            {
+                if (isBlack == true && Leaf_P1 >= 3 || isBlack == false && Leaf_P2 >= 3){ return; } // Can get Item Max 3
+                Leaf_P1 += isBlack ? 1 : 0;
+                Leaf_P2 += isBlack ? 0 : 1;
+                Game.transform.GetChild(3).transform.GetChild(ItemBoard[yGapNum + 4, xGapNum + 4, 1]).gameObject.SetActive(false);
+            }
+        }
+    }
+
+
 
 // >> Game : Set & Record << //
 // ------------------------------------------------------------------------------------------------------------------------ //
@@ -513,6 +559,7 @@ public class GameSceneSystem : MonoBehaviour
         if (assignedList.Count == 0) 
         {
             Set_And_RecordPosition();
+            BushOnclick();
             changePlayer();
         }
         else
@@ -530,6 +577,7 @@ public class GameSceneSystem : MonoBehaviour
             if(isDuplicated == false)
             {
                 Set_And_RecordPosition();
+                BushOnclick();
                 changePlayer();
                 Debug.Log(ZIZIBoard[yGapNum + 4, xGapNum + 4]);
             }
@@ -631,9 +679,9 @@ public class GameSceneSystem : MonoBehaviour
         } finally {
             if(winflag) {
                 string board = "";
-                for (int i = 0; i < 23; i++) {
+                for (int i = 0; i < 11 + 8; i++) {
                     string line = "";
-                    for (int j = 0; j < 23; j++) {
+                    for (int j = 0; j < 11 + 8; j++) {
                         line += ZIZIBoard[i, j] + " ";
                     }
                     board += line + "\n";
@@ -687,6 +735,17 @@ public class GameSceneSystem : MonoBehaviour
         return true;
     }
   
+
+// >> Skill : Dotori & Leaf << //
+// ------------------------------------------------------------------------------------------------------------------------ //
+
+
+
+
+
+
+
+
 
 
 // >> Game Over << //
