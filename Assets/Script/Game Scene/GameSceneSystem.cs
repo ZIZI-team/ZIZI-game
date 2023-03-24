@@ -97,8 +97,8 @@ public class GameSceneSystem : MonoBehaviour
 
     [Header("Gameplay Item System")]
     // public GameObject ActualMapPosition;    // this needs to replace 'AssignedMapPosition' in last
-    public GameObject firstPlayerItemSlotUI;
-    public GameObject secondPlayerItemSlotUI;
+    public GameObject ItemSlotUI_1P;
+    public GameObject ItemSlotUI_2P;
     public GameObject leafIcon;
     public GameObject dotoriIcon;
     public List<GameObject> P1_Item = new List<GameObject>();
@@ -162,8 +162,8 @@ public class GameSceneSystem : MonoBehaviour
 
 // >> [1] Set UI Panel
         GameplayUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 790f, -0.4f);
-        firstPlayerItemSlotUI.transform.localPosition = GameplayUI.transform.localPosition + new Vector3(0f, -391f, -0.4f); // y position is 824 in Inspector
-        secondPlayerItemSlotUI.transform.localPosition = GameplayUI.transform.localPosition + new Vector3(0f, -2215f, -0.4f);
+        ItemSlotUI_1P.transform.localPosition = GameplayUI.transform.localPosition + new Vector3(0f, -391f, -0.4f); // y position is 824 in Inspector
+        ItemSlotUI_2P.transform.localPosition = GameplayUI.transform.localPosition + new Vector3(0f, -2215f, -0.4f);
 
 // >> [2] Set Map Grid & Stone (Initiate state)
 
@@ -557,15 +557,14 @@ public class GameSceneSystem : MonoBehaviour
             if (isBlack == true)
             {
                 GameObject temp = Instantiate(dotoriIcon);
-                temp.transform.SetParent(firstPlayerItemSlotUI.transform);
+                temp.transform.SetParent(ItemSlotUI_1P.transform);
                 temp.transform.localPosition = new Vector3(-500f + (130 * (Dotori_P1)), 0f);
                 P1_Item.Add(temp);
             }
             else
             {
-                
                 GameObject temp = Instantiate(dotoriIcon);
-                temp.transform.SetParent(secondPlayerItemSlotUI.transform);
+                temp.transform.SetParent(ItemSlotUI_2P.transform);
                 temp.transform.localPosition = new Vector3(-500f + (130 * (Dotori_P2)), 0f);
                 P2_Item.Add(temp);
             }
@@ -584,14 +583,14 @@ public class GameSceneSystem : MonoBehaviour
             if (isBlack == true)
             {
                 GameObject temp = Instantiate(leafIcon);
-                temp.transform.SetParent(firstPlayerItemSlotUI.transform);
+                temp.transform.SetParent(ItemSlotUI_1P.transform);
                 temp.transform.localPosition = new Vector3(260f + (130 * (Leaf_P1)), 0f);
                 P1_Item.Add(temp);
             }
             else
             {
                 GameObject temp = Instantiate(leafIcon);
-                temp.transform.SetParent(secondPlayerItemSlotUI.transform);
+                temp.transform.SetParent(ItemSlotUI_2P.transform);
                 temp.transform.localPosition = new Vector3(260f + (130 * (Leaf_P2)), 0f);
                 P2_Item.Add(temp);
             }
@@ -618,6 +617,8 @@ public class GameSceneSystem : MonoBehaviour
     public bool SKill_Dotori = false;
     public bool SKill_Leaf = false;
 
+    public bool UsedItem = false;
+
     public void AddListAndSpawn()
     {
         if(SKill_Dotori == true)                                        // Play SKILL
@@ -625,8 +626,9 @@ public class GameSceneSystem : MonoBehaviour
             // Should be My ZIZI
             if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
             {
-                PlaySkill_Dotori(yGapNum, xGapNum, ZIZIBoard[yGapNum + 4, xGapNum + 4, 0]);
+                PlaySkill_Dotori(yGapNum + 4, xGapNum + 4, ZIZIBoard[yGapNum + 4, xGapNum + 4, 0]);
                 Debug.Log("PlaySkill_    Dotori");
+                UsedItem = true;
                 changePlayer();
                 SKill_Dotori = false;
             }
@@ -637,8 +639,9 @@ public class GameSceneSystem : MonoBehaviour
             // Should be My ZIZI
             if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
             {
-                PlaySkill_leaf(yGapNum, xGapNum);
+                PlaySkill_leaf(yGapNum + 4, xGapNum + 4);
                 Debug.Log("PlaySkill_    leaf");
+                UsedItem = true;
                 changePlayer();
                 SKill_Leaf = false;
             }
@@ -712,13 +715,20 @@ public class GameSceneSystem : MonoBehaviour
     
     public void changePlayer()
     {
+    // Check Did Player Used Item
+        if (UsedItem == false){ Curr_Item.SetActive(true); }
+        else { UsedItem = false; }
+
     // Change ZIZI Color for Next turn
-        if (isBlack) 
+        if (isBlack == true)  // Player 1
         {
             isBlack = false;
             playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(370f, 55.1f,-0.02f);
             time = fullTime;
             TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+
+            foreach (GameObject item in P2_Item){ item.GetComponent<Button>().interactable = true; }
+            foreach (GameObject item in P1_Item){ item.GetComponent<Button>().interactable = false; }
         }
         else 
         {
@@ -726,9 +736,11 @@ public class GameSceneSystem : MonoBehaviour
             playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
             time = fullTime;
             TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+
+            foreach (GameObject item in P2_Item){ item.GetComponent<Button>().interactable = false; }
+            foreach (GameObject item in P1_Item){ item.GetComponent<Button>().interactable = true; }
         }
     }
-
 
 
 // >> Check Condition << //
@@ -1078,28 +1090,36 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
 // >> Skill : Dotori & Leaf << //
 // ------------------------------------------------------------------------------------------------------------------------ //
     
-    public void OnClickSkill()
+    public GameObject Curr_Item;
+    public void OnClickSkill(GameObject Item) // Item(Button Onclick) : Script : SkillClick : OnClickItem()
     {
-        if (isBlack == true )
+        Curr_Item = Item;
+        if (isBlack == true && Item.transform.parent.name == "ItemSlotUI_1P")
         {
-            foreach (GameObject item in P2_Item)
+            Item.SetActive(false);
+            if(Item.name == "dotori_skill(Clone)")
             {
-                item.GetComponent<Button>().interactable = false;
+                SKill_Dotori = true;
+                Debug.Log("dotori_skill(1)");
             }
-            foreach (GameObject item in P1_Item)
+            else if(Item.name == "leaf_skill(Clone)")
             {
-                item.GetComponent<Button>().interactable = true;
-            }
+                SKill_Leaf = true;
+                Debug.Log("leaf_skill(2)");
+            }            
         }
-        else
+        else if (isBlack == false && Item.transform.parent.name == "ItemSlotUI_2P")
         {
-            foreach (GameObject item in P1_Item)
+            Item.SetActive(false);
+            if(Item.name == "dotori_skill(Clone)")
             {
-                item.GetComponent<Button>().interactable = false;
+                SKill_Dotori = true;
+                Debug.Log("dotori_skill(2)");
             }
-            foreach (GameObject item in P2_Item)
+            else if(Item.name == "leaf_skill(Clone)")
             {
-                item.GetComponent<Button>().interactable = true;
+                SKill_Leaf = true;
+                Debug.Log("leaf_skill(2)");
             }
         }
     }
@@ -1151,8 +1171,9 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
     {
         ZIZI_Transform.GetChild(ZIZIBoard[indexY, indexX, 1]).transform.GetChild(0).gameObject.name += "_Leaf";
         
-            GameObject Leaf = Instantiate(Resources.Load("Item_Prefab/"+"leaf"), new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
-            Leaf.transform.SetParent(ZIZI_Transform.GetChild(ZIZIBoard[indexY, indexX, 1]).transform.GetChild(0).transform, false);
+            GameObject Leaf = Instantiate(Resources.Load("Item_Prefab/"+"leaf"), new Vector3(0, 0, -0.01f), Quaternion.identity) as GameObject;
+            Leaf.transform.SetParent(ZIZI_Transform.GetChild(ZIZIBoard[indexY, indexX, 1]).transform, false);
+            Leaf.transform.localPosition = new Vector3(0, 0, 0);
     }
     
 
@@ -1173,7 +1194,7 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
         else
         {
             Time.timeScale = 0f;
-            GameResultBox.transform.position = _player.transform.localPosition + new Vector3( -1620f, -1038.7f);
+            GameResultBox.transform.position = _player.transform.localPosition + new Vector3(-1620f, -1038.7f);
         }
     }
 }
