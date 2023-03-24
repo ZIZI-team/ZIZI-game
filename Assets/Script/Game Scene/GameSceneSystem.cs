@@ -105,28 +105,6 @@ public class GameSceneSystem : MonoBehaviour
     public List<GameObject> P2_Item = new List<GameObject>();
 
 
-    
-    // // [SerializeField] private int leafItemForPlayerOne = 0;
-    // // [SerializeField] private int dotoriItemForPlayerOne = 0;
-    // // [SerializeField] private int leafItemForPlayerTwo = 0;
-    // // [SerializeField] private int dotoriItemForPlayerTwo = 0;
-
-    // // [SerializeField] private GameObject[] leafItemSlotForPlayerOne;
-    // // [SerializeField] private GameObject[] DotoriItemSlotForPlayerOne;
-    // // [SerializeField] private GameObject[] leafItemSlotForPlayerTwo;
-    // // [SerializeField] private GameObject[] DotoriItemSlotForPlayerTwo;
-    // // [SerializeField] public int[,] itemBoard = new int[11+8, 11+8, 2];
-    
-    
-    // // [Header("BushList Load Object")]
-    // // public int[,] mapBushList;
-    // // public int[,] newMapBushList = new int[11+8, 11+8];
-
-    // public GameObject bushSpawn;
-    // // public Game GameThing;
-    
-
-
 
 
 // +++++ InPut & Stone Position +++++ //
@@ -187,8 +165,6 @@ public class GameSceneSystem : MonoBehaviour
         firstPlayerItemSlotUI.transform.localPosition = GameplayUI.transform.localPosition + new Vector3(0f, -391f, -0.4f); // y position is 824 in Inspector
         secondPlayerItemSlotUI.transform.localPosition = GameplayUI.transform.localPosition + new Vector3(0f, -2215f, -0.4f);
 
-
-
 // >> [2] Set Map Grid & Stone (Initiate state)
 
         // 1. Calculate Grid Size with edgePoint 1, 2, 3 : Game > Map Prefab
@@ -221,6 +197,7 @@ public class GameSceneSystem : MonoBehaviour
 
     void Reset_Item()
     {    
+        // Should Make More....
         // mapGridNum_x = (int)((edgeSpot_x * (-1) * 2) / GapSize_x) + 1;    // : positive  // 10
         // mapGridNum_y = (int)((edgeSpot_y * (-1) * 2) / GapSize_y) + 1;    // : positive  // 10
 
@@ -234,7 +211,6 @@ public class GameSceneSystem : MonoBehaviour
                 RockBoard[i, j, 0] = 0;     RockBoard[i, j, 1] = 0;
                 BushBoard[i, j, 0] = 0;     BushBoard[i, j, 1] = 0;
                 ItemBoard[i, j, 0] = 0;     ItemBoard[i, j, 1] = 0;
-
             }
         }
 
@@ -583,7 +559,6 @@ public class GameSceneSystem : MonoBehaviour
                 GameObject temp = Instantiate(dotoriIcon);
                 temp.transform.SetParent(firstPlayerItemSlotUI.transform);
                 temp.transform.localPosition = new Vector3(-500f + (130 * (Dotori_P1)), 0f);
-
                 P1_Item.Add(temp);
             }
             else
@@ -611,7 +586,6 @@ public class GameSceneSystem : MonoBehaviour
                 GameObject temp = Instantiate(leafIcon);
                 temp.transform.SetParent(firstPlayerItemSlotUI.transform);
                 temp.transform.localPosition = new Vector3(260f + (130 * (Leaf_P1)), 0f);
-
                 P1_Item.Add(temp);
             }
             else
@@ -619,7 +593,6 @@ public class GameSceneSystem : MonoBehaviour
                 GameObject temp = Instantiate(leafIcon);
                 temp.transform.SetParent(secondPlayerItemSlotUI.transform);
                 temp.transform.localPosition = new Vector3(260f + (130 * (Leaf_P2)), 0f);
-  
                 P2_Item.Add(temp);
             }
             
@@ -673,7 +646,6 @@ public class GameSceneSystem : MonoBehaviour
 
         // ++Code : 시간 내에 스킬을 사용하지 못했을 경우는? : 돌려주기 (1)
 
-        
         else
         {
             // Check Same Position of ZIZI list
@@ -1108,7 +1080,6 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
     
     public void OnClickSkill()
     {
-        
         if (isBlack == true )
         {
             foreach (GameObject item in P2_Item)
@@ -1131,10 +1102,7 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
                 item.GetComponent<Button>().interactable = true;
             }
         }
-        
-
     }
-
 
 
     public void PlaySkill_Dotori(int indexY, int indexX, int My_Color) // : Destroy Other ZIZI : Square 
@@ -1178,6 +1146,7 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
         }
     }
 
+
     public void PlaySkill_leaf(int indexY, int indexX)
     {
         ZIZI_Transform.GetChild(ZIZIBoard[indexY, indexX, 1]).transform.GetChild(0).gameObject.name += "_Leaf";
@@ -1203,10 +1172,8 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
         }
         else
         {
-
             Time.timeScale = 0f;
             GameResultBox.transform.position = _player.transform.localPosition + new Vector3( -1620f, -1038.7f);
-
         }
     }
 }
