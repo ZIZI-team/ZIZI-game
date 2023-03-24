@@ -3509,7 +3509,7 @@ MonoBehaviour:
   player1StoneCounting: 0
   player2StoneCounting: 0
   GameResultBox: {fileID: 1151869297627664472}
-  mostTopCanvas: {fileID: 0}
+  mostTopCanvas: {fileID: 1151869297590901544}
   Map: {fileID: 0}
   mapGridNum_x: 0
   mapGridNum_y: 0
@@ -3520,6 +3520,12 @@ MonoBehaviour:
   isBlack: 1
   now: []
   stone_name: 
+  firstPlayerItemSlotUI: {fileID: 1151869296091919642}
+  secondPlayerItemSlotUI: {fileID: 1151869297139682125}
+  leafIcon: {fileID: 6710725642433113265, guid: baf5159922ce541eba8be10a8aa34235, type: 3}
+  dotoriIcon: {fileID: 2951389159927132193, guid: 626b095a6557d4f8fafd0530303ca956, type: 3}
+  P1_Item: []
+  P2_Item: []
   GapSize_x: 0
   GapSize_y: 0
   edgeSpot_1: {fileID: 0}
@@ -3529,11 +3535,18 @@ MonoBehaviour:
   edgeSpot_y: 0
   blackStoneCount: 0
   whiteStoneCount: 0
+  Dotori_Count: 0
+  Leaf_Count: 0
+  Board_Count: 0
   TimerHand: {fileID: 223358188}
+  Dotori_P1: 0
+  Dotori_P2: 0
+  Leaf_P1: 0
+  Leaf_P2: 0
   Game: {fileID: 1574242314}
   stoneWinner: 0
-  Player1Win: {fileID: 0}
-  Player2Win: {fileID: 0}
+  Player1Win: {fileID: 1151869297447070696}
+  Player2Win: {fileID: 1151869296071769522}
   StoneCount: 0
 --- !u!1 &1607167389
 GameObject:
@@ -5791,7 +5804,7 @@ GameObject:
   - component: {fileID: 1151869296091919645}
   - component: {fileID: 1151869296091919644}
   m_Layer: 5
-  m_Name: Player1itemStatusPanel
+  m_Name: Player1ItemPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6139,7 +6152,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1574242319}
         m_TargetAssemblyTypeName: GameSceneSystem, Assembly-CSharp
         m_MethodName: OnClickReset
         m_Mode: 1
@@ -6899,7 +6912,7 @@ GameObject:
   - component: {fileID: 1151869297139682112}
   - component: {fileID: 1151869297139682127}
   m_Layer: 5
-  m_Name: Player2itemStatusPanel
+  m_Name: Player2ItemPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7541,7 +7554,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1574242319}
         m_TargetAssemblyTypeName: GameSceneSystem, Assembly-CSharp
         m_MethodName: OnClickMainMenu
         m_Mode: 1

@@ -95,12 +95,16 @@ public class GameSceneSystem : MonoBehaviour
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
 
-    // [Header("Gameplay Item System")]
+    [Header("Gameplay Item System")]
     // public GameObject ActualMapPosition;    // this needs to replace 'AssignedMapPosition' in last
-    // public GameObject firstPlayerGameplayItemSlotUI;
-    // public GameObject secondPlayerGameplayItemSlotUI;
-    // public GameObject leaf;
-    // public GameObject dotori;
+    public GameObject firstPlayerItemSlotUI;
+    public GameObject secondPlayerItemSlotUI;
+    public GameObject leafIcon;
+    public GameObject dotoriIcon;
+    public List<GameObject> P1_Item = new List<GameObject>();
+    public List<GameObject> P2_Item = new List<GameObject>();
+
+
     
     // // [SerializeField] private int leafItemForPlayerOne = 0;
     // // [SerializeField] private int dotoriItemForPlayerOne = 0;
@@ -182,6 +186,9 @@ public class GameSceneSystem : MonoBehaviour
 
 // >> [1] Set UI Panel
         GameplayUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 790f, -0.4f);
+        firstPlayerItemSlotUI.transform.localPosition = GameplayUI.transform.localPosition + new Vector3(0f, -391f, -0.4f); // y position is 824 in Inspector
+        secondPlayerItemSlotUI.transform.localPosition = GameplayUI.transform.localPosition + new Vector3(0f, -2215f, -0.4f);
+
 
 
 // >> [2] Set Map Grid & Stone (Initiate state)
@@ -229,6 +236,7 @@ public class GameSceneSystem : MonoBehaviour
                 RockBoard[i, j, 0] = 0;     RockBoard[i, j, 1] = 0;
                 BushBoard[i, j, 0] = 0;     BushBoard[i, j, 1] = 0;
                 ItemBoard[i, j, 0] = 0;     ItemBoard[i, j, 1] = 0;
+
             }
         }
 
@@ -376,6 +384,13 @@ public class GameSceneSystem : MonoBehaviour
         for (int j = 0; j < Black.Length; j++){ Destroy(Black[j]); }
         for (int j = 0; j < White.Length; j++){ Destroy(White[j]); }
 
+        for (int j = 0; j < P1_Item.Count; j++){ Destroy(P1_Item[j]); }
+        for (int j = 0; j < P2_Item.Count; j++){ Destroy(P2_Item[j]); }
+
+        P1_Item.Clear();
+        P2_Item.Clear();
+
+
         isBlack = true;
         playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
 
@@ -412,6 +427,7 @@ public class GameSceneSystem : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene("TitleScene");
         GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
+        OnClickReset();
     }
 
 
@@ -535,6 +551,7 @@ public class GameSceneSystem : MonoBehaviour
     public int Leaf_P2 = 0;
 
 
+
     public void CutBush()
     {
         if (BushBoard[yGapNum + 4 + 1, xGapNum + 4, 0] == 1){ Map.transform.GetChild(0).transform.GetChild(1).transform.GetChild(BushBoard[yGapNum + 4 + 1, xGapNum + 4, 1]).gameObject.SetActive(false); }
@@ -548,17 +565,56 @@ public class GameSceneSystem : MonoBehaviour
     {
         if (ItemBoard[yGapNum + 4, xGapNum + 4, 0] == 2) // Dotori
         {
-            if (isBlack == true && Dotori_P1 >= 3 || isBlack == false && Dotori_P2 >= 3){ return; } // Can get Item Max 3
+            if (isBlack == true && Dotori_P1 >= 3 || isBlack == false && Dotori_P2 >= 3 ){ return; } // Can get Item Max 3
             Dotori_P1 += isBlack ? 1 : 0;
             Dotori_P2 += isBlack ? 0 : 1;
+
             Game.transform.GetChild(2).transform.GetChild(ItemBoard[yGapNum + 4, xGapNum + 4, 1]).gameObject.SetActive(false);
+            
+            if (isBlack == true)
+            {
+                GameObject temp = Instantiate(dotoriIcon);
+                temp.transform.SetParent(firstPlayerItemSlotUI.transform);
+                temp.transform.localPosition = new Vector3(-500f + (130 * (Dotori_P1)), 0f);
+
+                P1_Item.Add(temp);
+            }
+            else
+            {
+                
+                GameObject temp = Instantiate(dotoriIcon);
+                temp.transform.SetParent(secondPlayerItemSlotUI.transform);
+                temp.transform.localPosition = new Vector3(-500f + (130 * (Dotori_P2)), 0f);
+                P2_Item.Add(temp);
+            }
+            
+            
         }
         else if (ItemBoard[yGapNum + 4, xGapNum + 4, 0] == 3) // Leaf
         {
-            if (isBlack == true && Leaf_P1 >= 3 || isBlack == false && Leaf_P2 >= 3){ return; } // Can get Item Max 3
+            if (isBlack == true && Leaf_P1 >= 3 || isBlack == false && Leaf_P2 >= 3 ){ return; } // Can get Item Max 3
             Leaf_P1 += isBlack ? 1 : 0;
             Leaf_P2 += isBlack ? 0 : 1;
+
             Game.transform.GetChild(3).transform.GetChild(ItemBoard[yGapNum + 4, xGapNum + 4, 1]).gameObject.SetActive(false);
+
+            if (isBlack == true)
+            {
+                GameObject temp = Instantiate(leafIcon);
+                temp.transform.SetParent(firstPlayerItemSlotUI.transform);
+                temp.transform.localPosition = new Vector3(260f + (130 * (Leaf_P1)), 0f);
+
+                P1_Item.Add(temp);
+            }
+            else
+            {
+                GameObject temp = Instantiate(leafIcon);
+                temp.transform.SetParent(secondPlayerItemSlotUI.transform);
+                temp.transform.localPosition = new Vector3(260f + (130 * (Leaf_P2)), 0f);
+  
+                P2_Item.Add(temp);
+            }
+            
         }
         else { return; }
     }
@@ -640,14 +696,14 @@ public class GameSceneSystem : MonoBehaviour
             Player1Win.SetActive(true);
             // Player1Win.transform.parent.transform.parent.transform.SetAsLastSibling();
             mostTopCanvas.transform.SetAsLastSibling();
-            GameOver();
+            GameOver(Player1Win);
         }
         else if (StoneCount == 5 && stoneWinner == true && isBlack == false)
         {
             Debug.Log("Player 2 Win!");
             Player2Win.SetActive(true);
             mostTopCanvas.transform.SetAsLastSibling(); 
-            GameOver();
+            GameOver(Player2Win);
         }
         else { Debug.Log("Pass"); }
     }
@@ -763,6 +819,36 @@ public class GameSceneSystem : MonoBehaviour
 
 // >> Skill : Dotori & Leaf << //
 // ------------------------------------------------------------------------------------------------------------------------ //
+    
+    public void OnClickSkill()
+    {
+        
+        if (isBlack == true )
+        {
+            foreach (GameObject item in P2_Item)
+            {
+                item.GetComponent<Button>().interactable = false;
+            }
+            foreach (GameObject item in P1_Item)
+            {
+                item.GetComponent<Button>().interactable = true;
+            }
+        }
+        else
+        {
+            foreach (GameObject item in P1_Item)
+            {
+                item.GetComponent<Button>().interactable = false;
+            }
+            foreach (GameObject item in P2_Item)
+            {
+                item.GetComponent<Button>().interactable = true;
+            }
+        }
+        
+
+    }
+
 
 
 
@@ -776,19 +862,22 @@ public class GameSceneSystem : MonoBehaviour
 // >> Game Over << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
-    public void GameOver()
+    public void GameOver(GameObject _player)
     {
         // Player1Win.SetActive(false);
         // Player2Win.SetActive(false);
-        if (GameResultBox.transform.position != AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position)
+        Debug.Log("entered");
+        if ((GameResultBox.transform.localPosition != _player.transform.localPosition) && _player.activeSelf)
         {
             Time.timeScale = 0f;
-            GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, -425f, -0.4f);
+            GameResultBox.transform.localPosition = _player.transform.localPosition;  //+ new Vector3(0f, -0f, -0.4f);
         }
         else
         {
+
             Time.timeScale = 0f;
-            GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0.04f);
+            GameResultBox.transform.position = _player.transform.localPosition + new Vector3( -1620f, -1038.7f);
+
         }
     }
 }
