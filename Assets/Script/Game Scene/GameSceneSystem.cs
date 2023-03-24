@@ -622,7 +622,7 @@ public class GameSceneSystem : MonoBehaviour
             bool isDuplicated = false;
             for(int i = 0; i < assignedList.Count; i++)
             {
-                if (assignedList[i][0] == xGapNum && assignedList[i][1] == yGapNum)
+                if (assignedList[i][0] == xGapNum + 4&& assignedList[i][1] == yGapNum + 4)
                 {
                     Debug.Log("Same Position");
                     isDuplicated = true;
