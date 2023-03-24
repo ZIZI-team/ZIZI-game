@@ -27,7 +27,7 @@ public class ZIZIAnim_Title : MonoBehaviour
     void Start()
     {
         // Animation
-        Land = GameObject.Find("Title2").GetComponent<RectTransform>();
+        Land = GameObject.Find("Title BackGround").GetComponent<RectTransform>();
         ZIZILand = GameObject.Find("Charactor");
 
         ZIZIcontroller = GameObject.Find("ZIZI").GetComponent<Animator>(); 
