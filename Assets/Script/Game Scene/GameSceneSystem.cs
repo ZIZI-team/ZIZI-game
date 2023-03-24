@@ -232,8 +232,8 @@ public class GameSceneSystem : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < Game.transform.GetChild(2).childCount; i++){ Destroy(Game.transform.GetChild(2).transform.GetChild(i).gameObject); } // Dotori
-        for (int i = 0; i < Game.transform.GetChild(3).childCount; i++){ Destroy(Game.transform.GetChild(3).transform.GetChild(i).gameObject); } // Leaf
+        for (int i = 0; i < Map.transform.GetChild(0).transform.GetChild(1).childCount; i++){ Destroy(Map.transform.GetChild(0).transform.GetChild(1).transform.GetChild(i).gameObject); } // Dotori
+        for (int i = 0; i < Map.transform.GetChild(0).transform.GetChild(2).childCount; i++){ Destroy(Map.transform.GetChild(0).transform.GetChild(2).transform.GetChild(i).gameObject); } // Leaf
 
         for (int i = 0; i < ZIZIList.Count; i++){ Destroy(ZIZIList[i]); } // ZIZI
 
@@ -241,10 +241,10 @@ public class GameSceneSystem : MonoBehaviour
         ZIZIList = new List<GameObject>();
         
         GameObject Rock = Map.transform.GetChild(0).transform.GetChild(0).gameObject;
-        GameObject Bush = Map.transform.GetChild(0).transform.GetChild(1).gameObject;
+        GameObject Bush = Map.transform.GetChild(0).transform.GetChild(3).gameObject;
         
         int RockNum = Map.transform.GetChild(0).transform.GetChild(0).childCount;  // index Max
-        int BushNum = Map.transform.GetChild(0).transform.GetChild(1).childCount;  // index Max
+        int BushNum = Map.transform.GetChild(0).transform.GetChild(3).childCount;  // index Max
 
         Dotori_P1 = 0;
         Dotori_P2 = 0;
@@ -306,7 +306,7 @@ public class GameSceneSystem : MonoBehaviour
             {
                 ItemBoard[yGapNum + 4, xGapNum + 4, 1] = Dotori_Count++;
                 GameObject Dotori = Instantiate(Resources.Load("Item_Prefab/"+"dotori"), new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
-                Dotori.transform.SetParent(Game.transform.GetChild(2).transform, false);
+                Dotori.transform.SetParent(Map.transform.GetChild(0).transform.GetChild(1).transform, false);
 
         Debug.Log("================dotori==================");
         Debug.Log(ItemBoard[yGapNum + 4, xGapNum + 4, 0]);
@@ -318,7 +318,7 @@ public class GameSceneSystem : MonoBehaviour
             {
                 ItemBoard[yGapNum + 4, xGapNum + 4, 1] = Leaf_Count++;
                 GameObject Leaf = Instantiate(Resources.Load("Item_Prefab/"+"leaf"), new Vector3(x_correction, y_correction, -0.01f), Quaternion.identity) as GameObject;
-                Leaf.transform.SetParent(Game.transform.GetChild(3).transform, false);
+                Leaf.transform.SetParent(Map.transform.GetChild(0).transform.GetChild(2).transform, false);
 
         Debug.Log("================leaf==================");
         Debug.Log(ItemBoard[yGapNum + 4, xGapNum + 4, 0]);
@@ -479,7 +479,7 @@ public class GameSceneSystem : MonoBehaviour
         if (inMap == true)
         { 
             if (BushBoard[yGapNum + 4, xGapNum + 4, 0] == 1 
-            && Map.transform.GetChild(0).transform.GetChild(1).transform.GetChild(BushBoard[yGapNum + 4, xGapNum + 4, 1]).gameObject.activeSelf == true){ return; } // Cannot Spawn zizi on bush
+            && Map.transform.GetChild(0).transform.GetChild(3).transform.GetChild(BushBoard[yGapNum + 4, xGapNum + 4, 1]).gameObject.activeSelf == true){ return; } // Cannot Spawn zizi on bush
             AddListAndSpawn(); 
         }        
     }
@@ -537,10 +537,10 @@ public class GameSceneSystem : MonoBehaviour
 
     public void CutBush()
     {
-        if (BushBoard[yGapNum + 4 + 1, xGapNum + 4, 0] == 1){ Map.transform.GetChild(0).transform.GetChild(1).transform.GetChild(BushBoard[yGapNum + 4 + 1, xGapNum + 4, 1]).gameObject.SetActive(false); }
-        if (BushBoard[yGapNum + 4 - 1, xGapNum + 4, 0] == 1){ Map.transform.GetChild(0).transform.GetChild(1).transform.GetChild(BushBoard[yGapNum + 4 - 1, xGapNum + 4, 1]).gameObject.SetActive(false); }
-        if (BushBoard[yGapNum + 4, xGapNum + 4 + 1, 0] == 1){ Map.transform.GetChild(0).transform.GetChild(1).transform.GetChild(BushBoard[yGapNum + 4, xGapNum + 4 + 1, 1]).gameObject.SetActive(false); }
-        if (BushBoard[yGapNum + 4, xGapNum + 4 - 1, 0] == 1){ Map.transform.GetChild(0).transform.GetChild(1).transform.GetChild(BushBoard[yGapNum + 4, xGapNum + 4 - 1, 1]).gameObject.SetActive(false); }
+        if (BushBoard[yGapNum + 4 + 1, xGapNum + 4, 0] == 1){ Map.transform.GetChild(0).transform.GetChild(3).transform.GetChild(BushBoard[yGapNum + 4 + 1, xGapNum + 4, 1]).gameObject.SetActive(false); }
+        if (BushBoard[yGapNum + 4 - 1, xGapNum + 4, 0] == 1){ Map.transform.GetChild(0).transform.GetChild(3).transform.GetChild(BushBoard[yGapNum + 4 - 1, xGapNum + 4, 1]).gameObject.SetActive(false); }
+        if (BushBoard[yGapNum + 4, xGapNum + 4 + 1, 0] == 1){ Map.transform.GetChild(0).transform.GetChild(3).transform.GetChild(BushBoard[yGapNum + 4, xGapNum + 4 + 1, 1]).gameObject.SetActive(false); }
+        if (BushBoard[yGapNum + 4, xGapNum + 4 - 1, 0] == 1){ Map.transform.GetChild(0).transform.GetChild(3).transform.GetChild(BushBoard[yGapNum + 4, xGapNum + 4 - 1, 1]).gameObject.SetActive(false); }
     }
 
 
@@ -551,14 +551,14 @@ public class GameSceneSystem : MonoBehaviour
             if (isBlack == true && Dotori_P1 >= 3 || isBlack == false && Dotori_P2 >= 3){ return; } // Can get Item Max 3
             Dotori_P1 += isBlack ? 1 : 0;
             Dotori_P2 += isBlack ? 0 : 1;
-            Game.transform.GetChild(2).transform.GetChild(ItemBoard[yGapNum + 4, xGapNum + 4, 1]).gameObject.SetActive(false);
+            Map.transform.GetChild(0).transform.GetChild(1).transform.GetChild(ItemBoard[yGapNum + 4, xGapNum + 4, 1]).gameObject.SetActive(false);
         }
         else if (ItemBoard[yGapNum + 4, xGapNum + 4, 0] == 3) // Leaf
         {
             if (isBlack == true && Leaf_P1 >= 3 || isBlack == false && Leaf_P2 >= 3){ return; } // Can get Item Max 3
             Leaf_P1 += isBlack ? 1 : 0;
             Leaf_P2 += isBlack ? 0 : 1;
-            Game.transform.GetChild(3).transform.GetChild(ItemBoard[yGapNum + 4, xGapNum + 4, 1]).gameObject.SetActive(false);
+            Map.transform.GetChild(0).transform.GetChild(2).transform.GetChild(ItemBoard[yGapNum + 4, xGapNum + 4, 1]).gameObject.SetActive(false);
         }
         else { return; }
     }

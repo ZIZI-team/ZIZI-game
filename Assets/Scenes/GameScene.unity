@@ -3529,7 +3529,14 @@ MonoBehaviour:
   edgeSpot_y: 0
   blackStoneCount: 0
   whiteStoneCount: 0
+  Dotori_Count: 0
+  Leaf_Count: 0
+  Board_Count: 0
   TimerHand: {fileID: 223358188}
+  Dotori_P1: 0
+  Dotori_P2: 0
+  Leaf_P1: 0
+  Leaf_P2: 0
   Game: {fileID: 1574242314}
   stoneWinner: 0
   Player1Win: {fileID: 0}
