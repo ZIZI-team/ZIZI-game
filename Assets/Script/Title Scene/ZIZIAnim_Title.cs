@@ -119,7 +119,16 @@ public class ZIZIAnim_Title : MonoBehaviour
     // Animation Operator
     public void Operator(GameObject button)
     {
-        AnimList.Add(button.name);        
+        if(AnimList.Count < 1)
+        {
+            //prevent deleayed move
+            AnimList.Add(button.name);              
+        }
+        else
+        {
+
+        }
+      
     }
 
     // Animation ++++ End of L, R, U, D
