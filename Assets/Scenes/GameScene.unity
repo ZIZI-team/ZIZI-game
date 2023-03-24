@@ -3538,10 +3538,13 @@ MonoBehaviour:
   Leaf_P1: 0
   Leaf_P2: 0
   Game: {fileID: 1574242314}
-  stoneWinner: 0
+  ZIZI_Transform: {fileID: 1682889519}
   Player1Win: {fileID: 0}
   Player2Win: {fileID: 0}
-  StoneCount: 0
+  checkCond_Win: 0
+  StoneCount_Win: 0
+  checkCond_Anim4: 0
+  StoneCount_Anim4: 0
 --- !u!1 &1607167389
 GameObject:
   m_ObjectHideFlags: 0

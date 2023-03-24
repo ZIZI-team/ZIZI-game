@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+    // Script Located in skin prefab
+
 // Normal Animation
 public class ZIZIAnim_Game : MonoBehaviour
 {
@@ -24,6 +26,12 @@ public class ZIZIAnim_Game : MonoBehaviour
 
     public void AnimT(string AnimName)
     {
+        // AnimName
+            // Anim1 : Hop
+            // Anim2 : Nervous
+            // Anim3 : Dance
+            // Anim4 : Win
+
         controller.SetBool("Change", true);
         controller.SetBool(KEY, false);
         controller.SetBool(AnimName, true);
