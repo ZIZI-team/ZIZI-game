@@ -874,12 +874,15 @@ public class GameSceneSystem : MonoBehaviour
 
 // Hop Animation : Default
 public void Play_Animation1()
-{
+{   int cnt = 0;
+        Debug.Log("-------------!!--------------");
     for(int i = 0; i < Game.transform.GetChild(1).childCount; i++)
     {
         ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT("Anim1");
+        Debug.Log(cnt++);
         // Code : Animation Played, but not active
     }
+        Debug.Log("-------------!+++++!--------------");
 }
 
 // Nervous Animation : Play By Function Anim2Condition()
@@ -946,13 +949,13 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
         if (StoneCount_Anim2 == 6 && checkCond_Anim2 == true && isBlack == true)
         {
             Debug.Log("Player1 Play_Animation2! : Nervous");
-            Play_Animation2("Player1(Clone)");
-            Play_Animation2("Player1(Clone)_Leaf");
+            Play_Animation2("Player2(Clone)");
+            Play_Animation2("Player2(Clone)_Leaf");
         }
         else if (StoneCount_Anim2 == 6 && checkCond_Anim2 == true && isBlack == false)
         {
             Debug.Log("Player 2 Play_Animation2! : Nervous");
-            Play_Animation2("Player2(Clone)");
+            Play_Animation2("Player1(Clone)");
             Play_Animation2("Player1(Clone)_Leaf");
         }
         else { Debug.Log("Pass"); }

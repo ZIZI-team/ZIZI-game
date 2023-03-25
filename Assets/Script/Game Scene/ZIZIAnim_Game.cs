@@ -35,6 +35,7 @@ public class ZIZIAnim_Game : MonoBehaviour
         controller.SetBool("Change", true);
         controller.SetBool(KEY, false);
         controller.SetBool(AnimName, true);
+
         controller.SetBool("Change", false);
         KEY = AnimName;
     }
