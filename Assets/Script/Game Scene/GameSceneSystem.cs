@@ -97,6 +97,7 @@ public class GameSceneSystem : MonoBehaviour
 
     [Header("Gameplay Item System")]
     // public GameObject ActualMapPosition;    // this needs to replace 'AssignedMapPosition' in last
+    public GameObject SkillUI;
     public GameObject ItemSlotUI_1P;
     public GameObject ItemSlotUI_2P;
     public GameObject leafIcon;
@@ -164,6 +165,7 @@ public class GameSceneSystem : MonoBehaviour
         GameplayUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 790f, -0.4f);
         ItemSlotUI_1P.transform.localPosition = GameplayUI.transform.localPosition + new Vector3(0f, -391f, -0.4f); // y position is 824 in Inspector
         ItemSlotUI_2P.transform.localPosition = GameplayUI.transform.localPosition + new Vector3(0f, -2215f, -0.4f);
+        SkillUI.transform.localPosition += new Vector3(-1620f, 0f);
 
 // >> [2] Set Map Grid & Stone (Initiate state)
 
@@ -409,6 +411,53 @@ public class GameSceneSystem : MonoBehaviour
         GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
         OnClickReset();
     }
+    public void OnClickSkillActive()
+    {
+        if (SKill_Dotori == true)
+        {
+            Time.timeScale = 1;
+            SkillUI.transform.localPosition = new Vector3(-1620f, 0f);
+            if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
+            {
+                PlaySkill_Dotori(yGapNum, xGapNum, ZIZIBoard[yGapNum + 4, xGapNum + 4, 0]);
+                Debug.Log("PlaySkill_    Dotori");
+                UsedItem = true;
+                changePlayer();
+                SKill_Dotori = false;
+            }
+            else { return; } 
+        }
+        else if (SKill_Leaf == true)
+        {
+            Time.timeScale = 1;
+            SkillUI.transform.localPosition = new Vector3(-1620f, 0f);
+            if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
+            {
+                PlaySkill_leaf(yGapNum + 4, xGapNum + 4);
+                Debug.Log("PlaySkill_    leaf");
+                UsedItem = true;
+                changePlayer();
+                SKill_Leaf = false;
+            }
+            else { return; }  
+        }  
+    }
+    
+    
+    public void OnClickContinue()
+    {
+        Time.timeScale = 1f;
+        SkillUI.transform.localPosition = new Vector3(-1620f, 0f);
+        Curr_Item.SetActive(true);
+        if (SKill_Dotori == true)
+        {
+            SKill_Dotori = false;
+        }
+        else if (SKill_Leaf == true)
+        {
+            SKill_Leaf = false;
+        }
+    }
 
 
 
@@ -610,6 +659,7 @@ public class GameSceneSystem : MonoBehaviour
     
     public GameObject Player1Win;                     // Unity : Inspector
     public GameObject Player2Win;                     // Unity : Inspector
+    public bool skillCheckingDone = false;
     
 
 
@@ -622,31 +672,33 @@ public class GameSceneSystem : MonoBehaviour
     public void AddListAndSpawn()
     {
         if(SKill_Dotori == true)                                        // Play SKILL
-        { 
+        {
+            skillUseCheck();
             // Should be My ZIZI
-            if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
-            {
-                PlaySkill_Dotori(yGapNum, xGapNum, ZIZIBoard[yGapNum + 4, xGapNum + 4, 0]);
-                Debug.Log("PlaySkill_    Dotori");
-                UsedItem = true;
-                changePlayer();
-                SKill_Dotori = false;
-            }
-            else { return; }
+            // if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
+            // {
+            //     PlaySkill_Dotori(yGapNum, xGapNum, ZIZIBoard[yGapNum + 4, xGapNum + 4, 0]);
+            //     Debug.Log("PlaySkill_    Dotori");
+            //     UsedItem = true;
+            //     changePlayer();
+            //     SKill_Dotori = false;
+            // }
+            // else { return; }
         }
 
         else if (SKill_Leaf == true)
         {
+            skillUseCheck();
             // Should be My ZIZI
-            if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
-            {
-                PlaySkill_leaf(yGapNum + 4, xGapNum + 4);
-                Debug.Log("PlaySkill_    leaf");
-                UsedItem = true;
-                changePlayer();
-                SKill_Leaf = false;
-            }
-            else { return; }
+            // if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
+            // {
+            //     PlaySkill_leaf(yGapNum + 4, xGapNum + 4);
+            //     Debug.Log("PlaySkill_    leaf");
+            //     UsedItem = true;
+            //     changePlayer();
+            //     SKill_Leaf = false;
+            // }
+            // else { return; }
         }
 
         // ++Code : 시간 내에 스킬을 사용하지 못했을 경우는? : 돌려주기 (1)
@@ -720,6 +772,13 @@ public class GameSceneSystem : MonoBehaviour
     // Check Did Player Used Item
         if (UsedItem == false){ Curr_Item.SetActive(true); }
         else { UsedItem = false; }
+
+
+        // SKill_Dotori = false;
+        // SKill_Leaf = false;
+        // Curr_Item.SetActive(true);
+
+
 
     // Change ZIZI Color for Next turn
         if (isBlack == true)  // Player 1
@@ -1124,6 +1183,13 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
                 Debug.Log("leaf_skill(2)");
             }
         }
+    }
+
+    public void skillUseCheck()
+    {
+        
+        Time.timeScale = 0f;
+        SkillUI.transform.localPosition = new Vector3(0f, -390f);
     }
 
 
