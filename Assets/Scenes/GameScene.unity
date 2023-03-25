@@ -3819,6 +3819,7 @@ MonoBehaviour:
   Player2Win: {fileID: 0}
   SKill_Dotori: 0
   SKill_Leaf: 0
+  UsedItem: 0
   ZIZI_Count: 0
   checkCond_Win: 0
   StoneCount_Win: 0
@@ -3826,6 +3827,7 @@ MonoBehaviour:
   StoneCount_Anim2: 0
   checkCond_Anim3: 0
   StoneCount_Anim3: 0
+  Curr_Item: {fileID: 573597955}
 --- !u!1 &1607167389
 GameObject:
   m_ObjectHideFlags: 0

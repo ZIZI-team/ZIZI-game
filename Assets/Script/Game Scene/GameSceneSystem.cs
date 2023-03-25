@@ -626,12 +626,13 @@ public class GameSceneSystem : MonoBehaviour
             // Should be My ZIZI
             if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
             {
-                PlaySkill_Dotori(yGapNum + 4, xGapNum + 4, ZIZIBoard[yGapNum + 4, xGapNum + 4, 0]);
+                PlaySkill_Dotori(yGapNum, xGapNum, ZIZIBoard[yGapNum + 4, xGapNum + 4, 0]);
                 Debug.Log("PlaySkill_    Dotori");
                 UsedItem = true;
                 changePlayer();
                 SKill_Dotori = false;
             }
+            else { return; }
         }
 
         else if (SKill_Leaf == true)
@@ -645,6 +646,7 @@ public class GameSceneSystem : MonoBehaviour
                 changePlayer();
                 SKill_Leaf = false;
             }
+            else { return; }
         }
 
         // ++Code : 시간 내에 스킬을 사용하지 못했을 경우는? : 돌려주기 (1)
