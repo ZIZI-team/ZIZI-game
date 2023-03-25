@@ -240,6 +240,9 @@ public class GameSceneSystem : MonoBehaviour
         P1_Item = new List<GameObject>();
         P2_Item = new List<GameObject>();
 
+        SKill_Dotori = false;
+        SKill_Leaf = false;
+
         Turn = 0;
     }
 
@@ -383,15 +386,18 @@ public class GameSceneSystem : MonoBehaviour
         GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
         OnClickReset();
     }
+
+
     public void OnClickSkillActive()
     {
         if (SKill_Dotori == true)
         {
             Time.timeScale = 1;
             SkillUI.transform.localPosition = new Vector3(-1620f, 0f);
+            
             if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
             {
-                PlaySkill_Dotori(yGapNum, xGapNum, ZIZIBoard[yGapNum + 4, xGapNum + 4, 0]);
+                PlaySkill_Dotori(yGapNum + 4, xGapNum + 4, ZIZIBoard[yGapNum + 4, xGapNum + 4, 0]);
                 Debug.Log("PlaySkill_    Dotori");
                 UsedItem = true;
                 changePlayer();
@@ -403,6 +409,7 @@ public class GameSceneSystem : MonoBehaviour
         {
             Time.timeScale = 1;
             SkillUI.transform.localPosition = new Vector3(-1620f, 0f);
+
             if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
             {
                 PlaySkill_leaf(yGapNum + 4, xGapNum + 4);
@@ -421,14 +428,9 @@ public class GameSceneSystem : MonoBehaviour
         Time.timeScale = 1f;
         SkillUI.transform.localPosition = new Vector3(-1620f, 0f);
         Curr_Item.SetActive(true);
-        if (SKill_Dotori == true)
-        {
-            SKill_Dotori = false;
-        }
-        else if (SKill_Leaf == true)
-        {
-            SKill_Leaf = false;
-        }
+
+        SKill_Dotori = false;
+        SKill_Leaf = false;
     }
 
 
@@ -642,9 +644,14 @@ public class GameSceneSystem : MonoBehaviour
 
     public void AddListAndSpawn()
     {
-        if(SKill_Dotori == true)                                        // Play SKILL
+        if(SKill_Dotori == true || SKill_Leaf == true)                                        // Play SKILL
         {
-            skillUseCheck();
+            // Should be My ZIZI
+            if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
+            { 
+                skillUseCheck(); 
+            }
+
             // Should be My ZIZI
             // if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
             // {
@@ -657,9 +664,9 @@ public class GameSceneSystem : MonoBehaviour
             // else { return; }
         }
 
-        else if (SKill_Leaf == true)
-        {
-            skillUseCheck();
+//        else if (SKill_Leaf == true)
+        // {
+        //     skillUseCheck();
             // Should be My ZIZI
             // if(isBlack == true && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 4, xGapNum + 4, 0] == 2)
             // {
@@ -670,7 +677,7 @@ public class GameSceneSystem : MonoBehaviour
             //     SKill_Leaf = false;
             // }
             // else { return; }
-        }
+        // }
 
         // ++Code : 시간 내에 스킬을 사용하지 못했을 경우는? : 돌려주기 (1)
 
