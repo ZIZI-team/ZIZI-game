@@ -843,7 +843,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1345}
+  m_AnchoredPosition: {x: 0, y: -123}
   m_SizeDelta: {x: 715.7842, y: 156.1398}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &298414722
@@ -3338,7 +3338,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -527, y: 507}
+  m_AnchoredPosition: {x: -500, y: 507}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1371276329
@@ -4268,8 +4268,6 @@ MonoBehaviour:
   Stone_b: {fileID: 1382746492186278602, guid: 507a83acd0bf09145a1489f6b175bcf7, type: 3}
   Stone_w: {fileID: 1702663830927483069, guid: e6a84d3d59c02e74f9811e93704768c8, type: 3}
   isBlack: 1
-  now: []
-  stone_name: 
   SkillUI: {fileID: 1190258898}
   ItemSlotUI_1P: {fileID: 1151869296091919642}
   ItemSlotUI_2P: {fileID: 1151869297139682125}
@@ -4298,6 +4296,7 @@ MonoBehaviour:
   ZIZI_Transform: {fileID: 1682889519}
   Player1Win: {fileID: 1151869297447070696}
   Player2Win: {fileID: 1151869296071769522}
+  skillCheckingDone: 0
   SKill_Dotori: 0
   SKill_Leaf: 0
   UsedItem: 0
@@ -5764,7 +5763,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 555, y: 507}
+  m_AnchoredPosition: {x: 500, y: 507}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2132657105
