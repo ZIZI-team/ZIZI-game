@@ -139,6 +139,7 @@ public class GameSceneSystem : MonoBehaviour
 
     public int blackStoneCount = 0;
     public int whiteStoneCount = 0;
+    public bool musicIsOn = false;
 
     // public GameObject Line;
     // GameObject[] Black_line;
@@ -779,7 +780,7 @@ public class GameSceneSystem : MonoBehaviour
         if (isBlack == true)  // Player 1
         {
             isBlack = false;
-            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
+            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f, -0.02f);
             time = fullTime;
             TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
 
@@ -793,7 +794,7 @@ public class GameSceneSystem : MonoBehaviour
         else 
         {
             isBlack = true;
-            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(370f, 55.1f,-0.02f);
+            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(370f, 55.1f, -0.02f);
             time = fullTime;
             TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
 
@@ -920,6 +921,47 @@ public class GameSceneSystem : MonoBehaviour
         }
         return true;
     }
+    //======================3x3=================//
+        public bool Check_Y_Plus(int startPointY, int StartPointX, int color)
+    {
+        StoneCount_Win = 0;
+        for (int i = 0; i < 3; i++)
+        {
+            if (ZIZIBoard[startPointY + i, StartPointX, 0] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
+            else { StoneCount_Win = 0; return false; }
+            if (i == 3)
+            {
+                
+            }
+        }
+        return true;
+    }
+
+    public bool Check_X_Plus(int startPointY, int StartPointX, int color)
+    {
+        StoneCount_Win = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            if (ZIZIBoard[startPointY, StartPointX + i, 0] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
+            else { StoneCount_Win = 0; return false; }
+        }
+        return true;
+    }
+
+    public bool Check_XY_Plus(int startPointY, int StartPointX, int color)
+    {
+        StoneCount_Win = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            if (ZIZIBoard[startPointY + i, StartPointX + i, 0] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
+            else { StoneCount_Win = 0; return false; }
+        }
+        return true;
+    }
+
+
+
+
 
     public bool Check_XY_Minus(int startPointY, int StartPointX, int color)
     {
@@ -1265,6 +1307,26 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
             GameObject Leaf = Instantiate(Resources.Load("Item_Prefab/"+"leaf"), new Vector3(0, 0, -0.01f), Quaternion.identity) as GameObject;
             Leaf.transform.SetParent(ZIZI_Transform.GetChild(ZIZIBoard[indexY, indexX, 1]).transform, false);
             Leaf.transform.localPosition = new Vector3(0, 0, 0);
+    }
+
+//music on//
+    public void OnclickMusic()
+    {
+       if (musicIsOn == true)
+       {
+        //mute = false;\
+        // music = Music.GetComponent<
+        Game.GetComponent<AudioSource>().mute  = true;
+        musicIsOn = false;
+       } 
+       else
+       {
+        //mute = true;
+        Game.GetComponent<AudioSource>().mute  = false;
+        musicIsOn = true;
+
+       }
+        
     }
     
 
