@@ -1025,47 +1025,6 @@ public class GameSceneSystem : MonoBehaviour
         }
         return true;
     }
-    //======================3x3=================//
-        public bool Check_Y_Plus(int startPointY, int StartPointX, int color)
-    {
-        StoneCount_Win = 0;
-        for (int i = 0; i < 3; i++)
-        {
-            if (ZIZIBoard[startPointY + i, StartPointX, 0] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
-            else { StoneCount_Win = 0; return false; }
-            if (i == 3)
-            {
-                
-            }
-        }
-        return true;
-    }
-
-    public bool Check_X_Plus(int startPointY, int StartPointX, int color)
-    {
-        StoneCount_Win = 0;
-        for (int i = 0; i < 5; i++)
-        {
-            if (ZIZIBoard[startPointY, StartPointX + i, 0] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
-            else { StoneCount_Win = 0; return false; }
-        }
-        return true;
-    }
-
-    public bool Check_XY_Plus(int startPointY, int StartPointX, int color)
-    {
-        StoneCount_Win = 0;
-        for (int i = 0; i < 5; i++)
-        {
-            if (ZIZIBoard[startPointY + i, StartPointX + i, 0] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
-            else { StoneCount_Win = 0; return false; }
-        }
-        return true;
-    }
-
-
-
-
 
     public bool Check_XY_Minus(int startPointY, int StartPointX, int color)
     {
