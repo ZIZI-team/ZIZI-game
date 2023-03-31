@@ -145,7 +145,7 @@ public class GameSceneSystem : MonoBehaviour
     // GameObject[] Black_line;
     // GameObject[] White_line;
 
-
+// ------------------------------------------------------------------------------------------------------------------------ //
 
 
 // ------------------------------------------------------------------------------------------------------------------------ //
@@ -750,6 +750,8 @@ public class GameSceneSystem : MonoBehaviour
         // Default Animation
             Play_Animation1();
 
+    // Check 33 Condition
+        Check3Condition();
 
     // Check Win Condition
         WinCondition();
@@ -819,7 +821,7 @@ public class GameSceneSystem : MonoBehaviour
 // ------------------------------------------------------------------------------------------------------------------------ //
 
     public bool CheckCondition(int indexY, int indexX, bool StoneColor, 
-                                Func<int, int, int, bool> Func1, Func<int, int, int, bool> Func2, Func<int, int, int, bool> Func3, Func<int, int, int, bool> Func4) // make 5 : win
+                                Func<int, int, int, bool> Func1, Func<int, int, int, bool> Func2, Func<int, int, int, bool> Func3, Func<int, int, int, bool> Func4, int kMin) // make 5 : win
     {
         // return true : Win, return false : Pass
 
@@ -828,20 +830,24 @@ public class GameSceneSystem : MonoBehaviour
         else { color = 2; }
 
         bool TrueFlag = false;
-        try {
-            for (int k = -4; k <= 0; k++)
+        try 
+        {
+            for (int k = kMin; k <= 0; k++) // F
             {
-                TrueFlag = Func1(indexY + k, indexX, color);
+                TrueFlag = Func1(indexY + k, indexX, color); // F
                 if (TrueFlag == true) { return true; }
-                TrueFlag = Func2(indexY, indexX + k, color);
+                TrueFlag = Func2(indexY, indexX + k, color); // F
                 if (TrueFlag == true) { return true; }
-                TrueFlag = Func3(indexY + k, indexX + k, color);
+                TrueFlag = Func3(indexY + k, indexX + k, color); // F
                 if (TrueFlag == true) { return true; }
-                TrueFlag = Func4(indexY + k, indexX - k, color);
+                TrueFlag = Func4(indexY + k, indexX - k, color); // F
                 if (TrueFlag == true) { return true; }
             }
             return false;
-        } finally {
+        } 
+
+        finally 
+        {
             if(TrueFlag) {
                 string board = "";
                 for (int i = 0; i < 11 + 8; i++) {
@@ -859,12 +865,110 @@ public class GameSceneSystem : MonoBehaviour
 // >> Check Win Condition : make 5 << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
+    public bool checkCond_3 = false;
+    public int StoneCount_Cond3 = 0;
+
+    public void Check3Condition()
+    {
+        checkCond_3 = CheckCondition(yGapNum + 4, xGapNum + 4, isBlack, Check3_Y_Plus, Check3_X_Plus, Check3_XY_Plus, Check3_XY_Minus, -4);
+
+        if (StoneCount_Cond3 == 5 && checkCond_3 == true && isBlack == true)
+        {
+            Debug.Log("black coondition 3");
+        }
+        else if (StoneCount_Cond3 == 5 && checkCond_3 == true && isBlack == false)
+        {
+            Debug.Log("White coondition 3");
+        }
+        else { Debug.Log("Pass"); }
+    }
+
+    public bool Check3_Y_Plus(int startPointY, int StartPointX, int color)//int i
+    {
+        StoneCount_Cond3 = 0;
+
+        if (ZIZIBoard[startPointY, StartPointX, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+            else { StoneCount_Cond3 = 0; return false; }
+        
+        for (int i = 1; i < 4; i++)
+        {
+            if (ZIZIBoard[startPointY + i, StartPointX, 0] == color){ StoneCount_Cond3 += 1; } // ZIZI : Existed / Same Color (# 4)
+                else { StoneCount_Cond3 = 0; return false; }
+        }
+        
+        if (ZIZIBoard[startPointY + 5, StartPointX, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+            else { StoneCount_Cond3 = 0; return false; }
+
+        return true;
+    }
+
+    public bool Check3_X_Plus(int startPointY, int StartPointX, int color)
+    {
+        StoneCount_Cond3 = 0;
+
+        if (ZIZIBoard[startPointY, StartPointX, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+            else { StoneCount_Cond3 = 0; return false; }
+        
+        for (int i = 1; i < 4; i++)
+        {
+            if (ZIZIBoard[startPointY, StartPointX + i, 0] == color){ StoneCount_Cond3 += 1; } // ZIZI : Existed / Same Color (# 4)
+                else { StoneCount_Cond3 = 0; return false; }
+        }
+        
+        if (ZIZIBoard[startPointY, StartPointX + 5, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+            else { StoneCount_Cond3 = 0; return false; }
+
+        return true;
+    }
+
+    public bool Check3_XY_Plus(int startPointY, int StartPointX, int color)
+    {
+        StoneCount_Cond3 = 0;
+        
+        if (ZIZIBoard[startPointY, StartPointX, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+            else { StoneCount_Cond3 = 0; return false; }
+        
+        for (int i = 1; i < 4; i++)
+        {
+            if (ZIZIBoard[startPointY + i, StartPointX + i, 0] == color){ StoneCount_Cond3 += 1; } // ZIZI : Existed / Same Color (# 4)
+                else { StoneCount_Cond3 = 0; return false; }
+        }
+        
+        if (ZIZIBoard[startPointY + 5, StartPointX + 5, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+            else { StoneCount_Cond3 = 0; return false; }        
+        
+        return true;
+    }
+
+    public bool Check3_XY_Minus(int startPointY, int StartPointX, int color)
+    {
+        StoneCount_Cond3 = 0;
+
+        if (ZIZIBoard[startPointY, StartPointX, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+            else { StoneCount_Cond3 = 0; return false; }
+        
+        for (int i = 1; i < 4; i++)
+        {
+            if (ZIZIBoard[startPointY + i, StartPointX - i, 0] == color){ StoneCount_Cond3 += 1; } // ZIZI : Existed / Same Color (# 4)
+                else { StoneCount_Cond3 = 0; return false; }
+        }
+        
+        if (ZIZIBoard[startPointY + 5, StartPointX - 5, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+            else { StoneCount_Cond3 = 0; return false; }  
+
+        return true;
+    }
+
+
+// >> Check Win Condition : make 5 << //
+// ------------------------------------------------------------------------------------------------------------------------ //
+
     public bool checkCond_Win = false;
     public int StoneCount_Win = 0;
 
     public void WinCondition()
     {
-        checkCond_Win = CheckCondition(yGapNum + 4, xGapNum + 4, isBlack, Check_Y_Plus, Check_X_Plus, Check_XY_Plus, Check_XY_Minus);
+        checkCond_Win = CheckCondition(yGapNum + 4, xGapNum + 4, isBlack, Check_Y_Plus, Check_X_Plus, Check_XY_Plus, Check_XY_Minus, -4);
 
         if (StoneCount_Win == 5 && checkCond_Win == true && isBlack == true)
         {
@@ -900,7 +1004,7 @@ public class GameSceneSystem : MonoBehaviour
         return true;
     }
 
-    public bool Check_X_Plus(int startPointY, int StartPointX, int color)
+    public bool Check_X_Plus (int startPointY, int StartPointX, int color)
     {
         StoneCount_Win = 0;
         for (int i = 0; i < 5; i++)
@@ -1052,7 +1156,7 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
 
     public void Anim2Condition()
     {
-        checkCond_Anim2 = CheckCondition(yGapNum + 4, xGapNum + 4, isBlack, Anim2_Check_Y_Plus, Anim2_Check_X_Plus, Anim2_Check_XY_Plus, Anim2_Check_XY_Minus);
+        checkCond_Anim2 = CheckCondition(yGapNum + 4, xGapNum + 4, isBlack, Anim2_Check_Y_Plus, Anim2_Check_X_Plus, Anim2_Check_XY_Plus, Anim2_Check_XY_Minus, -5);
 
         if (StoneCount_Anim2 == 6 && checkCond_Anim2 == true && isBlack == true)
         {
@@ -1069,7 +1173,7 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
         else { Debug.Log("Pass"); }
     }
 
-    public bool Anim2_Check_Y_Plus(int startPointY, int StartPointX, int color)
+    public bool Anim2_Check_Y_Plus(int startPointY, int StartPointX, int color)//int i
     {
         StoneCount_Anim2 = 0;
 
