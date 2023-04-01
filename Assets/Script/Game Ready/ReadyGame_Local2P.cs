@@ -87,8 +87,8 @@ public class ReadyGame_Local2P : MonoBehaviour
         Skincolor_list = MySkin[MySkinIndex].GetComponent<SKIN>().Color_List.ToList();
         for (int i = 0; i < Skincolor_list.Count; i++)
         {
-            if (i < 3){ ColorPalette_Object.Add(Instantiate(ColorPrefab, new Vector3(-216 + i*216, 104, 0), Quaternion.identity) as GameObject); }
-            else if (i >= 3){ ColorPalette_Object.Add(Instantiate(ColorPrefab, new Vector3(-216 + (i-3)*216, -80, 0), Quaternion.identity) as GameObject); }
+            if (i < 3){ ColorPalette_Object.Add(Instantiate(ColorPrefab, new Vector3(-216 + i*216, 9, 0), Quaternion.identity) as GameObject); }
+            else if (i >= 3){ ColorPalette_Object.Add(Instantiate(ColorPrefab, new Vector3(-216 + (i-3)*216, -177, 0), Quaternion.identity) as GameObject); }
 
             ColorPalette_Object[i].GetComponent<Image>().color = Skincolor_list[i];
             ColorPalette_Object[i].transform.SetParent(ColorPalette.transform, false);
@@ -150,8 +150,8 @@ public class ReadyGame_Local2P : MonoBehaviour
                 Block_1P.transform.SetAsLastSibling();
                 Block_1P.SetActive(true);
 
-                if (i < 3){ Block_1P.GetComponent<RectTransform>().localPosition = new Vector3(-216 + i*216, 104, 0); }
-                else if (i >= 3){ Block_1P.GetComponent<RectTransform>().localPosition = new Vector3(-216 + (i-3)*216, -80, 0); }
+                if (i < 3){ Block_1P.GetComponent<RectTransform>().localPosition = new Vector3(-216 + i*216, 9, 0); }
+                else if (i >= 3){ Block_1P.GetComponent<RectTransform>().localPosition = new Vector3(-216 + (i-3)*216, -177, 0); }
                 break;
             }
         }   

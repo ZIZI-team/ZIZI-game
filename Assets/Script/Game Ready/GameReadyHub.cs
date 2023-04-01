@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameReadyHub : MonoBehaviour
 {   
@@ -9,7 +10,7 @@ public class GameReadyHub : MonoBehaviour
     public GameObject Final_Skin_1P;                       // ReadyGame_Local1P >> Hub
     public GameObject Final_Skin_2P;                       // ReadyGame_Local2P >> Hub
 
-    public Animator controller;                            // Unity : Inspector : Animator : ReadyGame, Controller : SelectMap
+    // public Animator controller;                            // Unity : Inspector : Animator : ReadyGame, Controller : SelectMap
 
 
     void Start()
@@ -49,16 +50,21 @@ public class GameReadyHub : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("PlayerMode") == 1 && DidYouSelect_Skin1 == true)
         {
-            controller.SetBool("Finish", true);
+            GameObject.Find("ReadyGame").transform.GetChild(2).gameObject.SetActive(false);
+            GameObject.Find("ReadyGame").transform.GetChild(3).gameObject.SetActive(true);
             ShowMapPalette();
         }
         else if (PlayerPrefs.GetInt("PlayerMode") == 2 && DidYouSelect_Skin1 == true && DidYouSelect_Skin2 == true)
         {
-            controller.SetBool("Finish", true);
+            GameObject.Find("ReadyGame").transform.GetChild(2).gameObject.SetActive(false);
+            GameObject.Find("ReadyGame").transform.GetChild(3).gameObject.SetActive(true);
             ShowMapPalette();
         }
         else return;
+
+        // controller.SetBool("Finish", true);
     }
+
 
     // +++ MAP +++ //
     // Map Prefab : MapName(Str) + MapImg(Img) + MapRule(Script)
@@ -85,15 +91,20 @@ public class GameReadyHub : MonoBehaviour
         MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/BushMap3")); 
 
         MapPalette = GameObject.Find("MAP");
-        Selected_MapPalette = GameObject.Find("Finish MAP");
+        // Selected_MapPalette = GameObject.Find("Finish MAP");
 
         // Set initiate Map Prefab
         newMap = Instantiate(MapImg[0], new Vector3(0, 0, 0), Quaternion.identity);
         newMap.transform.SetParent(MapPalette.transform, false);
         SetMapSize(newMap, 600f, 600f);
+
+        // Set initiate Map In Game Panel
+        GameMap = Instantiate(Map[0], new Vector3(0, 0, 0), Quaternion.identity);
+        GameMap.transform.SetParent(Game.transform, false);
+        GameMap.transform.SetSiblingIndex(0);
     }
 
-    public void MapIndexUp()
+    public void MapIndexUp() // no use
     {
         Destroy(newMap);
         if (MapIndex == MapImg.Count - 1){ MapIndex = 0; }
@@ -104,7 +115,7 @@ public class GameReadyHub : MonoBehaviour
         SetMapSize(newMap, 600f, 600f);
     }
 
-    public void MapIndexDown()
+    public void MapIndexDown() // no use
     {
         Destroy(newMap); 
         if (MapIndex == 0){ MapIndex = 2; }
@@ -115,25 +126,29 @@ public class GameReadyHub : MonoBehaviour
         SetMapSize(newMap, 600f, 600f);
     }
 
-
     public GameObject Game;     // Unity : Inspector
 
 
     // Unity : Selected_MapPalette Onclick
-    public bool DidYouSelect_Map = false;
     public GameObject GameMap;
-    public void Finish_SelectMap()
+
+    public void Finish_SelectMap(GameObject MapChart)
     {
         if (Selected_Map != null){ Destroy(Selected_Map); }
         
-        Selected_Map = Instantiate(newMap, new Vector3(0, -500, 0), Quaternion.identity);
-        Selected_Map.transform.SetParent(Selected_MapPalette.transform, false);
-        SetMapSize(Selected_Map, 500f, 500f);
+            // Selected_Map = Instantiate(newMap, new Vector3(0, -500, 0), Quaternion.identity);
+            // Selected_Map.transform.SetParent(Selected_MapPalette.transform, false);
+            // SetMapSize(Selected_Map, 500f, 500f);
 
-        // Must Select Map
-        DidYouSelect_Map = true;
+        MapIndex = MapChart.transform.GetSiblingIndex();
+        Destroy(newMap); 
 
+        newMap = Instantiate(MapImg[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
+        newMap.transform.SetParent(MapPalette.transform, false);
+        SetMapSize(newMap, 600f, 600f);
 
+        Selected_Map = newMap;
+        
         // Set Map In Game Panel
         if (Selected_Map != null){ Destroy(GameMap); }
         GameMap = Instantiate(Map[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
@@ -148,19 +163,30 @@ public class GameReadyHub : MonoBehaviour
         rectTransform_Map.sizeDelta = new Vector2(width, height);
     }
 
+    public void GoBack_1()
+    {
+        SceneManager.LoadScene("TitleScene");
+    }
+
+    public void GoBack_2()
+    {
+        GameObject.Find("ReadyGame").transform.GetChild(2).gameObject.SetActive(true);
+        GameObject.Find("ReadyGame").transform.GetChild(3).gameObject.SetActive(false);
+
+        // Set initiate Map Prefab
+        newMap = Instantiate(MapImg[0], new Vector3(0, 0, 0), Quaternion.identity);
+        newMap.transform.SetParent(MapPalette.transform, false);
+        SetMapSize(newMap, 600f, 600f);
+    }
 
     // Unity : Start Game Onclick
     public void StartGame()
     {
-        if (DidYouSelect_Map == true)
-        {
-            Game.SetActive(true);
-            gameObject.SetActive(false);
-        }
+        Game.SetActive(true);
+        gameObject.SetActive(false);
 
         GameObject.Find("Game").GetComponent<GameSceneSystem>().Stone_b = Final_Skin_1P;
         GameObject.Find("Game").GetComponent<GameSceneSystem>().Stone_w = Final_Skin_2P;
-        
     }
 
     void Update()

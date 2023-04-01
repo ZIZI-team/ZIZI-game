@@ -22,9 +22,8 @@ public class GameSceneSystem : MonoBehaviour
     float time = 5f;
     float fullTime = 10f;
     
-    [Header("Gameplay Panel")]
-    public GameObject GameplayUI;                   // inspector
-
+    [Header("Main UI")]
+    public GameObject MainUI;                   // inspector
 
     [Header("PlayerTurn Function")]
     public GameObject playerTurnIcon;               // inspector
@@ -34,16 +33,9 @@ public class GameSceneSystem : MonoBehaviour
     public GameObject PauseBox;                     // inspector
     bool pauseIsOnSight = false;
 
-    [Header("Each Players Stone Spawn Status")]
-    public Text firstPlayerStoneStatus;             // inspector
-    public Text secondPlayerStoneStatus;            // inspector
-    public int player1StoneCounting = 0;
-    public int player2StoneCounting = 0;
-
     [Header("Game Result Panel")]
     public GameObject GameResultBox;                // inspector
-    public GameObject mostTopCanvas;                // This object is declared for 'ClickCanvas'
-
+    public GameObject mostTopCanvas;                // This object is declared for 'GameCanvas'
 
 
 
@@ -153,9 +145,9 @@ public class GameSceneSystem : MonoBehaviour
     {
 
 // >> [1] Set UI Panel
-        GameplayUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 790f, -0.4f);
-        ItemSlotUI_1P.transform.localPosition = GameplayUI.transform.localPosition + new Vector3(0f, -391f, -0.4f); // y position is 824 in Inspector
-        ItemSlotUI_2P.transform.localPosition = GameplayUI.transform.localPosition + new Vector3(0f, -2215f, -0.4f);
+        // MainUI.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(0f, 790f, -0.4f);
+        // ItemSlotUI_1P.transform.localPosition = MainUI.transform.localPosition + new Vector3(0f, -391f, -0.4f); // y position is 824 in Inspector
+        // ItemSlotUI_2P.transform.localPosition = MainUI.transform.localPosition + new Vector3(0f, -2215f, -0.4f);
         SkillUI.transform.localPosition += new Vector3(-1620f, 0f);
 
 // >> [2] Set Map Grid & Stone (Initiate state)
@@ -349,7 +341,7 @@ public class GameSceneSystem : MonoBehaviour
         Reset_Item();
 
         isBlack = true;
-        playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
+        playerTurnIcon.transform.position = MainUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
 
         Time.timeScale = 1f;
         time = fullTime;
@@ -779,7 +771,7 @@ public class GameSceneSystem : MonoBehaviour
         if (isBlack == true)  // Player 1
         {
             isBlack = false;
-            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
+            playerTurnIcon.transform.position = MainUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
             time = fullTime;
             TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
 
@@ -793,7 +785,7 @@ public class GameSceneSystem : MonoBehaviour
         else 
         {
             isBlack = true;
-            playerTurnIcon.transform.position = GameplayUI.transform.position + new Vector3(370f, 55.1f,-0.02f);
+            playerTurnIcon.transform.position = MainUI.transform.position + new Vector3(370f, 55.1f,-0.02f);
             time = fullTime;
             TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
 
