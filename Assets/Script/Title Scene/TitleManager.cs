@@ -58,13 +58,13 @@ public class TitleManager : MonoBehaviour
     
     public void PlayerMode1() // Onclick Button 1P Local
     {
-        button1.GetComponent<Image>().sprite = pressedSprite1;
+        // button1.GetComponent<Image>().sprite = pressedSprite1;
         button1.transform.GetChild(0).gameObject.SetActive(true);
 
-        button2.GetComponent<Image>().sprite = disabledSprite2;
+        // button2.GetComponent<Image>().sprite = disabledSprite2;
         button2.transform.GetChild(0).gameObject.SetActive(false);
 
-        button3.GetComponent<Image>().sprite = disabledSprite3;
+        // button3.GetComponent<Image>().sprite = disabledSprite3;
         button3.transform.GetChild(0).gameObject.SetActive(false);
 
         PlayerPrefs.SetInt("PlayerMode", 1); 
@@ -72,13 +72,13 @@ public class TitleManager : MonoBehaviour
 
     public void PlayerMode2() // Onclick Button 2P Local
     {
-        button2.GetComponent<Image>().sprite = pressedSprite2;
+        // button2.GetComponent<Image>().sprite = pressedSprite2;
         button2.transform.GetChild(0).gameObject.SetActive(true);
 
-        button1.GetComponent<Image>().sprite = disabledSprite1;
+        // button1.GetComponent<Image>().sprite = disabledSprite1;
         button1.transform.GetChild(0).gameObject.SetActive(false);
 
-        button3.GetComponent<Image>().sprite = disabledSprite3;
+        // button3.GetComponent<Image>().sprite = disabledSprite3;
         button3.transform.GetChild(0).gameObject.SetActive(false);
 
         PlayerPrefs.SetInt("PlayerMode", 2); 
@@ -86,13 +86,13 @@ public class TitleManager : MonoBehaviour
 
     public void PlayerMode3()  // Onclick Button Online
     {        
-        button3.GetComponent<Image>().sprite = pressedSprite3;
+        // button3.GetComponent<Image>().sprite = pressedSprite3;
         button3.transform.GetChild(0).gameObject.SetActive(true);
 
-        button2.GetComponent<Image>().sprite = disabledSprite2;
+        // button2.GetComponent<Image>().sprite = disabledSprite2;
         button2.transform.GetChild(0).gameObject.SetActive(false);
 
-        button1.GetComponent<Image>().sprite = disabledSprite1;
+        // button1.GetComponent<Image>().sprite = disabledSprite1;
         button1.transform.GetChild(0).gameObject.SetActive(false);
 
         PlayerPrefs.SetInt("PlayerMode", 3); 
