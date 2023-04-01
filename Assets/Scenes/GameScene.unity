@@ -4268,8 +4268,6 @@ MonoBehaviour:
   Stone_b: {fileID: 1382746492186278602, guid: 507a83acd0bf09145a1489f6b175bcf7, type: 3}
   Stone_w: {fileID: 1702663830927483069, guid: e6a84d3d59c02e74f9811e93704768c8, type: 3}
   isBlack: 1
-  now: []
-  stone_name: 
   SkillUI: {fileID: 1190258898}
   ItemSlotUI_1P: {fileID: 1151869296091919642}
   ItemSlotUI_2P: {fileID: 1151869297139682125}
@@ -4277,6 +4275,7 @@ MonoBehaviour:
   dotoriIcon: {fileID: 2951389159927132193, guid: 626b095a6557d4f8fafd0530303ca956, type: 3}
   P1_Item: []
   P2_Item: []
+  latestItem: {fileID: 0}
   GapSize_x: 0
   GapSize_y: 0
   edgeSpot_1: {fileID: 0}
@@ -4286,6 +4285,7 @@ MonoBehaviour:
   edgeSpot_y: 0
   blackStoneCount: 0
   whiteStoneCount: 0
+  musicIsOn: 0
   Dotori_Count: 0
   Leaf_Count: 0
   Board_Count: 0
@@ -4298,11 +4298,14 @@ MonoBehaviour:
   ZIZI_Transform: {fileID: 1682889519}
   Player1Win: {fileID: 1151869297447070696}
   Player2Win: {fileID: 1151869296071769522}
+  skillCheckingDone: 0
   SKill_Dotori: 0
   SKill_Leaf: 0
   UsedItem: 0
   ZIZI_Count: 0
   Turn: 0
+  checkCond_3: 0
+  StoneCount_Cond3: 0
   checkCond_Win: 0
   StoneCount_Win: 0
   checkCond_Anim2: 0
