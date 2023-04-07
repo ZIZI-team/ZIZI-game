@@ -150,21 +150,46 @@ public class GameSceneSystem : MonoBehaviour
         // ItemSlotUI_2P.transform.localPosition = MainUI.transform.localPosition + new Vector3(0f, -2215f, -0.4f);
         SkillUI.transform.localPosition += new Vector3(-1620f, 0f);
 
+
 // >> [2] Set Map Grid & Stone (Initiate state)
+
+        Map = GameObject.Find("Game").transform.GetChild(0).gameObject;
+        
+        // >>>>>. Screen Ratio
+            panel = Map.transform.GetChild(1).gameObject.GetComponent<RectTransform>();
+
+            // Panel Size
+            panelSize = panel.rect.size;
+
+            // Get Canvas Scaler component
+            CanvasScaler canvasScaler = Map.transform.GetChild(1).gameObject.GetComponentInParent<CanvasScaler>();
+
+            // Calculate Size by bCanvas Scaler match mode
+            if (canvasScaler.matchWidthOrHeight == 0)
+            {
+                // Width Match
+                float scaleFactor = Screen.width / canvasScaler.referenceResolution.x;
+                panelSize *= scaleFactor;
+            }
+            else
+            {
+                // Height Match 
+                float scaleFactor = Screen.height / canvasScaler.referenceResolution.y;
+                panelSize *= scaleFactor;
+            }
+
 
         // 1. Calculate Grid Size with edgePoint 1, 2, 3 : Game > Map Prefab
 
-            Map = GameObject.Find("Game").transform.GetChild(0).gameObject;
+            edgeSpot_1 = Map.transform.GetChild(1).transform.GetChild(0).gameObject;
+            edgeSpot_2 = Map.transform.GetChild(1).transform.GetChild(1).gameObject;
+            edgeSpot_3 = Map.transform.GetChild(1).transform.GetChild(2).gameObject;
 
-            edgeSpot_1 = Map.transform.GetChild(1).gameObject;
-            edgeSpot_2 = Map.transform.GetChild(2).gameObject;
-            edgeSpot_3 = Map.transform.GetChild(3).gameObject;
+            edgeSpot_x = edgeSpot_1.GetComponent<RectTransform>().localPosition.x;  // : by EventPosition
+            edgeSpot_y = edgeSpot_1.GetComponent<RectTransform>().localPosition.y;  // : by EventPosition
 
-            edgeSpot_x = edgeSpot_1.GetComponent<RectTransform>().position.x;  // : by EventPosition
-            edgeSpot_y = edgeSpot_1.GetComponent<RectTransform>().position.y;  // : by EventPosition
-
-            GapSize_x = edgeSpot_2.GetComponent<RectTransform>().position.x - edgeSpot_x;
-            GapSize_y = edgeSpot_3.GetComponent<RectTransform>().position.y - edgeSpot_y;
+            GapSize_x = (edgeSpot_2.GetComponent<RectTransform>().localPosition.x - edgeSpot_x);
+            GapSize_y = (edgeSpot_3.GetComponent<RectTransform>().localPosition.y - edgeSpot_y);
 
 
         // 2. Make Initiate Board (Record Initiate Information)
@@ -247,8 +272,8 @@ public class GameSceneSystem : MonoBehaviour
     {
         RectTransform BoardItemRect = BoardItem.GetComponent<RectTransform>();
 
-        xPos = BoardItemRect.position.x;
-        yPos = BoardItemRect.position.y;
+        xPos = BoardItemRect.localPosition.x;
+        yPos = BoardItemRect.localPosition.y;
         
         xNamuji = (xPos - edgeSpot_x) % GapSize_x; // xNamuji = 0.0f ~ < GapSize
         yNamuji = (yPos - edgeSpot_y) % GapSize_y; // yNamuji = 0.0f ~ < GapSize
@@ -258,7 +283,7 @@ public class GameSceneSystem : MonoBehaviour
         yGapNum = (int)((yPos - edgeSpot_y) / GapSize_y);  // int, Grid Index
 
     // correction working (inMap)
-        xGapNum += Correction(xNamuji, GapSize_x); // xGapNum : 0 ~ 10  // 0 : 
+        xGapNum += Correction(xNamuji, GapSize_x) - 1; // xGapNum : 0 ~ 10  // 0 : 
         yGapNum += Correction(yNamuji, GapSize_y); // yGapNum : 0 ~ 10
 
     // Push Item To List
@@ -271,8 +296,10 @@ public class GameSceneSystem : MonoBehaviour
             List<int> ItemPercentage = new List<int>(){1, 1, 1, 1, 1, 1, 2, 2, 3, 3};
             ItemBoard[yGapNum + 4, xGapNum + 4, 0] = ItemPercentage[Random.Range(0, ItemPercentage.Count)];
 
-                x_correction = xGapNum * GapSize_x + edgeSpot_x - Screen.width/2;  
-                y_correction = yGapNum * GapSize_y + edgeSpot_y - Screen.height/2;
+                float ratio = (float)Screen.height / (float)3040; // width
+        
+                x_correction = (xGapNum * GapSize_x + edgeSpot_x);// - Screen.width/2);// * ratio;  
+                y_correction = (yGapNum * GapSize_y + edgeSpot_y);// - Screen.height/2);// * ratio;
 
             if (ItemBoard[yGapNum + 4, xGapNum + 4, 0] == 2) // Dotori
             {
@@ -430,6 +457,16 @@ public class GameSceneSystem : MonoBehaviour
 // >> Game (Click Panel) << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
+    public RectTransform panel;
+    public Vector2 panelSize;
+
+    private Vector2 initialPanelSize;
+
+    public CanvasScaler canvasScaler;
+    public Vector2 localMousePos;
+
+    float scaleFactor = 1;
+
 
     public void PanelOnclick()
     {
@@ -437,7 +474,19 @@ public class GameSceneSystem : MonoBehaviour
 
     // Get Mouse Position
         // InputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        InputPos = Input.mousePosition;     // EventSystem : Position
+
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(panel, Input.mousePosition, null, out localMousePos);
+            panelSize = panel.rect.size;
+
+            InputPos = localMousePos;
+
+        // Get Mouse Position in panel's local coordinates
+        
+            //InputPos = Input.mousePosition; // EventSystem : Position
+
+            // Vector2 localMousePos;
+            // RectTransformUtility.ScreenPointToLocalPointInRectangle(panel, Input.mousePosition, null, out localMousePos);
+            // InputPos = localMousePos;
 
         xPos = InputPos.x;
         yPos = InputPos.y;
@@ -473,10 +522,12 @@ public class GameSceneSystem : MonoBehaviour
                 if ((xNamuji < 0 && xGapNum == 0) && (yGapNum > 0 && yGapNum < mapGridNum_y)){ inMap = true; }
                 if ((yNamuji < 0 && yGapNum == 0) && (xGapNum > 0 && xGapNum < mapGridNum_x)){ inMap = true; }
 
-
     // Set correct ZIZI Position
-        x_correction = xGapNum * GapSize_x + edgeSpot_x - Screen.width/2;   // Grid Position for zizi 
-        y_correction = yGapNum * GapSize_y + edgeSpot_y - Screen.height/2;  // Grid Position for zizi 
+
+        float ratio = (float)3040 / (float)Screen.height; // width
+
+        x_correction = (xGapNum * GapSize_x + edgeSpot_x);// - panelSize.y * 0.5f);// * ratio;  
+        y_correction = (yGapNum * GapSize_y + edgeSpot_y);// - panelSize.x * 0.5f);// * ratio;
 
 
     // Set Stone Condition
@@ -551,7 +602,6 @@ public class GameSceneSystem : MonoBehaviour
         if (BushBoard[yGapNum + 4, xGapNum + 4 - 1, 0] == 1){ Map.transform.GetChild(0).transform.GetChild(3).transform.GetChild(BushBoard[yGapNum + 4, xGapNum + 4 - 1, 1]).gameObject.SetActive(false); }
     }
 
-
     public void ItemOnclick()
     {
         if (ItemBoard[yGapNum + 4, xGapNum + 4, 0] == 2) // Dotori
@@ -563,11 +613,14 @@ public class GameSceneSystem : MonoBehaviour
 
             // (+) Game.transform.GetChild(2).transform.GetChild(ItemBoard[yGapNum + 4, xGapNum + 4, 1]).gameObject.SetActive(false);
             
+            float ratio = (float)Screen.width / (float)1440;
+
             if (isBlack == true)
             {
                 GameObject temp = Instantiate(dotoriIcon);
                 temp.transform.SetParent(ItemSlotUI_1P.transform);
                 temp.transform.localPosition = new Vector3(-500f + (130 * (Dotori_P1)), 0f);
+                temp.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
                 P1_Item.Add(temp);
             }
             else
@@ -575,6 +628,7 @@ public class GameSceneSystem : MonoBehaviour
                 GameObject temp = Instantiate(dotoriIcon);
                 temp.transform.SetParent(ItemSlotUI_2P.transform);
                 temp.transform.localPosition = new Vector3(-500f + (130 * (Dotori_P2)), 0f);
+                temp.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
                 P2_Item.Add(temp);
             }
 
@@ -591,11 +645,14 @@ public class GameSceneSystem : MonoBehaviour
 
             // (+) Game.transform.GetChild(3).transform.GetChild(ItemBoard[yGapNum + 4, xGapNum + 4, 1]).gameObject.SetActive(false);
 
+            float ratio = (float)Screen.width / (float)1440;
+
             if (isBlack == true)
             {
                 GameObject temp = Instantiate(leafIcon);
                 temp.transform.SetParent(ItemSlotUI_1P.transform);
                 temp.transform.localPosition = new Vector3(260f + (130 * (Leaf_P1)), 0f);
+                temp.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
                 P1_Item.Add(temp);
             }
             else
@@ -603,6 +660,7 @@ public class GameSceneSystem : MonoBehaviour
                 GameObject temp = Instantiate(leafIcon);
                 temp.transform.SetParent(ItemSlotUI_2P.transform);
                 temp.transform.localPosition = new Vector3(260f + (130 * (Leaf_P2)), 0f);
+                temp.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
                 P2_Item.Add(temp);
             }
 
