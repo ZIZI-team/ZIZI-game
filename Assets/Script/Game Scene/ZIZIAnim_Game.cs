@@ -35,9 +35,21 @@ public class ZIZIAnim_Game : MonoBehaviour
         controller.SetBool("Change", true);
         controller.SetBool(KEY, false);
         controller.SetBool(AnimName, true);
+        StartCoroutine(booler("Change", false, 0.5f));
 
-        controller.SetBool("Change", false);
+        // controller.SetBool("Change", false);
+
+        // StartCoroutine(booler(KEY, false, 0.1f));
+        // StartCoroutine(booler(AnimName, true, 0.3f));
+
         KEY = AnimName;
+    }
+
+    IEnumerator booler(string _name, bool _flag, float _sec)
+    {
+        yield return new WaitForSeconds(_sec);
+
+        controller.SetBool(_name, _flag);
     }
 
     void Update()

@@ -5574,6 +5574,7 @@ MonoBehaviour:
   dotoriIcon: {fileID: 2951389159927132193, guid: 626b095a6557d4f8fafd0530303ca956, type: 3}
   P1_Item: []
   P2_Item: []
+  latestItem: {fileID: 0}
   GapSize_x: 0
   GapSize_y: 0
   edgeSpot_1: {fileID: 0}
@@ -5583,6 +5584,7 @@ MonoBehaviour:
   edgeSpot_y: 0
   blackStoneCount: 0
   whiteStoneCount: 0
+  musicIsOn: 0
   Dotori_Count: 0
   Leaf_Count: 0
   Board_Count: 0
@@ -5605,6 +5607,8 @@ MonoBehaviour:
   UsedItem: 0
   ZIZI_Count: 0
   Turn: 0
+  checkCond_3: 0
+  StoneCount_Cond3: 0
   checkCond_Win: 0
   StoneCount_Win: 0
   checkCond_Anim2: 0
