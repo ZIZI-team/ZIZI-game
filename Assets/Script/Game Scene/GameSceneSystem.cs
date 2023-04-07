@@ -1243,7 +1243,7 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
                 else { StoneCount_Anim2 = 0; return false; }
         }
         
-        if (ZIZIBoard[startPointY + 5, StartPointX, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
+        if (ZIZIBoard[startPointY + 4, StartPointX, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
             else { StoneCount_Anim2 = 0; return false; }
 
         return true;
@@ -1262,7 +1262,7 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
                 else { StoneCount_Anim2 = 0; return false; }
         }
         
-        if (ZIZIBoard[startPointY, StartPointX + 5, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
+        if (ZIZIBoard[startPointY, StartPointX + 4, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
             else { StoneCount_Anim2 = 0; return false; }
 
         return true;
@@ -1281,7 +1281,7 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
                 else { StoneCount_Anim2 = 0; return false; }
         }
         
-        if (ZIZIBoard[startPointY + 5, StartPointX + 5, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
+        if (ZIZIBoard[startPointY + 4, StartPointX + 4, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
             else { StoneCount_Anim2 = 0; return false; }        
         
         return true;
@@ -1300,7 +1300,7 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
                 else { StoneCount_Anim2 = 0; return false; }
         }
         
-        if (ZIZIBoard[startPointY + 5, StartPointX - 5, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
+        if (ZIZIBoard[startPointY + 4, StartPointX - 4, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
             else { StoneCount_Anim2 = 0; return false; }  
 
         return true;
