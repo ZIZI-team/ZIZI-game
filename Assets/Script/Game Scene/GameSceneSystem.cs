@@ -1424,6 +1424,7 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
         if (isBlack == true && Item.transform.parent.name == "ItemSlotUI_1P")
         {
             // Item.SetActive(false);
+
             latestItem = Item;
             if(latestItem.name.Contains("dotori")) //  "dotori_skill(Clone)")
             {
@@ -1454,8 +1455,10 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
         }
         else if (isBlack == false && Item.transform.parent.name == "ItemSlotUI_2P")
         {
-            latestItem = Item;
             // Item.SetActive(false);
+
+            latestItem = Item;
+            
             if(latestItem.name.Contains("dotori")) //"dotori_skill(Clone)")
             {
                 if (SKill_Dotori == true)
@@ -1467,7 +1470,6 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
                     SKill_Dotori = true;
                     Debug.Log("dotori_skill(2)");
                 }
-                // SKill_Dotori = true;
                 
             }
             else if(latestItem.name.Contains("leaf")) // "leaf_skill(Clone)"
@@ -1488,7 +1490,6 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
 
     public void skillUseCheck()
     {
-        
         Time.timeScale = 0f;
         SkillUI.transform.localPosition = new Vector3(0f, -390f);
     }
