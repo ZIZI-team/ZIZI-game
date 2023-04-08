@@ -39,9 +39,10 @@ public class Tutorial : MonoBehaviour
         TutorialList.Add(Main.transform.GetChild(1).transform.GetChild(1).transform.GetChild(0).gameObject); // T2 [ 4 ]
         TutorialList.Add(Main.transform.GetChild(1).transform.GetChild(1).transform.GetChild(1).gameObject); // T2-1
         TutorialList.Add(Main.transform.GetChild(1).transform.GetChild(1).transform.GetChild(2).gameObject); // T2-2
-        TutorialList.Add(Main.transform.GetChild(1).transform.GetChild(1).transform.GetChild(3).gameObject); // T2-3
-        TutorialList.Add(Main.transform.GetChild(1).transform.GetChild(1).transform.GetChild(4).gameObject); // T2-4
-        TutorialList.Add(Main.transform.GetChild(1).transform.GetChild(1).transform.GetChild(5).gameObject); // T2-5
+        TutorialList.Add(Main.transform.GetChild(1).transform.GetChild(1).transform.GetChild(3).gameObject); // T2-2-1
+        TutorialList.Add(Main.transform.GetChild(1).transform.GetChild(1).transform.GetChild(4).gameObject); // T2-3
+        TutorialList.Add(Main.transform.GetChild(1).transform.GetChild(1).transform.GetChild(5).gameObject); // T2-4
+        TutorialList.Add(Main.transform.GetChild(1).transform.GetChild(1).transform.GetChild(6).gameObject); // T2-5
 
         TutorialList.Add(Main.transform.GetChild(1).transform.GetChild(2).transform.GetChild(0).gameObject); // T3 [ 10 ]
         TutorialList.Add(Main.transform.GetChild(1).transform.GetChild(2).transform.GetChild(1).gameObject); // T3-1
@@ -128,6 +129,14 @@ public class Tutorial : MonoBehaviour
 // 2-2. Text : 도토리는 상대 말을 제거하는 아이템입니다. (next button)
 
 // 2-2-1. Text : 자신의 말 중 하나를 선택하면 주변의 상대 말을 없앨 수 있습니다. (next button)
+
+
+
+
+// ---- 여기부터
+
+
+
 // 2-3. // Text : 방금 획득한 도토리 아이템을 사용해볼까요? (next button) (상대편이 생김)
 
 // 2-3. Text : 도토리를 집어보세요. (도토리 아이콘 스폿 애니메이션)
@@ -153,6 +162,7 @@ public class Tutorial : MonoBehaviour
 // 스킵버튼 : 튜토리얼 스킵하기
 
 // +-------------------------------------------------------------------------------+//
+    
 // 1. Text :  (next button) 텍스트와 버튼 없애기, 페이드로 변경
 // Onclick : T1 / Next Button (T1)
     bool T1Flag = false;
@@ -250,7 +260,7 @@ public class Tutorial : MonoBehaviour
         T2_1Flag = false;
     }
 
-// 2-1. Text : 도토리를 얻었다! 
+// 2-1. Text : 도토리를 얻었어요! (next button)
 // Onclick : T2 / Next Button (T2)
     bool T2_1Flag = true;
     public void T2_1()
@@ -259,43 +269,95 @@ public class Tutorial : MonoBehaviour
 
         NextT(); // 2-2. Text
 
-        T2_1Flag = true;
-        
         // Buton interactive false : Next Button (T2)
         ButtonList[1].interactable = false;
-
-        T2_2Flag = false;
+        T2_1Flag = true;        
+        
+        StartCoroutine(DelayCoroutine_T2_1());
+    }
+    IEnumerator DelayCoroutine_T2_1()
+    {
+        yield return new WaitForSeconds(0.5f);
 
         // Buton interactive true : Next Button (T2)
         ButtonList[1].interactable = true;
+        T2_2Flag = false; 
     }
-    // 코루틴
 
-// 2-2. Text : 도토리로 상대를 공격할수있다
+ 
+// 2-2. Text : 도토리는 상대 말을 제거하는 아이템입니다. (next button)
 // Onclick : T2 / Next Button (T2)
     bool T2_2Flag = true;
     public void T2_2()
     {
         if (T2_2Flag == true){ return; }
 
+        // (2)
+        NextT(); // 2-2-1. Text
+
+        // (3) Buton interactive false : Next Button (T2)
+        ButtonList[1].interactable = false;
+        T2_2Flag = true;
+
+        StartCoroutine(DelayCoroutine_T2_2());
+    }
+    IEnumerator DelayCoroutine_T2_2()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        // Buton interactive true : Next Button (T2)
+        ButtonList[1].interactable = true;
+        T2_2_1Flag = false;
+    }
+
+
+// 2-2-1. Text : 자신의 말 중 하나를 선택하면 주변의 상대 말을 없앨 수 있습니다. (next button)
+// Onclick : T2 / Next Button (T2)
+    bool T2_2_1Flag = true;
+    public void T2_2_1()
+    {
+        if (T2_2_1Flag == true){ return; }
+
+        // (1)
+        // NextT(); // 2-3. Text
+
+        // (2) Buton interactive false : Next Button (T2)
+        ButtonList[1].interactable = false;
+        T2_2_1Flag = true;
+        
+        StartCoroutine(DelayCoroutine_T2_2());
+    }
+    IEnumerator DelayCoroutine_T2_2_2()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        // Buton interactive true : Next Button (T2)
+        ButtonList[1].interactable = true;
+        T2_2_2Flag = false; 
+    }
+
+
+// 2-2-2. Text : 방금 획득한 도토리 아이템을 사용해볼까요? (next button) (상대편이 생김)
+    bool T2_2_2Flag = true;
+    public void T2_2_2()
+    {
+        if (T2_2_2Flag == true){ return; }
+
         // (1) SetActive true : juk
         ObjectList[3].SetActive(true); // BIBI 1
         // ObjectList[4].SetActive(true); // BIBI 2
         ObjectList[5].SetActive(true); // BIBI 3
 
-        // (2)
-        NextT(); // 2-3. Text
-
-        // (3) Buton interactive false : Next Button (T2)
+        // Buton interactive false : Next Button (T2)
         ButtonList[1].interactable = false;
-
-        // (4) Buton interactive true : my dotori
-        ButtonList[6].interactable = true;
-
-        T2_2Flag = true;
+        T2_2_2Flag = true; 
+        
+        // (3) Buton interactive true : my dotori
+        ButtonList[6].interactable = true;     
     }
 
-// 2-3. Text : 상대편이 있다, 얻은 도토리를 집어볼까?
+
+// 2-3. Text : 도토리를 집어보세요. (도토리 아이콘 스폿 애니메이션)
 // Onclick : My Item dotori
     public void T2_3()
     {
@@ -314,7 +376,7 @@ public class Tutorial : MonoBehaviour
         ObjectList[1].GetComponent<Button>().interactable = true;
     }
 
-// 2-4. Text : 내 지지 위에 도토리를 놓아보자!
+// 2-4. Text : 말 위에 도토리를 놓아보세요. (지지 스폿 애니메이션)
 // Onclick : My ZIZI 2
     public void T2_4()
     {
@@ -335,7 +397,7 @@ public class Tutorial : MonoBehaviour
         T2_5Flag = false;
    }
 
-// 2-5. Text : 잘했어! 공격을 통해 상대편이 5개의 지지를 모으는 것을 막을 수 있다
+// 2-5. Text : 잘했어요! (Tip) 도토리로 상대를 공격할 수 있습니다. (next button)
 // Onclick : T2 / Next Button (T2)
     bool T2_5Flag = true;
     public void T2_5()
@@ -394,15 +456,19 @@ public class Tutorial : MonoBehaviour
 
         NextT(); // 3-2. Text
 
-        T3_1Flag = true;
-
         // Buton interactive false : Next Button (T3)
         ButtonList[1].interactable = false;
-        
-        T3_2Flag = false;
+        T3_1Flag = true;
+
+        StartCoroutine(DelayCoroutine_T3_1());
+    }
+    IEnumerator DelayCoroutine_T3_1()
+    {
+        yield return new WaitForSeconds(0.5f);
 
         // Buton interactive true : Next Button (T3)
         ButtonList[1].interactable = true;
+        T3_2Flag = false;
     }
 
 // 3-2. Text : 나뭇잎으로 상대의 공격을 방어할 수 있다
@@ -512,15 +578,19 @@ public class Tutorial : MonoBehaviour
 
         // (3) Animation : Timer
 
-        T4Flag = true;
-
         // Buton interactive false : Next Button (T4)
         ButtonList[3].interactable = false;
+        T4Flag = true;
 
-        T4_1Flag = false;
+        StartCoroutine(DelayCoroutine_T4());
+    }
+    IEnumerator DelayCoroutine_T4()
+    {
+        yield return new WaitForSeconds(0.5f);
 
         // Buton interactive true : Next Button (T4)
         ButtonList[3].interactable = true;
+        T4_1Flag = false;
     }
 
 // 4-1. 제한시간이 존재하니 조심하도록 하자 시간이 지나면 턴이 넘어간다
