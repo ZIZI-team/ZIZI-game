@@ -86,6 +86,8 @@ public class Tutorial : MonoBehaviour
         ObjectList.Add(Main.transform.GetChild(1).transform.GetChild(2).transform.GetChild(5).gameObject); // My leaf
 
         ObjectList.Add(Main.transform.GetChild(1).transform.GetChild(3).transform.GetChild(6).gameObject); //leaf on ZIZI
+
+        ObjectList.Add(Main.transform.GetChild(1).transform.GetChild(9).gameObject); // Spot
     }
 
     
@@ -128,6 +130,7 @@ public class Tutorial : MonoBehaviour
         ButtonList[1].interactable = true;
 
         // Animation Play (Spot Bush Point A)
+        ObjectList[9].transform.GetChild(0).gameObject.SetActive(true);
     }
 
 
@@ -135,6 +138,9 @@ public class Tutorial : MonoBehaviour
 // Onclick : BushMap / BackGround / Bush / bush PointA
     public void T1_1()
     {
+        // Animation Off (Spot Bush Point A)
+        ObjectList[9].transform.GetChild(0).gameObject.SetActive(false);
+
         // SetActive True My ZIZI 1
         ObjectList[0].SetActive(true);
 
@@ -169,11 +175,14 @@ public class Tutorial : MonoBehaviour
             // Text 2.
             textMeshPro.text = "도토리를 발견했어요!\n말을 놓아 도토리를 주워보세요.";
 
-            // (2) Buton interactive false : Next Button    
+            // Buton interactive false : Next Button    
             ButtonList[0].interactable = false;
 
-            // (3) Buton interactive true : dotori        
+            // Buton interactive true : dotori        
             ButtonList[2].interactable = true;
+
+            // Animation Play (Dotori)
+            ObjectList[9].transform.GetChild(1).gameObject.SetActive(true);
 
         T1_2Flag = true;
     }
@@ -184,6 +193,10 @@ public class Tutorial : MonoBehaviour
 // Onclick : BushMap / BackGround / Item / dotori
     public void T2()
     {
+
+        // Animation Off (Dotori)
+        ObjectList[9].transform.GetChild(1).gameObject.SetActive(false);
+
         // SetActive True My ZIZI 2
         ObjectList[1].SetActive(true);
 
@@ -195,11 +208,14 @@ public class Tutorial : MonoBehaviour
         // SetActive false dotori
         GameObject.Find("dotori").SetActive(false);
 
-        // SetActive true : My Item dotori
+        // SetActive true : My dotori
         ObjectList[6].SetActive(true);
 
         // Text 2-1.
         textMeshPro.text = "도토리를 얻었어요!";
+
+        // Animation Play (My Dotori)
+        ObjectList[9].transform.GetChild(2).gameObject.SetActive(true);
 
         // Buton interactive false : dotori
         ButtonList[2].interactable = false;
@@ -218,6 +234,9 @@ public class Tutorial : MonoBehaviour
     public void T2_1_Next()
     {
         if (T2_1Flag == true){ return; }
+
+            // Animation Off (My Dotori)
+            ObjectList[9].transform.GetChild(2).gameObject.SetActive(false);
 
             // Text 2-2.
             textMeshPro.text = "도토리는 상대 말을\n제거하는 아이템입니다.";
@@ -305,6 +324,9 @@ public class Tutorial : MonoBehaviour
             // Text 2-5.
             textMeshPro.text = "도토리를 집어보세요.";
             
+            // Animation Play (My Dotori)
+            ObjectList[9].transform.GetChild(2).gameObject.SetActive(true);
+
             // SetActive true : juk
             ObjectList[3].SetActive(true); // BIBI 1
             ObjectList[5].SetActive(true); // BIBI 3
@@ -323,13 +345,19 @@ public class Tutorial : MonoBehaviour
 // Onclick : My Item dotori
     public void T2_5()
     {
-        // SetActive false : dotori
+        // Animation Off (My Dotori)
+        ObjectList[9].transform.GetChild(2).gameObject.SetActive(false);
+
+        // SetActive false : my dotori
         ObjectList[6].SetActive(false);
 
         // Animation : Spot My ZIZI 2
 
         // Text 2-6.
         textMeshPro.text = "말 위에 도토리를 놓아보세요.";
+
+        // Animation Play (ZIZI 2)
+        ObjectList[9].transform.GetChild(3).gameObject.SetActive(true);
 
         // (4) Buton interactive false : my dotori
         ButtonList[3].interactable = false;
@@ -343,9 +371,16 @@ public class Tutorial : MonoBehaviour
 // Onclick : My ZIZI 2
     public void T2_6()
     {
+        // Animation Off (ZIZI 2)
+        ObjectList[9].transform.GetChild(3).gameObject.SetActive(false);
+
         // SetActive false : juk 
         ObjectList[3].SetActive(false); // BIBI 1
         ObjectList[5].SetActive(false); // BIBI 3
+
+        // Animation Play (skill) : BIBI 1, BIBI 3
+        ObjectList[9].transform.GetChild(4).gameObject.SetActive(true);
+        ObjectList[9].transform.GetChild(5).gameObject.SetActive(true);
 
         // Text 2-7.
         textMeshPro.text = "잘했어요!\n(Tip) 도토리로 상대를 공격할 수 있습니다.";
@@ -355,7 +390,6 @@ public class Tutorial : MonoBehaviour
 
         // Buton interactive true : Next Button
         ButtonList[0].interactable = true;
-
 
             T2_7Flag = false;
    }
@@ -368,8 +402,15 @@ public class Tutorial : MonoBehaviour
     {
         if (T2_7Flag == true){ return; }
 
+            // Animation Off (skill) : BIBI 1, BIBI 3
+            ObjectList[9].transform.GetChild(4).gameObject.SetActive(false);
+            ObjectList[9].transform.GetChild(5).gameObject.SetActive(false);
+
             // Text 3.
             textMeshPro.text = "이번에는 나뭇잎을 발견했어요!\n말을 놓아 나뭇잎을 주워보세요.";
+
+            // Animation Play (leaf)
+            ObjectList[9].transform.GetChild(6).gameObject.SetActive(true);
 
             // Buton interactive false : Next Button 
             ButtonList[0].interactable = false;
@@ -386,6 +427,9 @@ public class Tutorial : MonoBehaviour
 // Onclick : BushMap / BackGround / Item / leaf
     public void T3()
     {
+        // Animation Off (leaf)
+        ObjectList[9].transform.GetChild(6).gameObject.SetActive(false);
+
         // SetActive True My ZIZI 3
         ObjectList[2].SetActive(true); // ZIZI 3
 
@@ -396,11 +440,14 @@ public class Tutorial : MonoBehaviour
         // SetActive false : leaf item
         GameObject.Find("leaf").SetActive(false);
 
-        // SetActive true : leaf on zizi
+        // SetActive true : my leaf
         ObjectList[7].SetActive(true);
 
         // Text 3-1.
         textMeshPro.text = "나뭇잎을 얻었어요!";
+
+        // Animation Play (My leaf)
+        ObjectList[9].transform.GetChild(7).gameObject.SetActive(true);
 
         // Buton interactive false : leaf
         ButtonList[4].interactable = false;
@@ -419,6 +466,9 @@ public class Tutorial : MonoBehaviour
     public void T3_1_Next()
     {
         if (T3_1Flag == true){ return; }
+
+            // Animation Off (My leaf)
+            ObjectList[9].transform.GetChild(7).gameObject.SetActive(false);
 
             // Text 3-2.
             textMeshPro.text = "나뭇잎은 상대의 도토리 공격을\n방어하는 아이템입니다.";
@@ -481,6 +531,9 @@ public class Tutorial : MonoBehaviour
             // Text 3-4.
             textMeshPro.text = "나뭇잎을 집어보세요.";
 
+            // Animation Play (My leaf)
+            ObjectList[9].transform.GetChild(7).gameObject.SetActive(true);
+
             // Buton interactive false : Next Button
             ButtonList[0].interactable = false;
 
@@ -495,6 +548,10 @@ public class Tutorial : MonoBehaviour
 // Onclick : My Item leaf
     public void T3_4()
     {
+
+        // Animation Off (My leaf)
+        ObjectList[9].transform.GetChild(7).gameObject.SetActive(false);
+
         // SetActive false : My leaf 
         ObjectList[7].SetActive(false);
 
@@ -502,6 +559,9 @@ public class Tutorial : MonoBehaviour
 
         // Text 3-5.
         textMeshPro.text = "말 위에 나뭇잎을 놓아보세요.";
+
+        // Animation Play (ZIZI 3)
+        ObjectList[9].transform.GetChild(8).gameObject.SetActive(true);
 
         // Buton interactive false : My leaf
         ButtonList[5].interactable = false;
@@ -517,7 +577,11 @@ public class Tutorial : MonoBehaviour
     {
         // SetActive true : Leaf
         ObjectList[8].SetActive(true);
-        
+
+        // Animation Off (ZIZI 3))
+        ObjectList[9].transform.GetChild(8).gameObject.SetActive(false);
+
+
         StartCoroutine(DelayCoroutine3());        
     }
     IEnumerator DelayCoroutine3()
@@ -530,6 +594,11 @@ public class Tutorial : MonoBehaviour
         // SetActive false : ZIZI 1, 2
         ObjectList[0].SetActive(false);
         ObjectList[1].SetActive(false);
+
+        // Animation Play (skill) BIBI 1, ZIZI 1, ZIZI 2
+        ObjectList[9].transform.GetChild(9).gameObject.SetActive(true);
+        ObjectList[9].transform.GetChild(10).gameObject.SetActive(true);
+        ObjectList[9].transform.GetChild(11).gameObject.SetActive(true);
 
         // Animation : ZIZI 1, 2
 
@@ -552,6 +621,11 @@ public class Tutorial : MonoBehaviour
     public void T3_6_Next()
     {
         if (T3_6Flag == true){ return; }
+
+            // Animation Play (skill) BIBI 1, ZIZI 1, ZIZI 2
+            ObjectList[9].transform.GetChild(9).gameObject.SetActive(false);
+            ObjectList[9].transform.GetChild(10).gameObject.SetActive(false);
+            ObjectList[9].transform.GetChild(11).gameObject.SetActive(false);
 
             // Animation : DANCE ZIZI
 
