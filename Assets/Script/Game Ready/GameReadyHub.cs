@@ -82,9 +82,9 @@ public class GameReadyHub : MonoBehaviour
 
     public void ShowMapPalette()
     {
-        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP1"));  
-        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP2"));
-        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP3")); 
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP2"));  
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP3"));
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP4")); 
 
         MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/BushMap1"));  
         MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/BushMap2"));

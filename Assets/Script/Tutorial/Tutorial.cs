@@ -693,6 +693,17 @@ public class Tutorial : MonoBehaviour
             // Text 4-2.
             textMeshPro.text = "5개의 말을 일렬로 놓으면\n게임에서 승리합니다.";
 
+            // Bush
+            Main.transform.GetChild(1).transform.GetChild(1).gameObject.SetActive(false);
+
+            // Item Box
+            Main.transform.GetChild(1).transform.GetChild(2).gameObject.SetActive(false);
+
+            // Charactor
+            Main.transform.GetChild(1).transform.GetChild(3).gameObject.SetActive(false);
+
+            Main.transform.GetChild(1).transform.GetChild(6).gameObject.SetActive(true);            
+
             // SetActive true : DANCE ZIZI
 
             // Animation : Timer

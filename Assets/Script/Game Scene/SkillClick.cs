@@ -14,20 +14,33 @@ public class SkillClick : MonoBehaviour
         
     }
 
-    bool Skill_Flag = false;
     public void OnClickItem()
     {
-        if (Skill_Flag == true){ return; }
+        Debug.Log(gameObject.name);
 
         GameObject.Find("Game").GetComponent<GameSceneSystem>().OnClickSkill(gameObject);
-
-        Skill_Flag = true;
-        StartCoroutine(DelayCoroutine());
     }
-    IEnumerator DelayCoroutine()
+  
+    public void OnClickChiso()
     {
-        yield return new WaitForSeconds(0.5f);
-
-        Skill_Flag = false;
+        GameObject.Find("Game").GetComponent<GameSceneSystem>().SkillChiso();
     }
+
+
+    // bool Skill_Flag = false;
+    // public void OnClickItem()
+    // {
+    //     if (Skill_Flag == true){ return; }
+
+    //     GameObject.Find("Game").GetComponent<GameSceneSystem>().OnClickSkill(gameObject);
+
+    //     Skill_Flag = true;
+    //     StartCoroutine(DelayCoroutine());
+    // }
+    // IEnumerator DelayCoroutine()
+    // {
+    //     yield return new WaitForSeconds(0.5f);
+
+    //     Skill_Flag = false;
+    // }
 }

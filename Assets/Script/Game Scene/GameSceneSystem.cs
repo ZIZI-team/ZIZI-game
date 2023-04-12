@@ -23,7 +23,7 @@ public class GameSceneSystem : MonoBehaviour
     float fullTime = 10f;
     
     [Header("Main UI")]
-    public GameObject MainUI;                   // inspector
+    public GameObject MainUI;                       // inspector
 
     [Header("PlayerTurn Function")]
     public GameObject playerTurnIcon;               // inspector
@@ -87,9 +87,6 @@ public class GameSceneSystem : MonoBehaviour
     public GameObject dotoriIcon;
     public List<GameObject> P1_Item = new List<GameObject>();
     public List<GameObject> P2_Item = new List<GameObject>();
-    public GameObject latestItem;
-
-
 
 
 
@@ -314,7 +311,7 @@ public class GameSceneSystem : MonoBehaviour
         yGapNum = (int)((yPos - edgeSpot_y) / GapSize_y);  // int, Grid Index
 
     // correction working (inMap)
-        xGapNum += Correction(xNamuji, GapSize_x) - 1; // xGapNum : 0 ~ 10  // 0 : 
+        xGapNum += Correction(xNamuji, GapSize_x); // xGapNum : 0 ~ 10  // 0 : 
         yGapNum += Correction(yNamuji, GapSize_y); // yGapNum : 0 ~ 10
 
     // Push Item To List
@@ -383,27 +380,21 @@ public class GameSceneSystem : MonoBehaviour
     public void Timer()
     {
         time -= Time.deltaTime;
-        gameText.text = "타이머 : " + time.ToString("F1");
+        gameText.text = "????���? : " + time.ToString("F1");
         TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 360f*(fullTime-time)/fullTime);
 
         if (time <= 0)
         {
             changePlayer(); 
-
-            SKill_Dotori = false;
-            SKill_Leaf = false;
-
-            // ++Code : 시간 내에 스킬을 사용하지 못했을 경우는? : 돌려주기 (2)
         }
     }
-
 
     public void OnClickReset()
     {
         Reset_Item();
 
         isBlack = true;
-        playerTurnIcon.transform.position = MainUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
+        // playerTurnIcon.transform.position = MainUI.transform.position + new Vector3(0f, 0f, 0f);
 
         Time.timeScale = 1f;
         time = fullTime;
@@ -412,7 +403,7 @@ public class GameSceneSystem : MonoBehaviour
         Player1Win.SetActive(false);
         Player2Win.SetActive(false);
         
-        GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
+        GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-5000f, 0f, 0f);
     }
 
     public void OnClickPause()
@@ -420,7 +411,7 @@ public class GameSceneSystem : MonoBehaviour
         if (pauseIsOnSight == false)
         {
             pauseIsOnSight = true;
-            PauseBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position;
+            PauseBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-788f, 0f, 0f);;
 
             Time.timeScale = 0f;
         }
@@ -428,78 +419,27 @@ public class GameSceneSystem : MonoBehaviour
         {
             Time.timeScale = 1f;
             pauseIsOnSight = false;   
-            PauseBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 0f, 0f);
+            PauseBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-5000f, 0f, 0f); 
         }
     }
-
 
     public void OnClickMainMenu()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("TitleScene");
-        GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-1230f, 2000f, 0f);
+        GameResultBox.transform.position = AssignedMapPosition.GetComponent<GameReadyHub>().MapPalette.transform.position + new Vector3(-5000f, 0f, 0f);
         OnClickReset();
     }
-
-
-    // public void OnClickSkillActive()
-    // {
-    //     if (SKill_Dotori == true)
-    //     {
-    //         Time.timeScale = 1;
-    //         //SkillUI.transform.localPosition = new Vector3(-1620f, 0f); //skill use check ui
-            
-    //         if(isBlack == true && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 2)
-    //         {
-    //             PlaySkill_Dotori(yGapNum + 6, xGapNum + 6, ZIZIBoard[yGapNum + 6, xGapNum + 6, 0]);
-    //             P1_Item.RemoveAt(P1_Item.Count- 1);
-    //             Destroy(latestItem.gameObject);
-                
-    //             Debug.Log("PlaySkill_    Dotori");
-    //             UsedItem = true;
-    //             changePlayer();
-    //             SKill_Dotori = false;
-    //         }
-    //         else { return; } 
-    //     }
-    //     else if (SKill_Leaf == true)
-    //     {
-    //         Time.timeScale = 1;
-    //         //SkillUI.transform.localPosition = new Vector3(-1620f, 0f); //skill use check ui
-
-    //         if(isBlack == true && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 2)
-    //         {
-    //             if(isBlack)
-    //             {
-    //                 Leaf_P1 -= 1;
-    //             }
-    //             else
-    //             {
-    //                 Leaf_P2 -= 1;
-    //             }
-    //             PlaySkill_leaf(yGapNum + 6, xGapNum + 6);
-    //             Destroy(latestItem);
-
-    //             Debug.Log("PlaySkill_    leaf");
-    //             UsedItem = true;
-    //             changePlayer();
-    //             SKill_Leaf = false;
-    //         }
-    //         else { return; }  
-    //     }  
-    // }
-    
     
     public void OnClickContinue()
     {
         Time.timeScale = 1f;
-        SkillUI.transform.localPosition = new Vector3(-1620f, 0f);
+        SkillUI.transform.localPosition = new Vector3(-5000f, 0f, 0f);
         Curr_Item.SetActive(true);
 
         SKill_Dotori = false;
         SKill_Leaf = false;
     }
-
 
 
 // >> Game (Click Panel) << //
@@ -634,12 +574,10 @@ public class GameSceneSystem : MonoBehaviour
         }
     }
 
-
     public int Dotori_P1 = 0;
     public int Dotori_P2 = 0;
     public int Leaf_P1 = 0;
     public int Leaf_P2 = 0;
-
 
 
     public void CutBush()
@@ -684,7 +622,7 @@ public class GameSceneSystem : MonoBehaviour
                 GameObject temp = Instantiate(dotoriIcon);
                 temp.name = $"black_dotori + {Dotori_P1}";
                 temp.transform.SetParent(ItemSlotUI_1P.transform);
-                temp.transform.localPosition = new Vector3(-500f + (130 * (Dotori_P1)), 0f);
+                temp.transform.localPosition = new Vector3(-660f + (120 * (Dotori_P1)), 0f);
                 temp.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
                 P1_Item.Add(temp);
             }
@@ -693,7 +631,7 @@ public class GameSceneSystem : MonoBehaviour
                 GameObject temp = Instantiate(dotoriIcon);
                 temp.name = $"white_dotori + {Dotori_P2}";
                 temp.transform.SetParent(ItemSlotUI_2P.transform);
-                temp.transform.localPosition = new Vector3(-500f + (130 * (Dotori_P2)), 0f);
+                temp.transform.localPosition = new Vector3(-660f + (120 * (Dotori_P2)), 0f);
                 temp.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
                 P2_Item.Add(temp);
             }
@@ -717,7 +655,7 @@ public class GameSceneSystem : MonoBehaviour
             {
                 GameObject temp = Instantiate(leafIcon);
                 temp.transform.SetParent(ItemSlotUI_1P.transform);
-                temp.transform.localPosition = new Vector3(260f + (130 * (Leaf_P1)), 0f);
+                temp.transform.localPosition = new Vector3(190f + (120 * (Leaf_P1)), 0f);
                 temp.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
                 P1_Item.Add(temp);
             }
@@ -725,7 +663,7 @@ public class GameSceneSystem : MonoBehaviour
             {
                 GameObject temp = Instantiate(leafIcon);
                 temp.transform.SetParent(ItemSlotUI_2P.transform);
-                temp.transform.localPosition = new Vector3(260f + (130 * (Leaf_P2)), 0f);
+                temp.transform.localPosition = new Vector3(190f + (120 * (Leaf_P2)), 0f);
                 temp.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
                 P2_Item.Add(temp);
             }
@@ -767,25 +705,29 @@ public class GameSceneSystem : MonoBehaviour
 
             if(isBlack == true && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 2)
             {
-                PlaySkill_Dotori(yGapNum + 6, xGapNum + 6, ZIZIBoard[yGapNum + 6, xGapNum + 6, 0]);
+                Dotori_P1 -= isBlack ? 1 : 0;
+                Dotori_P2 -= isBlack ? 0 : 1;
 
-                Debug.Log("PlaySkill_    Dotori fucking");
-                if (isBlack)
+                if (isBlack == true)
                 {
-                    P1_Item.Remove(latestItem);
+                    P1_Item.Remove(Curr_Item);
                 }
                 else
                 {
-                    P2_Item.Remove(latestItem);
+                    P2_Item.Remove(Curr_Item);
                 }
-                
-                Destroy(latestItem);
+
+                PlaySkill_Dotori(yGapNum + 6, xGapNum + 6, ZIZIBoard[yGapNum + 6, xGapNum + 6, 0]);
+                Debug.Log("PlaySkill_    Dotori fucking");
+
+                Destroy(Curr_Item);
                 UsedItem = true;
                 changePlayer();
                 SKill_Dotori = false;
             }
             else { return; } 
         }
+
         else if (SKill_Leaf == true)
         {
             Time.timeScale = 1;
@@ -793,6 +735,9 @@ public class GameSceneSystem : MonoBehaviour
 
             if(isBlack == true && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 2)
             {
+                Leaf_P1 -= isBlack ? 1 : 0;
+                Leaf_P2 -= isBlack ? 0 : 1;
+
                 PlaySkill_leaf(yGapNum + 6, xGapNum + 6);
                 Debug.Log("PlaySkill_    leaf fucking");
                 UsedItem = true;
@@ -802,49 +747,12 @@ public class GameSceneSystem : MonoBehaviour
             else { return; }  
         }  
 
-//        else if (SKill_Leaf == true)
-        // {
-        //     skillUseCheck();
-            // Should be My ZIZI
-            // if(isBlack == true && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 2)
-            // {
-            //     PlaySkill_leaf(yGapNum + 6, xGapNum + 6);
-            //     Debug.Log("PlaySkill_    leaf");
-            //     UsedItem = true;
-            //     changePlayer();
-            //     SKill_Leaf = false;
-            // }
-            // else { return; }
-        // }
-
-        // ++Code : 시간 내에 스킬을 사용하지 못했을 경우는? : 돌려주기 (1)
-
         else if (ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 0)
         {
-                Set_And_RecordPosition();
-                ItemOnclick();
-                CutBush();
-                changePlayer();
-
-            // Check Same Position of ZIZI list
-            // bool isDuplicated = false;
-            // for(int i = 0; i < assignedList.Count; i++)
-            // {
-            //     if (assignedList[i][0] == xGapNum + 6 && assignedList[i][1] == yGapNum + 6)
-            //     {
-            //         Debug.Log("Same Position");
-            //         isDuplicated = true;
-            //         break;
-            //     }
-            // }
-
-            // if(isDuplicated == false)                   // Spawn New ZIZI
-            // {
-            //     Set_And_RecordPosition();
-            //     ItemOnclick();
-            //     CutBush();
-            //     changePlayer();
-            // }
+            Set_And_RecordPosition();
+            ItemOnclick();
+            CutBush();
+            changePlayer();
         }
 
         else if (ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] != 0)
@@ -890,7 +798,6 @@ public class GameSceneSystem : MonoBehaviour
     //add tag in list 
 
         
-
     // Check Win Condition
         WinCondition();
 
@@ -905,51 +812,54 @@ public class GameSceneSystem : MonoBehaviour
     // Check Did Player Used Item
         if (SKill_Dotori == true || SKill_Dotori == true)
         {
-            if (UsedItem == false){ Curr_Item.SetActive(true); }
+            if (UsedItem == false)
+            { 
+                Curr_Item.GetComponent<Animator>().SetBool("On", false);
+                Curr_Item.GetComponent<Animator>().SetBool("Off", true);
+            }
             else { UsedItem = false; }
         }
 
+        SKill_Dotori = false;
+        SKill_Leaf = false;
 
-        // SKill_Dotori = false;
-        // SKill_Leaf = false;
         // Curr_Item.SetActive(true);
-
 
 
     // Change ZIZI Color for Next turn
         if (isBlack == true)  // Player 1
         {
             isBlack = false;
-            playerTurnIcon.transform.position = MainUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
+            // playerTurnIcon.transform.position = MainUI.transform.position + new Vector3(545f, 55.1f,-0.02f);
             time = fullTime;
             TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
 
             if (Turn >= 10)
             {
-                foreach (GameObject item in P2_Item){ item.GetComponent<Button>().interactable = true; }
-                foreach (GameObject item in P1_Item){ item.GetComponent<Button>().interactable = false; }
+                foreach (GameObject item in P2_Item){ item.transform.GetChild(0).GetComponent<Button>().interactable = true; }
+                foreach (GameObject item in P1_Item){ item.transform.GetChild(0).GetComponent<Button>().interactable = false; }
             }
         }
 
         else 
         {
             isBlack = true;
-            playerTurnIcon.transform.position = MainUI.transform.position + new Vector3(370f, 55.1f,-0.02f);
+            // playerTurnIcon.transform.position = MainUI.transform.position + new Vector3(370f, 55.1f,-0.02f);
             time = fullTime;
             TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
 
             if (Turn >= 10)
             {
-                foreach (GameObject item in P2_Item){ item.GetComponent<Button>().interactable = false; }
-                foreach (GameObject item in P1_Item){ item.GetComponent<Button>().interactable = true; }
+                foreach (GameObject item in P2_Item){ item.transform.GetChild(0).GetComponent<Button>().interactable = false; }
+                foreach (GameObject item in P1_Item){ item.transform.GetChild(0).GetComponent<Button>().interactable = true; }
             }
         }
 
         // Can't Use Item Before turn 10
         if (Turn < 10)
         {
-            foreach (GameObject item in P2_Item){ item.GetComponent<Button>().interactable = false; }
-            foreach (GameObject item in P1_Item){ item.GetComponent<Button>().interactable = false; }
+            foreach (GameObject item in P2_Item){ item.transform.GetChild(0).GetComponent<Button>().interactable = false; }
+            foreach (GameObject item in P1_Item){ item.transform.GetChild(0).GetComponent<Button>().interactable = false; }
             Turn++;
         }
     }
@@ -1420,78 +1330,32 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
     public GameObject Curr_Item;
     public void OnClickSkill(GameObject Item) // Item(Button Onclick) : Script : SkillClick : OnClickItem()
     {
-        Curr_Item = Item;
-        if (isBlack == true && Item.transform.parent.name == "ItemSlotUI_1P")
+        if(Curr_Item == null || Curr_Item != Item)
         {
-            // Item.SetActive(false);
-
-            latestItem = Item;
-            if(latestItem.name.Contains("dotori")) //  "dotori_skill(Clone)")
-            {
-                if (SKill_Dotori == true)
-                {
-                    SKill_Dotori = false;
-                }
-                else
-                {
-                    SKill_Dotori = true;
-                    Debug.Log("dotori_skill(1)");
-                }
-                
-            }
-            else if(latestItem.name.Contains("leaf")) // "leaf_skill(Clone)"
-            {
-                if (SKill_Leaf == true)
-                {
-                    SKill_Leaf = false;
-                }
-                else
-                {
-                    SKill_Leaf = true;
-                    Debug.Log("leaf_skill(2)");
-                }
-                
-            }            
+            Curr_Item = Item;
         }
-        else if (isBlack == false && Item.transform.parent.name == "ItemSlotUI_2P")
+
+        Curr_Item.GetComponent<Animator>().SetBool("On", true);
+        Curr_Item.GetComponent<Animator>().SetBool("Off", false);
+
+        if(Curr_Item.tag == "dotori_item")
         {
-            // Item.SetActive(false);
-
-            latestItem = Item;
-            
-            if(latestItem.name.Contains("dotori")) //"dotori_skill(Clone)")
-            {
-                if (SKill_Dotori == true)
-                {
-                    SKill_Dotori = false;
-                }
-                else
-                {
-                    SKill_Dotori = true;
-                    Debug.Log("dotori_skill(2)");
-                }
-                
-            }
-            else if(latestItem.name.Contains("leaf")) // "leaf_skill(Clone)"
-            {
-                if (SKill_Leaf == true)
-                {
-                   SKill_Leaf = false; 
-                }
-                else
-                {
-                    SKill_Leaf = true;
-                    Debug.Log("leaf_skill(2)");
-                }
-                
-            }
+            SKill_Dotori = true;
+            Debug.Log("dotori_skill");
         }
+        else if(Curr_Item.tag == "leaf_item")
+        {
+            SKill_Leaf = true;
+            Debug.Log("leaf_skill");
+        } 
     }
 
-    public void skillUseCheck()
+    public void SkillChiso()
     {
-        Time.timeScale = 0f;
-        SkillUI.transform.localPosition = new Vector3(0f, -390f);
+        Curr_Item.GetComponent<Animator>().SetBool("On",false);
+        Curr_Item.GetComponent<Animator>().SetBool("Off", true);
+        SKill_Dotori = false;
+        SKill_Dotori = false;
     }
 
 
@@ -1527,10 +1391,14 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
         {
             string PlayerName = ZIZI_Transform.GetChild(ZIZIBoard[y, x, 1]).transform.GetChild(0).gameObject.name;
 
-            if (ZIZIBoard[y, x, 0] == OtherColor && PlayerName.Substring(PlayerName.IndexOf('_') + 1).Trim() != "Leaf")         // Cannot Destroy Other ZIZI + Leaf
+            if (ZIZIBoard[y, x, 0] == OtherColor && PlayerName.Substring(PlayerName.IndexOf('_') + 1).Trim() != "Leaf")         // Can Destroy Other ZIZI + Leaf
             { 
                 Play_Anim_Dotori_1(ZIZIBoard[y, x, 1]);     // Play Animation 1
 
+                // Play Skill Anim
+                ZIZI_Transform.GetChild(ZIZIBoard[y, x, 1]).transform.GetChild(0).transform.GetChild(1).gameObject.SetActive(true); 
+
+                // Delete ZIZI (SetActive False)
                 ZIZI_Transform.GetChild(ZIZIBoard[y, x, 1]).transform.GetChild(0).gameObject.SetActive(false); 
 
                 // Reset ZIZIBoard
