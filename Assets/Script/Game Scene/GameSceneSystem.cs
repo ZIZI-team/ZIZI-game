@@ -19,8 +19,8 @@ public class GameSceneSystem : MonoBehaviour
     [Header("Timer")]
     public int setTime;
     public Text gameText;                           // inspector
-    float time = 5f;
-    float fullTime = 10f;
+    float time = 20f;
+    float fullTime = 20f;
     
     [Header("Main UI")]
     public GameObject MainUI;                       // inspector
@@ -286,6 +286,7 @@ public class GameSceneSystem : MonoBehaviour
         P2_Item = new List<GameObject>();
 
         SKill_Dotori = false;
+        Debug.Log("Dotori false : Reset");
         SKill_Leaf = false;
 
         Turn = 0;
@@ -438,6 +439,7 @@ public class GameSceneSystem : MonoBehaviour
         Curr_Item.SetActive(true);
 
         SKill_Dotori = false;
+        Debug.Log("Dotori false : Continue");
         SKill_Leaf = false;
     }
 
@@ -523,14 +525,31 @@ public class GameSceneSystem : MonoBehaviour
         Stone.name = isBlack ? "Player1" : "Player2";
         // Stone.name = $"{Stone.name}{now.Length}";
 
+            Debug.Log("yjyjyjyjyj");
+
     // Instantiate
         if (inMap == true)
         { 
+
+            Debug.Log("ffffff");
+
             // Cannot Spawn zizi on bush
             if (BushBoard[yGapNum + 6, xGapNum + 6, 0] == 1 
             && Map.transform.GetChild(0).transform.GetChild(3).transform.GetChild(BushBoard[yGapNum + 6, xGapNum + 6, 1]).gameObject.activeSelf == true){ return; } 
 
+            Debug.Log("panel onclick add jun");
+            Debug.Log(SKill_Dotori);
+
+
             AddListAndSpawn(); 
+
+            Debug.Log("panel onclick add hoooo");
+            Debug.Log(SKill_Dotori);
+
+
+            Debug.Log("sjshshshshshsh");
+
+
         }        
     }
 
@@ -699,6 +718,7 @@ public class GameSceneSystem : MonoBehaviour
 
     public void AddListAndSpawn()
     {
+        Debug.Log("skill dotori ahahahhahaah" + SKill_Dotori);
         if (SKill_Dotori == true)
         {
             Time.timeScale = 1;
@@ -725,7 +745,6 @@ public class GameSceneSystem : MonoBehaviour
                 Destroy(Curr_Item);
                 UsedItem = true;
                 changePlayer();
-                SKill_Dotori = false;
             }
             else { return; } 
         }
@@ -814,18 +833,36 @@ public class GameSceneSystem : MonoBehaviour
     // Check Did Player Used Item
         if (SKill_Dotori == true || SKill_Dotori == true)
         {
+            Debug.Log("change player 1");
+            Debug.Log(SKill_Dotori);
             if (UsedItem == false)
             { 
                 Curr_Item.GetComponent<Animator>().SetBool("On", false);
                 Curr_Item.GetComponent<Animator>().SetBool("Off", true);
+
+            Debug.Log("change player 2");
+            Debug.Log(SKill_Dotori);
+
             }
-            else { UsedItem = false; }
+            else { UsedItem = false; 
+                        Debug.Log("change player 3");
+            Debug.Log(SKill_Dotori);
+}
         }
 
+            Debug.Log("change player 4");
+            Debug.Log(SKill_Dotori);
+
+
         SKill_Dotori = false;
+        Debug.Log("Dotori false : Change Player");
         SKill_Leaf = false;
 
         // Curr_Item.SetActive(true);
+
+            Debug.Log("change player 5");
+            Debug.Log(SKill_Dotori);
+
 
 
     // Change ZIZI Color for Next turn
@@ -1345,6 +1382,9 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
             Debug.Log("dotori_skillshitfuckshitfuck1");
             SKill_Dotori = true;
             Debug.Log("dotori_skillshitfuckshitfuck");
+            Debug.Log(SKill_Dotori);
+
+
         }
         else if(Curr_Item.CompareTag ("leaf_item"))
         {
@@ -1360,7 +1400,8 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
         Curr_Item.GetComponent<Animator>().SetBool("On",false);
         Curr_Item.GetComponent<Animator>().SetBool("Off", true);
         SKill_Dotori = false;
-        SKill_Dotori = false;
+        Debug.Log("Dotori false : Skilchiso");
+        SKill_Leaf = false;
     }
 
 
@@ -1469,6 +1510,7 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
         Debug.Log("GameOver");
 
         SKill_Dotori = false;
+        Debug.Log("Dotori false : Game Over");
         SKill_Leaf = false;
 
         if ((GameResultBox.transform.localPosition != _player.transform.localPosition) && _player.activeSelf)
