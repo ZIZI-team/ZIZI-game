@@ -380,7 +380,7 @@ public class GameSceneSystem : MonoBehaviour
     public void Timer()
     {
         time -= Time.deltaTime;
-        gameText.text = "????ù¥Î®? : " + time.ToString("F1");
+        gameText.text = "????ÔøΩÔøΩÔøΩ? : " + time.ToString("F1");
         TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 360f*(fullTime-time)/fullTime);
 
         if (time <= 0)
@@ -611,6 +611,7 @@ public class GameSceneSystem : MonoBehaviour
             if (isBlack == true && Dotori_P1 >= 3 || isBlack == false && Dotori_P2 >= 3 ){ return; } // Can get Item Max 3
             Dotori_P1 += isBlack ? 1 : 0;
             Dotori_P2 += isBlack ? 0 : 1;
+            Debug.Log("Fuckfuckfuck");
             Map.transform.GetChild(0).transform.GetChild(1).transform.GetChild(ItemBoard[yGapNum + 6, xGapNum + 6, 1]).gameObject.SetActive(false);
 
             // (+) Game.transform.GetChild(2).transform.GetChild(ItemBoard[yGapNum + 6, xGapNum + 6, 1]).gameObject.SetActive(false);
@@ -701,6 +702,7 @@ public class GameSceneSystem : MonoBehaviour
         if (SKill_Dotori == true)
         {
             Time.timeScale = 1;
+            Debug.Log("PlaySkill_    Dotori shitxoixoxoxoxoxoxo");
             // SkillUI.transform.localPosition = new Vector3(-1620f, 0f);
 
             if(isBlack == true && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 2)
@@ -731,7 +733,7 @@ public class GameSceneSystem : MonoBehaviour
         else if (SKill_Leaf == true)
         {
             Time.timeScale = 1;
-            SkillUI.transform.localPosition = new Vector3(-1620f, 0f);
+            //SkillUI.transform.localPosition = new Vector3(-1620f, 0f);
 
             if(isBlack == true && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 1 || isBlack == false && ZIZIBoard[yGapNum + 6, xGapNum + 6, 0] == 2)
             {
@@ -1337,17 +1339,20 @@ public void Play_Anim_Dotori_2(int ZIZI_Index)
 
         Curr_Item.GetComponent<Animator>().SetBool("On", true);
         Curr_Item.GetComponent<Animator>().SetBool("Off", false);
-
-        if(Curr_Item.tag == "dotori_item")
+        
+        if(Curr_Item.CompareTag("dotori_item"))
         {
+            Debug.Log("dotori_skillshitfuckshitfuck1");
             SKill_Dotori = true;
-            Debug.Log("dotori_skill");
+            Debug.Log("dotori_skillshitfuckshitfuck");
         }
-        else if(Curr_Item.tag == "leaf_item")
+        else if(Curr_Item.CompareTag ("leaf_item"))
         {
             SKill_Leaf = true;
             Debug.Log("leaf_skill");
         } 
+        Debug.Log("smart dotori_skill");
+
     }
 
     public void SkillChiso()
