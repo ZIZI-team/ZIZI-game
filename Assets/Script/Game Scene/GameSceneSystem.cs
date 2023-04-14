@@ -181,15 +181,15 @@ public class GameSceneSystem : MonoBehaviour
 
         // 1. Calculate Grid Size with edgePoint 1, 2, 3 : Game > Map Prefab
 
-            edgeSpot_1 = Map.transform.GetChild(1).transform.GetChild(0).gameObject;
-            edgeSpot_2 = Map.transform.GetChild(1).transform.GetChild(1).gameObject;
-            edgeSpot_3 = Map.transform.GetChild(1).transform.GetChild(2).gameObject;
+            edgeSpot_1 = Game.transform.GetChild(7).transform.GetChild(0).gameObject;
+            edgeSpot_2 = Game.transform.GetChild(7).transform.GetChild(1).gameObject;
+            edgeSpot_3 = Game.transform.GetChild(7).transform.GetChild(2).gameObject;
 
-            edgeSpot_x = edgeSpot_1.GetComponent<RectTransform>().localPosition.x;  // : by EventPosition
-            edgeSpot_y = edgeSpot_1.GetComponent<RectTransform>().localPosition.y;  // : by EventPosition
+            edgeSpot_x = edgeSpot_1.GetComponent<RectTransform>().position.x;  // : by EventPosition // localPosition 4개
+            edgeSpot_y = edgeSpot_1.GetComponent<RectTransform>().position.y;  // : by EventPosition
 
-            GapSize_x = (edgeSpot_2.GetComponent<RectTransform>().localPosition.x - edgeSpot_x);
-            GapSize_y = (edgeSpot_3.GetComponent<RectTransform>().localPosition.y - edgeSpot_y);
+            GapSize_x = (edgeSpot_2.GetComponent<RectTransform>().position.x - edgeSpot_x);
+            GapSize_y = (edgeSpot_3.GetComponent<RectTransform>().position.y - edgeSpot_y);
 
 
         // 2. Make Initiate Board (Record Initiate Information)
