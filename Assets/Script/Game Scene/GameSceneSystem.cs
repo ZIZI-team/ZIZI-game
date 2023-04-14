@@ -809,6 +809,12 @@ public class GameSceneSystem : MonoBehaviour
 
     public void changePlayer()
     {
+        // gepjo
+        if(Turn >= 20)
+        {
+            Player1Win.SetActive(true);
+        }
+
     // Check Did Player Used Item
         if (SKill_Dotori == true || SKill_Dotori == true)
         {
@@ -838,6 +844,7 @@ public class GameSceneSystem : MonoBehaviour
             {
                 foreach (GameObject item in P2_Item){ item.transform.GetChild(0).GetComponent<Button>().interactable = true; }
                 foreach (GameObject item in P1_Item){ item.transform.GetChild(0).GetComponent<Button>().interactable = false; }
+                Turn++;
             }
         }
 
@@ -852,6 +859,7 @@ public class GameSceneSystem : MonoBehaviour
             {
                 foreach (GameObject item in P2_Item){ item.transform.GetChild(0).GetComponent<Button>().interactable = false; }
                 foreach (GameObject item in P1_Item){ item.transform.GetChild(0).GetComponent<Button>().interactable = true; }
+                Turn++;
             }
         }
 
