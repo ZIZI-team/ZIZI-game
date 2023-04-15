@@ -52,6 +52,12 @@ public class GameSceneSystem : MonoBehaviour
     GameObject Rock;
     GameObject Bush;
 
+    public GameObject Game;                           // Unity : Inspector
+    public Transform ZIZI_Transform;                  // Unity : Inspector
+    
+    public GameObject Player1Win;                     // Unity : Inspector
+    public GameObject Player2Win;                     // Unity : Inspector    
+
 
 // +++++ Stone +++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -63,7 +69,8 @@ public class GameSceneSystem : MonoBehaviour
     RectTransform rectTransform_w;
 
     [SerializeField] private bool isBlack = true;
-
+    
+    public int Turn = 0;
 
 // +++++ Item List +++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -77,6 +84,10 @@ public class GameSceneSystem : MonoBehaviour
     public GameObject dotoriIcon;
     public List<GameObject> P1_Item = new List<GameObject>();
     public List<GameObject> P2_Item = new List<GameObject>();
+
+    public bool SKill_Dotori = false;
+    public bool SKill_Leaf = false;
+    public bool UsedItem = false;
 
 
 // +++++ Win Condition +++++ //
@@ -123,6 +134,7 @@ public class GameSceneSystem : MonoBehaviour
         //         panelSize *= scaleFactor;
         //     }
         #endregion
+        
         // 3. Make Initiate Board (Record Initiate Information)
             Reset_Item();
 
@@ -162,27 +174,24 @@ public class GameSceneSystem : MonoBehaviour
             // ItemList = new List<GameObject>();
             ZIZIList = new List<GameObject>();
         
-            // Dotori_P1 = 0;
-            // Dotori_P2 = 0;
-            // Leaf_P1 = 0;
-            // Leaf_P2 = 0;
+            Dotori_P1 = 0;
+            Dotori_P2 = 0;
+            Leaf_P1 = 0;
+            Leaf_P2 = 0;
 
         // Reset Item
 
-            // Curr_Item = GameObject.Find("ZIZI").gameObject;     
+            for (int j = 0; j < P1_Item.Count; j++){ Destroy(P1_Item[j]); }
+            for (int j = 0; j < P2_Item.Count; j++){ Destroy(P2_Item[j]); }
 
-            // for (int j = 0; j < P1_Item.Count; j++){ Destroy(P1_Item[j]); }
-            // for (int j = 0; j < P2_Item.Count; j++){ Destroy(P2_Item[j]); }
+            UsedItem = false;
+            P1_Item = new List<GameObject>();
+            P2_Item = new List<GameObject>();
 
-            // UsedItem = false;
-            // P1_Item = new List<GameObject>();
-            // P2_Item = new List<GameObject>();
+            SKill_Dotori = false;
+            SKill_Leaf = false;
 
-            // SKill_Dotori = false;
-            // Debug.Log("Dotori false : Reset");
-            // SKill_Leaf = false;
-
-            // Turn = 0;
+            Turn = 0;
 
         #endregion
 
@@ -259,8 +268,8 @@ public class GameSceneSystem : MonoBehaviour
             {
                 if (UsedItem == false)
                 { 
-                    Curr_Item.GetComponent<Animator>().SetBool("On", false);
-                    Curr_Item.GetComponent<Animator>().SetBool("Off", true);
+                    Selected_Item.GetComponent<Animator>().SetBool("On", false);
+                    Selected_Item.GetComponent<Animator>().SetBool("Off", true);
                 }
                 else 
                 { 
@@ -271,7 +280,7 @@ public class GameSceneSystem : MonoBehaviour
             SKill_Dotori = false;
             SKill_Leaf = false;
 
-            // Curr_Item.SetActive(true);
+            // Selected_Item.SetActive(true);
 
         #endregion
 
@@ -381,7 +390,7 @@ public class GameSceneSystem : MonoBehaviour
         {
             Time.timeScale = 1f;
             SkillUI.transform.localPosition = new Vector3(-5000f, 0f, 0f);
-            Curr_Item.SetActive(true);
+            Selected_Item.SetActive(true);
 
             SKill_Dotori = false;
             Debug.Log("Dotori false : Continue");
@@ -397,20 +406,27 @@ public class GameSceneSystem : MonoBehaviour
     // Rock에 OnclickRock 스크립트 연결하기
     #region OnclickRock() : Spon ZIZI on Rock
  
+        int RockIndex;
+        int ListX;
+        int ListY;
+
         public void OnclickRock()
         {
+            // gameObject : Rock
+            
             // Get This Rock's Child Index
-                int RockIndex;
-                for (int i = 0; i < Rock.transform.childCount; i++){ if (Rock.transform.GetChild(i) == gameObject.transform){ RockIndex = i; break; }} 
+                for (int i = 0; i < Rock.transform.childCount; i++){ if (Rock.transform.GetChild(i) == gameObject.transform){ RockIndex = i; break; } }  
+                ListX = (int)(RockIndex / mapGridNum_x) + 6;
+                ListY = RockIndex % mapGridNum_x + 6;
 
             // Instantiate ZIZI on this Rock
-                GameObject ZIZI_instance = Instantiate(Stone, Bush.transform.GetChild(RockIndex).transform.position, Quaternion.identity) as GameObject;
+                GameObject ZIZI_instance = Instantiate(Stone, gameObject.transform.position, Quaternion.identity) as GameObject;
                 ZIZI_instance.transform.SetParent(gameObject.transform, false);
                 ZIZI_instance.name = isBlack? "Player1" : "Player2"; 
-                ZIZI_instance.name += "_" + (string)RockIndex;
+                ZIZI_instance.name += "_" + RockIndex.ToString();
 
             // Record Color on ZIZIBoard
-                ZIZIBoard[(int)(RockIndex / mapGridNum_x) + 6, RockIndex % mapGridNum_x + 6] = isBlack ? 1 : 2;  // 1 : Black, 2 : White
+                ZIZIBoard[ListX, ListY] = isBlack ? 1 : 2;  // 1 : Black, 2 : White
 
             // Rock Button interactable false
                 gameObject.GetComponent<Button>().interactable = false;
@@ -424,10 +440,10 @@ public class GameSceneSystem : MonoBehaviour
     
         public void CutBush(int RockIndex)
         {
-            Bush.transform.GetChild(BushBoard[(int)(RockIndex / mapGridNum_x) + 6 + 1, RockIndex % mapGridNum_x + 6, 1]).SetActive(false);
-            Bush.transform.GetChild(BushBoard[(int)(RockIndex / mapGridNum_x) + 6, RockIndex % mapGridNum_x + 6 + 1, 1]).SetActive(false);
-            Bush.transform.GetChild(BushBoard[(int)(RockIndex / mapGridNum_x) + 6 - 1, RockIndex % mapGridNum_x + 6, 1]).SetActive(false);
-            Bush.transform.GetChild(BushBoard[(int)(RockIndex / mapGridNum_x) + 6, RockIndex % mapGridNum_x + 6 - 1, 1]).SetActive(false);
+            if (RockIndex % mapGridNum_x != mapGridNum_x - 1){ Bush.transform.GetChild(RockIndex + 1).gameObject.SetActive(false); }
+            if (RockIndex % mapGridNum_x != 0){ Bush.transform.GetChild(RockIndex - 1).gameObject.SetActive(false); }
+            if ((int)(RockIndex / mapGridNum_x) != 0){ Bush.transform.GetChild(RockIndex + mapGridNum_x).gameObject.SetActive(false); }
+            if ((int)(RockIndex / mapGridNum_x) != mapGridNum_y - 1){ Bush.transform.GetChild(RockIndex - mapGridNum_x).gameObject.SetActive(false); }
         }
     
     #endregion
@@ -440,9 +456,10 @@ public class GameSceneSystem : MonoBehaviour
         public int Leaf_P1 = 0;
         public int Leaf_P2 = 0;
 
-
         public void OnclickRockItem()
         {
+            // gameObject : Item on map
+
             if (gameObject.name == "dotori(Clone)")
             {
                 if (isBlack == true && Dotori_P1 >= 3 || isBlack == false && Dotori_P2 >= 3 ){ return; } // Can get Item Max 3
@@ -454,19 +471,17 @@ public class GameSceneSystem : MonoBehaviour
 
                 if (isBlack == true)
                 {
-                    GameObject temp = Instantiate(dotoriIcon);
-                    temp.transform.SetParent(ItemSlotUI_1P.transform);
-                    temp.transform.localPosition = new Vector3(-660f + (120 * (Dotori_P1)), 0f);
-                    temp.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
-                    P1_Item.Add(temp);
+                    GameObject ItemForSlot = Instantiate(dotoriIcon, ItemSlotUI_1P.transform.position + new Vector3(-660f + (120 * (Dotori_P1)), 0f), Quaternion.identity) as GameObject;
+                    ItemForSlot.transform.SetParent(ItemSlotUI_1P.transform);
+                    ItemForSlot.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
+                    P1_Item.Add(ItemForSlot);
                 }
                 else
                 {
-                    GameObject temp = Instantiate(dotoriIcon);
-                    temp.transform.SetParent(ItemSlotUI_2P.transform);
-                    temp.transform.localPosition = new Vector3(-660f + (120 * (Dotori_P2)), 0f);
-                    temp.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
-                    P2_Item.Add(temp);
+                    GameObject ItemForSlot = Instantiate(dotoriIcon, ItemSlotUI_2P.transform.position + new Vector3(-660f + (120 * (Dotori_P2)), 0f), Quaternion.identity) as GameObject;
+                    ItemForSlot.transform.SetParent(ItemSlotUI_2P.transform);
+                    ItemForSlot.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
+                    P2_Item.Add(ItemForSlot);
                 }
             }
             else if (gameObject.name == "leaf(Clone)")
@@ -481,19 +496,17 @@ public class GameSceneSystem : MonoBehaviour
 
                 if (isBlack == true)
                 {
-                    GameObject temp = Instantiate(leafIcon);
-                    temp.transform.SetParent(ItemSlotUI_1P.transform);
-                    temp.transform.localPosition = new Vector3(190f + (120 * (Leaf_P1)), 0f);
-                    temp.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
-                    P1_Item.Add(temp);
+                    GameObject ItemForSlot = Instantiate(leafIcon, ItemSlotUI_1P.transform.position + new Vector3(-660f + (120 * (Leaf_P1)), 0f), Quaternion.identity) as GameObject;
+                    ItemForSlot.transform.SetParent(ItemSlotUI_1P.transform);
+                    ItemForSlot.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
+                    P1_Item.Add(ItemForSlot);
                 }
                 else
                 {
-                    GameObject temp = Instantiate(leafIcon);
-                    temp.transform.SetParent(ItemSlotUI_2P.transform);
-                    temp.transform.localPosition = new Vector3(190f + (120 * (Leaf_P2)), 0f);
-                    temp.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
-                    P2_Item.Add(temp);
+                    GameObject ItemForSlot = Instantiate(leafIcon, ItemSlotUI_2P.transform.position + new Vector3(-660f + (120 * (Leaf_P2)), 0f), Quaternion.identity) as GameObject;
+                    ItemForSlot.transform.SetParent(ItemSlotUI_2P.transform);
+                    ItemForSlot.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
+                    P2_Item.Add(ItemForSlot);
                 }
             }
             else { return; }
@@ -532,465 +545,542 @@ public class GameSceneSystem : MonoBehaviour
 
 
     // Item에 스크립트 연결하기
-    #region 
+    #region OnClickSlotItem(), SkillChiso()
 
-    public void OnClickSlotItem() // Item(Button Onclick) : Script : SkillClick : OnClickItem()
-    {
-        // Skill Item Animation (UP)
-        gameObject.GetComponent<Animator>().SetBool("On", true);
-        gameObject.GetComponent<Animator>().SetBool("Off", false);
-        
-        if(gameObject.name == "dotori_skill"){ SKill_Dotori = true; }
-        else if(gameObject.name == "leaf_skill"){ SKill_Leaf = true; } 
-    }
+        GameObject Selected_Item;
 
-    public void SkillChiso()
-    {
-        // Skill Item Animation (Down)
-        gameObject.GetComponent<Animator>().SetBool("On",false);
-        gameObject.GetComponent<Animator>().SetBool("Off", true);
+        public void OnClickSlotItem() // Item(Button Onclick) : Script : SkillClick : OnClickItem()
+        {
+            // gameObject : Item on slot
+            Selected_Item = gameObject;
 
-        SKill_Dotori = false;
-        SKill_Leaf = false;
-    }
+            // Skill Item Animation (UP)
+            gameObject.GetComponent<Animator>().SetBool("On", true);
+            gameObject.GetComponent<Animator>().SetBool("Off", false);
+            
+            if(gameObject.name == "dotori_skill"){ SKill_Dotori = true; }
+            else if(gameObject.name == "leaf_skill"){ SKill_Leaf = true; } 
+        }
 
-    public void PlaySkill_Dotori(GameObject Clicked_ZIZI) 
-    {
-        int Clicked_ZIZI_index = int.Parse(Clicked_ZIZI.name.Substring(Clicked_ZIZI.name.IndexOf('_') + 1).Trim());
+        public void SkillChiso()
+        {
+            // gameObject : Item on slot - chiso button
 
-        int JukColor = 0;
-        if(isBlack == true){ Dotori_P1 -= 1; JukColor = 2;}
-        else { Dotori_P2 -= 1; JukColor = 1; }
+            // Skill Item Animation (Down)
+            gameObject.GetComponent<Animator>().SetBool("On",false);
+            gameObject.GetComponent<Animator>().SetBool("Off", true);
 
-        // Animation Juk, Destroy Juk    
-        if (ZIZIBoard[(int)(Clicked_ZIZI_index / mapGridNum_x) + 6 + 1, Clicked_ZIZI_index % mapGridNum_x + 6] == JukColor){ Rock.transform.GetChild(Clicked_ZIZI_index + mapGridNum_x).transform.GetChild(0).transform.GetChild(0).SetActive(true); Rock.transform.GetChild(Clicked_ZIZI_index + mapGridNum_x).transform.GetChild(0); }
-        if (ZIZIBoard[(int)(Clicked_ZIZI_index / mapGridNum_x) + 6, Clicked_ZIZI_index % mapGridNum_x + 6 + 1] == JukColor){ Rock.transform.GetChild(Clicked_ZIZI_index + 1).transform.GetChild(0).transform.GetChild(0).SetActive(true); Rock.transform.GetChild(Clicked_ZIZI_index + 1).transform.GetChild(0); }
-        if (ZIZIBoard[(int)(Clicked_ZIZI_index / mapGridNum_x) + 6 - 1, Clicked_ZIZI_index % mapGridNum_x + 6] == JukColor){ Rock.transform.GetChild(Clicked_ZIZI_index - mapGridNum_x).transform.GetChild(0).transform.GetChild(0).SetActive(true); Rock.transform.GetChild(Clicked_ZIZI_index - mapGridNum_x).transform.GetChild(0); }
-        if (ZIZIBoard[(int)(Clicked_ZIZI_index / mapGridNum_x) + 6, Clicked_ZIZI_index % mapGridNum_x + 6 - 1] == JukColor){ Rock.transform.GetChild(Clicked_ZIZI_index - 1).transform.GetChild(0).transform.GetChild(0).SetActive(true); Rock.transform.GetChild(Clicked_ZIZI_index - 1).transform.GetChild(0); }
-    }
+            SKill_Dotori = false;
+            SKill_Leaf = false;
+        }
+
+    #endregion
     
-    public void PlaySkill_leaf(GameObject Clicked_ZIZI)
-    {
-        int Clicked_ZIZI_index = int.Parse(Clicked_ZIZI.name.Substring(Clicked_ZIZI.name.IndexOf('_') + 1).Trim());
+    #region PlaySkill_Dotori() 
 
-        Clicked_ZIZI.name += "_Leaf";
+        public void PlaySkill_Dotori() 
+        {
+            int JukColor = 0;
+            if(isBlack == true){ Dotori_P1 -= 1; JukColor = 2;}
+            else { Dotori_P2 -= 1; JukColor = 1; }
 
-        GameObject Leaf = Instantiate(Resources.Load("Item_Prefab/"+"leaf"), new Vector3(0, 0, -0.01f), Quaternion.identity) as GameObject;
-        Leaf.transform.SetParent(ZIZI_Transform.GetChild(ZIZIBoard[indexY, indexX, 1]).transform, false);
-        Leaf.transform.localPosition = new Vector3(0, 0, 0);
-    }
+            // Animation Juk, Destroy Juk    
+            if ((int)(ZIZI_index / mapGridNum_x) != 0 && ZIZIBoard[ListX + 1, ListY] == JukColor)
+            { 
+                Rock.transform.GetChild(ZIZI_index + mapGridNum_x).transform.GetChild(0).transform.GetChild(0).gameObject.SetActive(true);  // Animation
+                StartCoroutine(WaitSecond(ZIZI_index + mapGridNum_x));
+            }
+            if (ZIZI_index % mapGridNum_x != mapGridNum_x - 1 && ZIZIBoard[ListX, ListY + 1] == JukColor)
+            { 
+                Rock.transform.GetChild(ZIZI_index + 1).transform.GetChild(0).transform.GetChild(0).gameObject.SetActive(true);  // Animation
+                StartCoroutine(WaitSecond(ZIZI_index + 1));
+            }
+            if ((int)(ZIZI_index / mapGridNum_x) != mapGridNum_y - 1 && ZIZIBoard[ListX - 1, ListY] == JukColor)
+            { 
+                Rock.transform.GetChild(ZIZI_index - mapGridNum_x).transform.GetChild(0).transform.GetChild(0).gameObject.SetActive(true);  // Animation
+                StartCoroutine(WaitSecond(ZIZI_index - mapGridNum_x));
+            }
+            if (ZIZI_index % mapGridNum_x != 0 && ZIZIBoard[ListX, ListY - 1] == JukColor)
+            { 
+                Rock.transform.GetChild(ZIZI_index - 1).transform.GetChild(0).transform.GetChild(0).gameObject.SetActive(true);  // Animation
+                StartCoroutine(WaitSecond(ZIZI_index - 1));
+            }
+        }
+        IEnumerator WaitSecond(int index)
+        {
+            yield return new WaitForSeconds(0.7f);
+            Rock.transform.GetChild(index).transform.GetChild(0).gameObject.SetActive(false);
+        }
+    
+    #endregion
+
+    #region PlaySkill_leaf() 
+
+        public void PlaySkill_leaf(GameObject Clicked_ZIZI)
+        {
+            Clicked_ZIZI.name += "_Leaf";
+
+            GameObject Leaf = Instantiate(Resources.Load("Item_Prefab/"+"leaf"), Clicked_ZIZI.transform.position, Quaternion.identity) as GameObject;
+            Leaf.transform.SetParent(Clicked_ZIZI.transform, false);
+        }
+
+    #endregion
 
     // ZIZI에 OnclickZIZI  스크립트 연결하기
     #region OnclickZIZI() : Skill or not
 
         GameObject Skill_ZIZI;
+        int ZIZI_index;
+
         public void OnclickZIZI()
         {
-            Skill_ZIZI = gameObject;
-            // 해당 지지의 부모 Rock의 인덱스를 가져오고 그 인덱스를 활용하여 배열 인덱스를 계산한다
+            ZIZI_index = int.Parse(Skill_ZIZI.name.Substring(Skill_ZIZI.name.IndexOf('_') + 1).Trim());
+            ListX = (int)(ZIZI_index / mapGridNum_x) + 6;
+            ListY = ZIZI_index % mapGridNum_x + 6;
+
+            // gameObject : zizi on map
+                Skill_ZIZI = gameObject;
 
             // Skill dotori
-                // flag 활용
+                if (SKill_Dotori == true)
+                {
+                    if (isBlack == true && Skill_ZIZI.name.Substring(Skill_ZIZI.name.IndexOf('_')).Trim() == "Player1(Clone)"){ PlaySkill_Dotori(); }
+                    else if (isBlack == false && Skill_ZIZI.name.Substring(Skill_ZIZI.name.IndexOf('_')).Trim() == "Player2(Clone)"){ PlaySkill_Dotori(); }
+                }
 
             // Skill leaf
-                // flag 활용
+                else if (SKill_Leaf == true)
+                {
+                    if (isBlack == true && Skill_ZIZI.name.Substring(Skill_ZIZI.name.IndexOf('_')).Trim() == "Player1(Clone)"){ PlaySkill_leaf(gameObject); }
+                    else if (isBlack == false && Skill_ZIZI.name.Substring(Skill_ZIZI.name.IndexOf('_')).Trim() == "Player2(Clone)"){ PlaySkill_leaf(gameObject); }
+                }
 
             // else : Return
-
-
-            
+                else return;  
         }
     
     #endregion
 
 
-    #endregion
-
 
 // >> Check Condition << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
-#region
-    public bool CheckCondition(int indexY, int indexX, bool StoneColor, 
-                                Func<int, int, int, bool> Func1, Func<int, int, int, bool> Func2, Func<int, int, int, bool> Func3, Func<int, int, int, bool> Func4, int kMin) // make 5 : win
-    {
-        // return true : Win, return false : Pass
+    #region CheckCondition() : Common Function
 
-        int color;  // 1 : Black, 2 : White
-        if (StoneColor == true){ color = 1; }
-        else { color = 2; }
-
-        bool TrueFlag = false;
-        try 
+        public bool CheckCondition(int indexY, int indexX, bool StoneColor, 
+                                    Func<int, int, int, bool> Func1, Func<int, int, int, bool> Func2, Func<int, int, int, bool> Func3, Func<int, int, int, bool> Func4, int kMin) // make 5 : win
         {
-            for (int k = kMin; k <= 0; k++) // F
+            // return true : Win, return false : Pass
+
+            int color;  // 1 : Black, 2 : White
+            if (StoneColor == true){ color = 1; }
+            else { color = 2; }
+
+            bool TrueFlag = false;
+            try 
             {
-                TrueFlag = Func1(indexY + k, indexX, color); // F
-                if (TrueFlag == true) { return true; }
-                TrueFlag = Func2(indexY, indexX + k, color); // F
-                if (TrueFlag == true) { return true; }
-                TrueFlag = Func3(indexY + k, indexX + k, color); // F
-                if (TrueFlag == true) { return true; }
-                TrueFlag = Func4(indexY + k, indexX - k, color); // F
-                if (TrueFlag == true) { return true; }
-            }
-            return false;
-        } 
+                for (int k = kMin; k <= 0; k++) // F
+                {
+                    TrueFlag = Func1(indexY + k, indexX, color); // F
+                    if (TrueFlag == true) { return true; }
+                    TrueFlag = Func2(indexY, indexX + k, color); // F
+                    if (TrueFlag == true) { return true; }
+                    TrueFlag = Func3(indexY + k, indexX + k, color); // F
+                    if (TrueFlag == true) { return true; }
+                    TrueFlag = Func4(indexY + k, indexX - k, color); // F
+                    if (TrueFlag == true) { return true; }
+                }
+                return false;
+            } 
 
-        finally 
-        {
-            if(TrueFlag) {
-                string board = "";
-                for (int i = 0; i < 11 + 12; i++) {
-                    string line = "";
-                    for (int j = 0; j < 11 + 12; j++) {
-                        line += ZIZIBoard[i, j, 0] + " ";
+            finally 
+            {
+                if(TrueFlag) {
+                    string board = "";
+                    for (int i = 0; i < 11 + 12; i++) {
+                        string line = "";
+                        for (int j = 0; j < 11 + 12; j++) {
+                            line += ZIZIBoard[i, j] + " ";
+                        }
+                        board += line + "\n";
                     }
-                    board += line + "\n";
                 }
             }
         }
-    }
+
+    #endregion
+
+// >> Check Win Condition : make 5 << //
+// ------------------------------------------------------------------------------------------------------------------------ //
+
+    #region Check3Condition()
+
+        public bool checkCond_3 = false;
+        public int StoneCount_Cond3 = 0;
+
+        public void Check3Condition()
+        {
+            checkCond_3 = CheckCondition(ListX, ListY, isBlack, Check3_Y_Plus, Check3_X_Plus, Check3_XY_Plus, Check3_XY_Minus, -4);
+
+            if (StoneCount_Cond3 == 5 && checkCond_3 == true && isBlack == true)
+            {
+                Debug.Log("black coondition 3");
+            }
+            else if (StoneCount_Cond3 == 5 && checkCond_3 == true && isBlack == false)
+            {
+                Debug.Log("White coondition 3");
+            }
+            else { Debug.Log("Pass"); }
+        }
+
+    #endregion
+
+        #region Check3_Y_Plus()
+        public bool Check3_Y_Plus(int startPointY, int StartPointX, int color)//int i
+        {
+            StoneCount_Cond3 = 0;
+
+            if (ZIZIBoard[startPointY, StartPointX] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+                else { StoneCount_Cond3 = 0; return false; }
+            
+            for (int i = 1; i < 4; i++)
+            {
+                if (ZIZIBoard[startPointY + i, StartPointX] == color){ StoneCount_Cond3 += 1; } // ZIZI : Existed / Same Color (# 4)
+                    else { StoneCount_Cond3 = 0; return false; }
+            }
+            
+            if (ZIZIBoard[startPointY + 5, StartPointX] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+                else { StoneCount_Cond3 = 0; return false; }
+
+            return true;
+        }
+        #endregion
+
+        #region Check3_X_Plus()
+        public bool Check3_X_Plus(int startPointY, int StartPointX, int color)
+        {
+            StoneCount_Cond3 = 0;
+
+            if (ZIZIBoard[startPointY, StartPointX] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+                else { StoneCount_Cond3 = 0; return false; }
+            
+            for (int i = 1; i < 4; i++)
+            {
+                if (ZIZIBoard[startPointY, StartPointX + i] == color){ StoneCount_Cond3 += 1; } // ZIZI : Existed / Same Color (# 4)
+                    else { StoneCount_Cond3 = 0; return false; }
+            }
+            
+            if (ZIZIBoard[startPointY, StartPointX + 5] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+                else { StoneCount_Cond3 = 0; return false; }
+
+            return true;
+        }
+        #endregion
+
+        #region Check3_XY_Plus()
+        public bool Check3_XY_Plus(int startPointY, int StartPointX, int color)
+        {
+            StoneCount_Cond3 = 0;
+            
+            if (ZIZIBoard[startPointY, StartPointX] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+                else { StoneCount_Cond3 = 0; return false; }
+            
+            for (int i = 1; i < 4; i++)
+            {
+                if (ZIZIBoard[startPointY + i, StartPointX + i] == color){ StoneCount_Cond3 += 1; } // ZIZI : Existed / Same Color (# 4)
+                    else { StoneCount_Cond3 = 0; return false; }
+            }
+            
+            if (ZIZIBoard[startPointY + 5, StartPointX + 5] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+                else { StoneCount_Cond3 = 0; return false; }        
+            
+            return true;
+        }
+        #endregion
+
+        #region Check3_XY_Minus()
+        public bool Check3_XY_Minus(int startPointY, int StartPointX, int color)
+        {
+            StoneCount_Cond3 = 0;
+
+            if (ZIZIBoard[startPointY, StartPointX] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+                else { StoneCount_Cond3 = 0; return false; }
+            
+            for (int i = 1; i < 4; i++)
+            {
+                if (ZIZIBoard[startPointY + i, StartPointX - i] == color){ StoneCount_Cond3 += 1; } // ZIZI : Existed / Same Color (# 4)
+                    else { StoneCount_Cond3 = 0; return false; }
+            }
+            
+            if (ZIZIBoard[startPointY + 5, StartPointX - 5] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
+                else { StoneCount_Cond3 = 0; return false; }  
+
+            return true;
+        }
+        #endregion
 
 
 // >> Check Win Condition : make 5 << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
-    public bool checkCond_3 = false;
-    public int StoneCount_Cond3 = 0;
+    #region WinCondition()
 
-    public void Check3Condition()
-    {
-        checkCond_3 = CheckCondition(yGapNum + 6, xGapNum + 6, isBlack, Check3_Y_Plus, Check3_X_Plus, Check3_XY_Plus, Check3_XY_Minus, -4);
+        public bool checkCond_Win = false;
+        public int StoneCount_Win = 0;
 
-        if (StoneCount_Cond3 == 5 && checkCond_3 == true && isBlack == true)
+        public void WinCondition()
         {
-            Debug.Log("black coondition 3");
+            checkCond_Win = CheckCondition(ListX, ListY, isBlack, Check_Y_Plus, Check_X_Plus, Check_XY_Plus, Check_XY_Minus, -4);
+
+            if (StoneCount_Win == 5 && checkCond_Win == true && isBlack == true)
+            {
+                Debug.Log("Player1 Win!");
+                Anim4Condition();   // Animation
+
+                Player1Win.SetActive(true);
+                // Player1Win.transform.parent.transform.parent.transform.SetAsLastSibling();
+                mostTopCanvas.transform.SetAsLastSibling();
+                GameOver(Player1Win);
+            }
+            else if (StoneCount_Win == 5 && checkCond_Win == true && isBlack == false)
+            {
+                Debug.Log("Player 2 Win!");
+                Anim4Condition();   // Animation
+
+                Player2Win.SetActive(true);
+                mostTopCanvas.transform.SetAsLastSibling(); 
+                GameOver(Player2Win);
+            }
+            else { Debug.Log("Pass"); }
         }
-        else if (StoneCount_Cond3 == 5 && checkCond_3 == true && isBlack == false)
+    #endregion
+
+        #region Check_Y_Plus()
+        public bool Check_Y_Plus(int startPointY, int StartPointX, int color)
         {
-            Debug.Log("White coondition 3");
+            StoneCount_Win = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                if (ZIZIBoard[startPointY + i, StartPointX] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
+                else { StoneCount_Win = 0; return false; }
+            }
+            return true;
         }
-        else { Debug.Log("Pass"); }
-    }
+        #endregion
 
-    public bool Check3_Y_Plus(int startPointY, int StartPointX, int color)//int i
-    {
-        StoneCount_Cond3 = 0;
-
-        if (ZIZIBoard[startPointY, StartPointX, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Cond3 = 0; return false; }
-        
-        for (int i = 1; i < 4; i++)
+        #region Check_X_Plus()
+        public bool Check_X_Plus (int startPointY, int StartPointX, int color)
         {
-            if (ZIZIBoard[startPointY + i, StartPointX, 0] == color){ StoneCount_Cond3 += 1; } // ZIZI : Existed / Same Color (# 4)
-                else { StoneCount_Cond3 = 0; return false; }
+            StoneCount_Win = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                if (ZIZIBoard[startPointY, StartPointX + i] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
+                else { StoneCount_Win = 0; return false; }
+            }
+            return true;
         }
-        
-        if (ZIZIBoard[startPointY + 5, StartPointX, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Cond3 = 0; return false; }
+        #endregion
 
-        return true;
-    }
-
-    public bool Check3_X_Plus(int startPointY, int StartPointX, int color)
-    {
-        StoneCount_Cond3 = 0;
-
-        if (ZIZIBoard[startPointY, StartPointX, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Cond3 = 0; return false; }
-        
-        for (int i = 1; i < 4; i++)
+        #region Check_XY_Plus()
+        public bool Check_XY_Plus(int startPointY, int StartPointX, int color)
         {
-            if (ZIZIBoard[startPointY, StartPointX + i, 0] == color){ StoneCount_Cond3 += 1; } // ZIZI : Existed / Same Color (# 4)
-                else { StoneCount_Cond3 = 0; return false; }
+            StoneCount_Win = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                if (ZIZIBoard[startPointY + i, StartPointX + i] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
+                else { StoneCount_Win = 0; return false; }
+            }
+            return true;
         }
-        
-        if (ZIZIBoard[startPointY, StartPointX + 5, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Cond3 = 0; return false; }
+        #endregion
 
-        return true;
-    }
-
-    public bool Check3_XY_Plus(int startPointY, int StartPointX, int color)
-    {
-        StoneCount_Cond3 = 0;
-        
-        if (ZIZIBoard[startPointY, StartPointX, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Cond3 = 0; return false; }
-        
-        for (int i = 1; i < 4; i++)
+        #region Check_XY_Minus()
+        public bool Check_XY_Minus(int startPointY, int StartPointX, int color)
         {
-            if (ZIZIBoard[startPointY + i, StartPointX + i, 0] == color){ StoneCount_Cond3 += 1; } // ZIZI : Existed / Same Color (# 4)
-                else { StoneCount_Cond3 = 0; return false; }
+            StoneCount_Win = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                if (ZIZIBoard[startPointY + i, StartPointX - i] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
+                else { StoneCount_Win = 0; return false; }
+            }
+            return true;
         }
-        
-        if (ZIZIBoard[startPointY + 5, StartPointX + 5, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Cond3 = 0; return false; }        
-        
-        return true;
-    }
-
-    public bool Check3_XY_Minus(int startPointY, int StartPointX, int color)
-    {
-        StoneCount_Cond3 = 0;
-
-        if (ZIZIBoard[startPointY, StartPointX, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Cond3 = 0; return false; }
-        
-        for (int i = 1; i < 4; i++)
-        {
-            if (ZIZIBoard[startPointY + i, StartPointX - i, 0] == color){ StoneCount_Cond3 += 1; } // ZIZI : Existed / Same Color (# 4)
-                else { StoneCount_Cond3 = 0; return false; }
-        }
-        
-        if (ZIZIBoard[startPointY + 5, StartPointX - 5, 0] == 0){ StoneCount_Cond3 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Cond3 = 0; return false; }  
-
-        return true;
-    }
-
-
-// >> Check Win Condition : make 5 << //
-// ------------------------------------------------------------------------------------------------------------------------ //
-
-    public bool checkCond_Win = false;
-    public int StoneCount_Win = 0;
-
-    public void WinCondition()
-    {
-        checkCond_Win = CheckCondition(yGapNum + 6, xGapNum + 6, isBlack, Check_Y_Plus, Check_X_Plus, Check_XY_Plus, Check_XY_Minus, -4);
-
-        if (StoneCount_Win == 5 && checkCond_Win == true && isBlack == true)
-        {
-            Debug.Log("Player1 Win!");
-            Anim4Condition();   // Animation
-
-            Player1Win.SetActive(true);
-            // Player1Win.transform.parent.transform.parent.transform.SetAsLastSibling();
-            mostTopCanvas.transform.SetAsLastSibling();
-            GameOver(Player1Win);
-        }
-        else if (StoneCount_Win == 5 && checkCond_Win == true && isBlack == false)
-        {
-            Debug.Log("Player 2 Win!");
-            Anim4Condition();   // Animation
-
-            Player2Win.SetActive(true);
-            mostTopCanvas.transform.SetAsLastSibling(); 
-            GameOver(Player2Win);
-        }
-        else { Debug.Log("Pass"); }
-    }
-
-
-    public bool Check_Y_Plus(int startPointY, int StartPointX, int color)
-    {
-        StoneCount_Win = 0;
-        for (int i = 0; i < 5; i++)
-        {
-            if (ZIZIBoard[startPointY + i, StartPointX, 0] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
-            else { StoneCount_Win = 0; return false; }
-        }
-        return true;
-    }
-
-    public bool Check_X_Plus (int startPointY, int StartPointX, int color)
-    {
-        StoneCount_Win = 0;
-        for (int i = 0; i < 5; i++)
-        {
-            if (ZIZIBoard[startPointY, StartPointX + i, 0] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
-            else { StoneCount_Win = 0; return false; }
-        }
-        return true;
-    }
-
-    public bool Check_XY_Plus(int startPointY, int StartPointX, int color)
-    {
-        StoneCount_Win = 0;
-        for (int i = 0; i < 5; i++)
-        {
-            if (ZIZIBoard[startPointY + i, StartPointX + i, 0] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
-            else { StoneCount_Win = 0; return false; }
-        }
-        return true;
-    }
-
-    public bool Check_XY_Minus(int startPointY, int StartPointX, int color)
-    {
-        StoneCount_Win = 0;
-        for (int i = 0; i < 5; i++)
-        {
-            if (ZIZIBoard[startPointY + i, StartPointX - i, 0] == color){ StoneCount_Win += 1; } // ZIZI : Existed / Same Color (# 5)
-            else { StoneCount_Win = 0; return false; }
-        }
-        return true;
-    }
-  
+        #endregion  
 
 
 // >> ZIZI : play Animation << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
+    #region Animationn
 
-// Hop Animation : Default
-public void Play_Animation1()
-{   int cnt = 0;
-        Debug.Log("-------------!!--------------");
-    for(int i = 0; i < Game.transform.GetChild(1).childCount; i++)
-    {
-        StartCoroutine(Rand_timer(Random.Range(0.1f, 0.7f), i, "Anim1"));
-        Debug.Log(cnt++);
-        // Code : Animation Played, but not active
-    }
-        Debug.Log("-------------!+++++!--------------");
-}
+        // Hop Animation : Default
+        public void Play_Animation1()
+        {   int cnt = 0;
+                Debug.Log("-------------!!--------------");
+            for(int i = 0; i < Game.transform.GetChild(1).childCount; i++)
+            {
+                StartCoroutine(Rand_timer(Random.Range(0.1f, 0.7f), i, "Anim1"));
+                Debug.Log(cnt++);
+                // Code : Animation Played, but not active
+            }
+                Debug.Log("-------------!+++++!--------------");
+        }
 
-IEnumerator Rand_timer(float _time, int _i, string _Anim)
-{
-    yield return new WaitForSeconds(_time);
+        IEnumerator Rand_timer(float _time, int _i, string _Anim)
+        {
+            yield return new WaitForSeconds(_time);
 
-    ZIZI_Transform.GetChild(_i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT(_Anim);
-}
+            ZIZI_Transform.GetChild(_i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT(_Anim);
+        }
 
-// Nervous Animation : Play By Function Anim2Condition()
-public void Play_Animation2(string PlayerName) 
-{
-    for(int i = 0; i < Game.transform.GetChild(1).childCount; i++)
-    {
-        if (ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.name == PlayerName){ ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT("Anim2"); }//StartCoroutine(Rand_timer(Random.Range(0.1f, 0.7f), i, "Anim2")); } //ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT("Anim2"); }
-        // Code : Animation Played, but not active
-    }
-}
+        // Nervous Animation : Play By Function Anim2Condition()
+        public void Play_Animation2(string PlayerName) 
+        {
+            for(int i = 0; i < Game.transform.GetChild(1).childCount; i++)
+            {
+                if (ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.name == PlayerName){ ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT("Anim2"); }//StartCoroutine(Rand_timer(Random.Range(0.1f, 0.7f), i, "Anim2")); } //ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT("Anim2"); }
+                // Code : Animation Played, but not active
+            }
+        }
 
-// Dance Animation : Play By Function Anim3Condition()
-public void Play_Animation3(string PlayerName)
-{
-    for(int i = 0; i < Game.transform.GetChild(1).childCount; i++)
-    {
-        if (ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.name == PlayerName){ StartCoroutine(Rand_timer(Random.Range(0.1f, 0.7f), i, "Anim3")); } //ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT("Anim3"); }
-        // Code : Animation Played, but not active
-    }
-}
+        // Dance Animation : Play By Function Anim3Condition()
+        public void Play_Animation3(string PlayerName)
+        {
+            for(int i = 0; i < Game.transform.GetChild(1).childCount; i++)
+            {
+                if (ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.name == PlayerName){ StartCoroutine(Rand_timer(Random.Range(0.1f, 0.7f), i, "Anim3")); } //ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT("Anim3"); }
+                // Code : Animation Played, but not active
+            }
+        }
 
-// Win Animation : Play By Function Anim4Condition()
-public void Play_Animation4(string PlayerName)
-{
-    for(int i = 0; i < Game.transform.GetChild(1).childCount; i++)
-    {
-        if (ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.name == PlayerName){ StartCoroutine(Rand_timer(Random.Range(0.1f, 0.7f), i, "Anim4")); } //ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT("Anim4"); }
-        // Code : Animation Played, but not active
-    }
-}
+        // Win Animation : Play By Function Anim4Condition()
+        public void Play_Animation4(string PlayerName)
+        {
+            for(int i = 0; i < Game.transform.GetChild(1).childCount; i++)
+            {
+                if (ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.name == PlayerName){ StartCoroutine(Rand_timer(Random.Range(0.1f, 0.7f), i, "Anim4")); } //ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT("Anim4"); }
+                // Code : Animation Played, but not active
+            }
+        }
 
-
+    #endregion  
 
 // >> Animation : Check Condition [ Play_Animation2 : Nervous ] << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
-    public bool checkCond_Anim2 = false;
-    public int StoneCount_Anim2 = 0;
+    #region Anim2Condition()
+    
+        public bool checkCond_Anim2 = false;
+        public int StoneCount_Anim2 = 0;
 
-    public void Anim2Condition()
-    {
-        checkCond_Anim2 = CheckCondition(yGapNum + 6, xGapNum + 6, isBlack, Anim2_Check_Y_Plus, Anim2_Check_X_Plus, Anim2_Check_XY_Plus, Anim2_Check_XY_Minus, -5);
-
-          if (StoneCount_Anim2 == 5 && checkCond_Anim2 == true && isBlack == true)
+        public void Anim2Condition()
         {
-            Debug.Log("Player1 Play_Animation2! : Nervous");
+            checkCond_Anim2 = CheckCondition(ListX, ListY, isBlack, Anim2_Check_Y_Plus, Anim2_Check_X_Plus, Anim2_Check_XY_Plus, Anim2_Check_XY_Minus, -5);
 
-            Play_Animation2("Player2(Clone)");
-            Play_Animation2("Player2(Clone)_Leaf");
+            if (StoneCount_Anim2 == 5 && checkCond_Anim2 == true && isBlack == true)
+            {
+                Debug.Log("Player1 Play_Animation2! : Nervous");
+
+                Play_Animation2("Player2(Clone)");
+                Play_Animation2("Player2(Clone)_Leaf");
+                
+            }
+            else if (StoneCount_Anim2 == 5 && checkCond_Anim2 == true && isBlack == false)
+            {
+                Debug.Log("Player 2 Play_Animation2! : Nervous");
+                Play_Animation2("Player1(Clone)");
+                Play_Animation2("Player1(Clone)_Leaf");
+
+            }
+            else { Debug.Log("Pass"); }
+        }
+
+    #endregion
+
+        #region Anim2_Check_Y_Plus()
+        public bool Anim2_Check_Y_Plus(int startPointY, int StartPointX, int color)//int i
+        {
+            StoneCount_Anim2 = 0;
+
+            if (ZIZIBoard[startPointY, StartPointX] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
+                else { StoneCount_Anim2 = 0; return false; }
             
-        }
-        else if (StoneCount_Anim2 == 5 && checkCond_Anim2 == true && isBlack == false)
-        {
-            Debug.Log("Player 2 Play_Animation2! : Nervous");
-            Play_Animation2("Player1(Clone)");
-            Play_Animation2("Player1(Clone)_Leaf");
-
-        }
-        else { Debug.Log("Pass"); }
-    }
-
-    public bool Anim2_Check_Y_Plus(int startPointY, int StartPointX, int color)//int i
-    {
-        StoneCount_Anim2 = 0;
-
-        if (ZIZIBoard[startPointY, StartPointX, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Anim2 = 0; return false; }
-        
-        for (int i = 1; i < 4; i++)
-        {
-            if (ZIZIBoard[startPointY + i, StartPointX, 0] == color){ StoneCount_Anim2 += 1; } // ZIZI : Existed / Same Color (# 4)
+            for (int i = 1; i < 4; i++)
+            {
+                if (ZIZIBoard[startPointY + i, StartPointX] == color){ StoneCount_Anim2 += 1; } // ZIZI : Existed / Same Color (# 4)
+                    else { StoneCount_Anim2 = 0; return false; }
+            }
+            
+            if (ZIZIBoard[startPointY + 4, StartPointX] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
                 else { StoneCount_Anim2 = 0; return false; }
+
+            return true;
         }
-        
-        if (ZIZIBoard[startPointY + 4, StartPointX, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Anim2 = 0; return false; }
+        #endregion
 
-        return true;
-    }
-
-    public bool Anim2_Check_X_Plus(int startPointY, int StartPointX, int color)
-    {
-        StoneCount_Anim2 = 0;
-
-        if (ZIZIBoard[startPointY, StartPointX, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Anim2 = 0; return false; }
-        
-        for (int i = 1; i < 4; i++)
+        #region Anim2_Check_X_Plus()
+        public bool Anim2_Check_X_Plus(int startPointY, int StartPointX, int color)
         {
-            if (ZIZIBoard[startPointY, StartPointX + i, 0] == color){ StoneCount_Anim2 += 1; } // ZIZI : Existed / Same Color (# 4)
+            StoneCount_Anim2 = 0;
+
+            if (ZIZIBoard[startPointY, StartPointX] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
                 else { StoneCount_Anim2 = 0; return false; }
+            
+            for (int i = 1; i < 4; i++)
+            {
+                if (ZIZIBoard[startPointY, StartPointX + i] == color){ StoneCount_Anim2 += 1; } // ZIZI : Existed / Same Color (# 4)
+                    else { StoneCount_Anim2 = 0; return false; }
+            }
+            
+            if (ZIZIBoard[startPointY, StartPointX + 4] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
+                else { StoneCount_Anim2 = 0; return false; }
+
+            return true;
         }
-        
-        if (ZIZIBoard[startPointY, StartPointX + 4, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Anim2 = 0; return false; }
+        #endregion
 
-        return true;
-    }
-
-    public bool Anim2_Check_XY_Plus(int startPointY, int StartPointX, int color)
-    {
-        StoneCount_Anim2 = 0;
-        
-        if (ZIZIBoard[startPointY, StartPointX, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Anim2 = 0; return false; }
-        
-        for (int i = 1; i < 4; i++)
+        #region Anim2_Check_XY_Plus()
+        public bool Anim2_Check_XY_Plus(int startPointY, int StartPointX, int color)
         {
-            if (ZIZIBoard[startPointY + i, StartPointX + i, 0] == color){ StoneCount_Anim2 += 1; } // ZIZI : Existed / Same Color (# 4)
+            StoneCount_Anim2 = 0;
+            
+            if (ZIZIBoard[startPointY, StartPointX] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
                 else { StoneCount_Anim2 = 0; return false; }
+            
+            for (int i = 1; i < 4; i++)
+            {
+                if (ZIZIBoard[startPointY + i, StartPointX + i] == color){ StoneCount_Anim2 += 1; } // ZIZI : Existed / Same Color (# 4)
+                    else { StoneCount_Anim2 = 0; return false; }
+            }
+            
+            if (ZIZIBoard[startPointY + 4, StartPointX + 4] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
+                else { StoneCount_Anim2 = 0; return false; }        
+            
+            return true;
         }
-        
-        if (ZIZIBoard[startPointY + 4, StartPointX + 4, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Anim2 = 0; return false; }        
-        
-        return true;
-    }
+        #endregion
 
-    public bool Anim2_Check_XY_Minus(int startPointY, int StartPointX, int color)
-    {
-        StoneCount_Anim2 = 0;
-
-        if (ZIZIBoard[startPointY, StartPointX, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Anim2 = 0; return false; }
-        
-        for (int i = 1; i < 4; i++)
+        #region Anim2_Check_XY_Minus()
+        public bool Anim2_Check_XY_Minus(int startPointY, int StartPointX, int color)
         {
-            if (ZIZIBoard[startPointY + i, StartPointX - i, 0] == color){ StoneCount_Anim2 += 1; } // ZIZI : Existed / Same Color (# 4)
+            StoneCount_Anim2 = 0;
+
+            if (ZIZIBoard[startPointY, StartPointX] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
                 else { StoneCount_Anim2 = 0; return false; }
+            
+            for (int i = 1; i < 4; i++)
+            {
+                if (ZIZIBoard[startPointY + i, StartPointX - i] == color){ StoneCount_Anim2 += 1; } // ZIZI : Existed / Same Color (# 4)
+                    else { StoneCount_Anim2 = 0; return false; }
+            }
+            
+            if (ZIZIBoard[startPointY + 4, StartPointX - 4] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
+                else { StoneCount_Anim2 = 0; return false; }  
+
+            return true;
         }
-        
-        if (ZIZIBoard[startPointY + 4, StartPointX - 4, 0] == 0){ StoneCount_Anim2 += 1; } // ZIZI : no Existed / 0
-            else { StoneCount_Anim2 = 0; return false; }  
-
-        return true;
-    }
-
-
+        #endregion
 
 
 // >> Animation : Check Condition [ Play_Animation3 : Dance ] << //
@@ -1026,64 +1116,60 @@ public void Play_Animation4(string PlayerName)
     // }
 
 
-
 // >> Animation : Check Condition [ Play_Animation4 : Win ] << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
-    public void Anim4Condition()
-    {
-        if (isBlack == true)
+    #region Anim4Condition()
+
+        public void Anim4Condition()
         {
-            Debug.Log("Player 1 Play_Animation4! : Win");
-            Play_Animation4("Player1(Clone)");
-            Play_Animation4("Player1(Clone)_Leaf");
-        }
-        else if (isBlack == false)
-        {
-            Debug.Log("Player 2 Play_Animation4! : Win");
-            Play_Animation4("Player2(Clone)");
-            Play_Animation4("Player2(Clone)_Leaf");
-        }
-    }    
-
-
-#endregion
-
+            if (isBlack == true)
+            {
+                Debug.Log("Player 1 Play_Animation4! : Win");
+                Play_Animation4("Player1(Clone)");
+                Play_Animation4("Player1(Clone)_Leaf");
+            }
+            else if (isBlack == false)
+            {
+                Debug.Log("Player 2 Play_Animation4! : Win");
+                Play_Animation4("Player2(Clone)");
+                Play_Animation4("Player2(Clone)_Leaf");
+            }
+        }    
+    
+    #endregion
 
 
 // >> Music << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
-#region 
+    #region OnclickMusic()
 
-    public void OnclickMusic()
-    {
-       if (musicIsOn == true)
-       {
-        //mute = false;\
-        // music = Music.GetComponent<
-        Game.GetComponent<AudioSource>().mute  = true;
-        musicIsOn = false;
-       } 
-       else
-       {
-        //mute = true;
-        Game.GetComponent<AudioSource>().mute  = false;
-        musicIsOn = true;
+        public void OnclickMusic()
+        {
+        if (musicIsOn == true)
+        {
+            //mute = false;\
+            // music = Music.GetComponent<
+            Game.GetComponent<AudioSource>().mute  = true;
+            musicIsOn = false;
+        } 
+        else
+        {
+            //mute = true;
+            Game.GetComponent<AudioSource>().mute  = false;
+            musicIsOn = true;
 
-       }
-        
-    }
+        }
+            
+        }
 
-
-#endregion
-
-
+    #endregion
 
 }
 
 
-#region 
+#region Code
 
 // using System.Collections;
 // using System.Collections.Generic;

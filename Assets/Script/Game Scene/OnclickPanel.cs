@@ -13,6 +13,6 @@ public class OnclickPanel : MonoBehaviour
 
     public void OnclickP()
     {
-        GameScript.GetComponent<GameSceneSystem>().PanelOnclick();
+        //GameScript.GetComponent<GameSceneSystem>().PanelOnclick();
     }
 }
