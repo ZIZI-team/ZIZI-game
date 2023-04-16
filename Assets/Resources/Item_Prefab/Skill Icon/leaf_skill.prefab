@@ -122,8 +122,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1662217153743850171}
-        m_TargetAssemblyTypeName: SkillClick, Assembly-CSharp
-        m_MethodName: OnClickChiso
+        m_TargetAssemblyTypeName: SlotItem, Assembly-CSharp
+        m_MethodName: SkillChiso_Func
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -367,8 +367,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1662217153743850171}
-        m_TargetAssemblyTypeName: SkillClick, Assembly-CSharp
-        m_MethodName: OnClickItem
+        m_TargetAssemblyTypeName: SlotItem, Assembly-CSharp
+        m_MethodName: OnClickSlotItem_Func
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
