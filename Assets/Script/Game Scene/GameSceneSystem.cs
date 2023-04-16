@@ -425,7 +425,7 @@ public class GameSceneSystem : MonoBehaviour
 
             if (ButtonMap_Button.name == "Button_ZIZI")
             {
-                OnclickZIZI( Rock.transform.GetChild(RockIndex).transform.GetChild(0).gameObject );
+                OnclickZIZI( Rock.transform.GetChild(RockIndex).transform.GetChild(0).transform.GetChild(0).gameObject ); // ZIZILand > ZIZI
                 if (UsedItem == true){ ButtonMap_Button.name = "Button"; }
                 return;
             }
@@ -627,7 +627,7 @@ public class GameSceneSystem : MonoBehaviour
             yield return new WaitForSeconds(0.7f);
 
             GameObject WaitingZIZI = Rock.transform.GetChild(index).transform.GetChild(1).gameObject;
-            if (WaitingZIZI.name.Substring(Skill_ZIZI.name.IndexOf('_') + 2).Trim() != "Leaf"){ Destroy(WaitingZIZI); }
+            if (WaitingZIZI.name.Split("_")[2] != "Leaf"){ Destroy(WaitingZIZI); }
         }
     
     #endregion
@@ -659,6 +659,7 @@ public class GameSceneSystem : MonoBehaviour
 
             // gameObject : zizi on map
                 Skill_ZIZI = Clicked_ZIZI;
+                string[] ZIZIname = Skill_ZIZI.name.Split("_");
 
             Debug.Assert(SKill_Dotori == true, SKill_Dotori);
             Debug.Assert(SKill_Leaf == true, SKill_Leaf);
@@ -666,15 +667,15 @@ public class GameSceneSystem : MonoBehaviour
             // Skill dotori
                 if (SKill_Dotori == true)
                 {
-                    if (isBlack == true && Skill_ZIZI.name.Substring(Skill_ZIZI.name.IndexOf('_')).Trim() == "Player1"){ PlaySkill_Dotori(); }
-                    else if (isBlack == false && Skill_ZIZI.name.Substring(Skill_ZIZI.name.IndexOf('_')).Trim() == "Player2"){ PlaySkill_Dotori(); }
+                    if (isBlack == true && ZIZIname[0] == "Player1"){ Debug.Log("dotori skill start p1"); PlaySkill_Dotori(); }
+                    else if (isBlack == false && ZIZIname[0] == "Player2"){ Debug.Log("dotori skill start p2"); PlaySkill_Dotori(); }
                 }
 
             // Skill leaf
                 else if (SKill_Leaf == true)
                 {
-                    if (isBlack == true && Skill_ZIZI.name.Substring(Skill_ZIZI.name.IndexOf('_')).Trim() == "Player1"){ PlaySkill_leaf(Skill_ZIZI); }
-                    else if (isBlack == false && Skill_ZIZI.name.Substring(Skill_ZIZI.name.IndexOf('_')).Trim() == "Player2"){ PlaySkill_leaf(Skill_ZIZI); }
+                    if (isBlack == true && ZIZIname[0] == "Player1"){ Debug.Log("leaf skill start p2"); PlaySkill_leaf(Skill_ZIZI); }
+                    else if (isBlack == false && ZIZIname[0] == "Player2"){ Debug.Log("leaf skill start p2"); PlaySkill_leaf(Skill_ZIZI); }
                 }
 
             // else : Return
@@ -956,7 +957,7 @@ public class GameSceneSystem : MonoBehaviour
         {
             for(int i = 0; i < ZIZIList.Count; i++)
             {
-                if (ZIZIList[i].name.Substring(Skill_ZIZI.name.IndexOf('_')).Trim() == PlayerName){ ZIZIList[i].GetComponent<ZIZIAnim_Game>().AnimT("Anim2"); }
+                if (ZIZIList[i].name.Split("_")[0] == PlayerName){ ZIZIList[i].GetComponent<ZIZIAnim_Game>().AnimT("Anim2"); }
 
                 //StartCoroutine(Rand_timer(Random.Range(0.1f, 0.7f), i, "Anim2")); } 
                 //ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT("Anim2"); }
@@ -970,7 +971,7 @@ public class GameSceneSystem : MonoBehaviour
         {
             for(int i = 0; i < ZIZIList.Count; i++)
             {
-                if (ZIZIList[i].name.Substring(Skill_ZIZI.name.IndexOf('_')).Trim() == PlayerName){ StartCoroutine(Rand_timer(Random.Range(0.1f, 0.7f), i, "Anim3")); } 
+                if (ZIZIList[i].name.Split("_")[0] == PlayerName){ StartCoroutine(Rand_timer(Random.Range(0.1f, 0.7f), i, "Anim3")); } 
                 
                 //ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT("Anim3"); }
 
@@ -983,7 +984,7 @@ public class GameSceneSystem : MonoBehaviour
         {
             for(int i = 0; i < ZIZIList.Count; i++)
             {
-                if (ZIZIList[i].name.Substring(Skill_ZIZI.name.IndexOf('_')).Trim() == PlayerName){ StartCoroutine(Rand_timer(Random.Range(0.1f, 0.7f), i, "Anim4")); } 
+                if (ZIZIList[i].name.Split("_")[0] == PlayerName){ StartCoroutine(Rand_timer(Random.Range(0.1f, 0.7f), i, "Anim4")); } 
                 
                 //ZIZI_Transform.GetChild(i).transform.GetChild(0).gameObject.GetComponent<ZIZIAnim_Game>().AnimT("Anim4"); }
                 
