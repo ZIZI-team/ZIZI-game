@@ -6,12 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class GameReadyHub : MonoBehaviour
 {   
-
     public GameObject Final_Skin_1P;                       // ReadyGame_Local1P >> Hub
     public GameObject Final_Skin_2P;                       // ReadyGame_Local2P >> Hub
 
     // public Animator controller;                            // Unity : Inspector : Animator : ReadyGame, Controller : SelectMap
-
 
     void Start()
     {
@@ -76,30 +74,70 @@ public class GameReadyHub : MonoBehaviour
     public GameObject MapPalette;                      // Start : Find
     public GameObject newMap;                          // Start : Instantiate
 
-    public GameObject Selected_MapPalette;             // ShowMapPalette() : Find 
-    public GameObject Selected_Map;                    // Finish_SelectMap()
 
-
-    public void ShowMapPalette()
+    public void ReadyMapSource()
     {
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/Classic"));  
+
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP1"));  
         Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP2"));  
         Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP3"));
         Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP4")); 
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP5")); 
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP6")); 
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP7")); 
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP8")); 
+        Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP9")); 
 
-        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/BushMap1"));  
-        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/BushMap2"));
-        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/BushMap3")); 
+        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/ClassicMap"));  
+
+        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/MapImage1"));
+        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/MapImage2")); 
+        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/MapImage3"));  
+        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/MapImage4"));  
+        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/MapImage5"));  
+        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/MapImage6"));  
+        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/MapImage7"));  
+        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/MapImage8"));  
+        MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/MapImage9"));  
 
         MapPalette = GameObject.Find("MAP");
-        // Selected_MapPalette = GameObject.Find("Finish MAP");
+    }
 
-        // Set initiate Map Prefab
-        newMap = Instantiate(MapImg[0], new Vector3(0, 0, 0), Quaternion.identity);
+
+    public GameObject SelectMapButton; // inspector
+    public GameObject Panel; // inspector
+    public RectTransform PanelRect; // inspector
+
+    public void MakeMapButton()
+    {
+        int MapNum = Map.Count;
+        PanelRect.sizeDelta = new Vector2(850f, 300f * (MapNum) - 60f);
+        PanelRect.localPosition = new Vector3(0f, -PanelRect.sizeDelta.y/2 + 860f/2 , 0f);
+        GameObject Button;
+
+        for(int i = 0; i < MapNum; i++)
+        {
+            Button = Instantiate(SelectMapButton, new Vector3(0f, 0f, 0f), Quaternion.identity);
+            Button.transform.SetParent(Panel.transform, false);
+            Button.transform.localPosition = new Vector3(0f, (PanelRect.sizeDelta.y/2-120f) -300f*i, 0f);
+        }
+    }
+
+    public void ShowMapPalette()
+    {
+        ReadyMapSource();
+        MakeMapButton();
+
+        // Set initiate Map image
+        if (newMap != null){ Destroy(newMap); }
+        newMap = Instantiate(MapImg[0], new Vector3(0f, -60f, 0f), Quaternion.identity);
         newMap.transform.SetParent(MapPalette.transform, false);
-        SetMapSize(newMap, 600f, 600f);
+        SetMapSize(newMap, 800f, 800f);
 
         // Set initiate Map In Game Panel
-        GameMap = Instantiate(Map[0], new Vector3(0, 0, 0), Quaternion.identity);
+        if (GameMap != null){ Destroy(GameMap); }
+        GameMap = Instantiate(Map[0], new Vector3(0f, 0f, 0f), Quaternion.identity);
         GameMap.transform.SetParent(Game.transform, false);
         GameMap.transform.SetSiblingIndex(0);
     }
@@ -110,9 +148,9 @@ public class GameReadyHub : MonoBehaviour
         if (MapIndex == MapImg.Count - 1){ MapIndex = 0; }
         else { MapIndex++; }
 
-        newMap = Instantiate(MapImg[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
+        newMap = Instantiate(MapImg[MapIndex], new Vector3(0f, -60f, 0f), Quaternion.identity);
         newMap.transform.SetParent(MapPalette.transform, false);
-        SetMapSize(newMap, 600f, 600f);
+        SetMapSize(newMap, 800f, 800f);
     }
 
     public void MapIndexDown() // no use
@@ -121,37 +159,29 @@ public class GameReadyHub : MonoBehaviour
         if (MapIndex == 0){ MapIndex = 2; }
         else { MapIndex--; }
 
-        newMap = Instantiate(MapImg[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
+        newMap = Instantiate(MapImg[MapIndex], new Vector3(0f, -60f, 0f), Quaternion.identity);
         newMap.transform.SetParent(MapPalette.transform, false);
-        SetMapSize(newMap, 600f, 600f);
+        SetMapSize(newMap, 800f, 800f);
     }
 
     public GameObject Game;     // Unity : Inspector
 
 
-    // Unity : Selected_MapPalette Onclick
     public GameObject GameMap;
 
     public void Finish_SelectMap(GameObject MapChart)
     {
-        if (Selected_Map != null){ Destroy(Selected_Map); }
-        
-            // Selected_Map = Instantiate(newMap, new Vector3(0, -500, 0), Quaternion.identity);
-            // Selected_Map.transform.SetParent(Selected_MapPalette.transform, false);
-            // SetMapSize(Selected_Map, 500f, 500f);
-
         MapIndex = MapChart.transform.GetSiblingIndex();
-        Destroy(newMap); 
 
-        newMap = Instantiate(MapImg[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
+        if (newMap != null){ Destroy(newMap); }
+        newMap = Instantiate(MapImg[MapIndex], new Vector3(0f, -60f, 0f), Quaternion.identity);
         newMap.transform.SetParent(MapPalette.transform, false);
-        SetMapSize(newMap, 600f, 600f);
+        SetMapSize(newMap, 800f, 800f);
 
-        Selected_Map = newMap;
         
         // Set Map In Game Panel
-        if (Selected_Map != null){ Destroy(GameMap); }
-        GameMap = Instantiate(Map[MapIndex], new Vector3(0, 0, 0), Quaternion.identity);
+        if (GameMap != null){ Destroy(GameMap); }
+        GameMap = Instantiate(Map[MapIndex], new Vector3(0f, 0f, 0f), Quaternion.identity);
         GameMap.transform.SetParent(Game.transform, false);
         GameMap.transform.SetSiblingIndex(0);
     }
@@ -172,11 +202,6 @@ public class GameReadyHub : MonoBehaviour
     {
         GameObject.Find("ReadyGame").transform.GetChild(2).gameObject.SetActive(true);
         GameObject.Find("ReadyGame").transform.GetChild(3).gameObject.SetActive(false);
-
-        // Set initiate Map Prefab
-        newMap = Instantiate(MapImg[0], new Vector3(0, 0, 0), Quaternion.identity);
-        newMap.transform.SetParent(MapPalette.transform, false);
-        SetMapSize(newMap, 600f, 600f);
     }
 
     // Unity : Start Game Onclick
