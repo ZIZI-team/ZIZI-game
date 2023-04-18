@@ -243,12 +243,14 @@ public class GameSceneSystem : MonoBehaviour
                 {
                     GameObject Dotori = Instantiate(Resources.Load("Item_Prefab/"+"dotori"), Rock.transform.GetChild(ItemSetIndex).transform.position, Quaternion.identity) as GameObject;
                     Dotori.transform.SetParent(Map.transform.GetChild(0).transform.GetChild(2).transform);
+                    Dotori.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 121.8f, ratio * 121.8f, 1f);
                     Dotori.name += "_" + ItemSetIndex.ToString();
                 }
                 else if (ItemPercentage[0] == 3)
                 {
                     GameObject Leaf = Instantiate(Resources.Load("Item_Prefab/"+"leaf"), Rock.transform.GetChild(ItemSetIndex).transform.position, Quaternion.identity) as GameObject;
                     Leaf.transform.SetParent(Map.transform.GetChild(0).transform.GetChild(3).transform);
+                    Leaf.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 121.8f, ratio * 121.8f, 1f);
                     Leaf.name += "_" + ItemSetIndex.ToString();
                 }
 
@@ -536,14 +538,14 @@ public class GameSceneSystem : MonoBehaviour
 
                 if (isBlack == true)
                 {
-                    GameObject ItemForSlot = Instantiate(dotoriIcon, ItemSlotUI_1P.transform.position + new Vector3(-660f + (120 * (Dotori_P1)), 0f), Quaternion.identity) as GameObject;
+                    GameObject ItemForSlot = Instantiate(dotoriIcon, ItemSlotUI_1P.transform.position + new Vector3((-660f + (120 * (Dotori_P1)))*ratio, 0f), Quaternion.identity) as GameObject;
                     ItemForSlot.transform.SetParent(ItemSlotUI_1P.transform);
                     ItemForSlot.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
                     P1_Item.Add(ItemForSlot);
                 }
                 else
                 {
-                    GameObject ItemForSlot = Instantiate(dotoriIcon, ItemSlotUI_2P.transform.position + new Vector3(-660f + (120 * (Dotori_P2)), 0f), Quaternion.identity) as GameObject;
+                    GameObject ItemForSlot = Instantiate(dotoriIcon, ItemSlotUI_2P.transform.position + new Vector3((-660f + (120 * (Dotori_P2)))*ratio, 0f), Quaternion.identity) as GameObject;
                     ItemForSlot.transform.SetParent(ItemSlotUI_2P.transform);
                     ItemForSlot.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
                     P2_Item.Add(ItemForSlot);
