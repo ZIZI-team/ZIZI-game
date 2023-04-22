@@ -8,7 +8,8 @@ public class UniviaLogo : MonoBehaviour
     void Start()
     {
         // Remove Juseok before Build
-        PlayerPrefs.SetInt("TutorialPlayed", 0); 
+        PlayerPrefs.SetInt("TutorialPlayed", 0);
+        PlayerPrefs.SetInt("GameScene", 0);
     }
 
     void ZIZI()

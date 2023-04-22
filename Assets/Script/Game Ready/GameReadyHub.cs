@@ -142,27 +142,31 @@ public class GameReadyHub : MonoBehaviour
         GameMap.transform.SetSiblingIndex(0);
     }
 
-    public void MapIndexUp() // no use
-    {
-        Destroy(newMap);
-        if (MapIndex == MapImg.Count - 1){ MapIndex = 0; }
-        else { MapIndex++; }
+    #region MapIndexUp, MapIndexDown // no use
 
-        newMap = Instantiate(MapImg[MapIndex], new Vector3(0f, -60f, 0f), Quaternion.identity);
-        newMap.transform.SetParent(MapPalette.transform, false);
-        SetMapSize(newMap, 800f, 800f);
-    }
+        public void MapIndexUp() 
+        {
+            Destroy(newMap);
+            if (MapIndex == MapImg.Count - 1){ MapIndex = 0; }
+            else { MapIndex++; }
 
-    public void MapIndexDown() // no use
-    {
-        Destroy(newMap); 
-        if (MapIndex == 0){ MapIndex = 2; }
-        else { MapIndex--; }
+            newMap = Instantiate(MapImg[MapIndex], new Vector3(0f, -60f, 0f), Quaternion.identity);
+            newMap.transform.SetParent(MapPalette.transform, false);
+            SetMapSize(newMap, 800f, 800f);
+        }
+        
+        public void MapIndexDown() 
+        {
+            Destroy(newMap); 
+            if (MapIndex == 0){ MapIndex = 2; }
+            else { MapIndex--; }
 
-        newMap = Instantiate(MapImg[MapIndex], new Vector3(0f, -60f, 0f), Quaternion.identity);
-        newMap.transform.SetParent(MapPalette.transform, false);
-        SetMapSize(newMap, 800f, 800f);
-    }
+            newMap = Instantiate(MapImg[MapIndex], new Vector3(0f, -60f, 0f), Quaternion.identity);
+            newMap.transform.SetParent(MapPalette.transform, false);
+            SetMapSize(newMap, 800f, 800f);
+        }
+
+    #endregion
 
     public GameObject Game;     // Unity : Inspector
 
@@ -195,6 +199,7 @@ public class GameReadyHub : MonoBehaviour
 
     public void GoBack_1()
     {
+        PlayerPrefs.SetInt("GameScene", 1);
         SceneManager.LoadScene("TitleScene");
     }
 

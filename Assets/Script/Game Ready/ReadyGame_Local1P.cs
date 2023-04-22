@@ -10,10 +10,14 @@ public class ReadyGame_Local1P : MonoBehaviour
 
     // : Skin
     private List<GameObject> MySkin = new List<GameObject>();   // Start : Add
+    private List<GameObject> MySkin_Select = new List<GameObject>();   // Start : Add
     public int MySkinIndex = 0;
 
     public GameObject SkinPalette;                      // Start : Find
     public GameObject Selected_Skin;                    // Start : Instantiate
+
+    public GameObject Game_Skin;                    // Start : Instantiate
+    public GameObject Game_SkinPalette;                      // Start : Find
 
     // : Block
     public GameObject Block_2P;                         // Block Same color of 2P (using panel)
@@ -40,6 +44,7 @@ public class ReadyGame_Local1P : MonoBehaviour
     // SKIN 
         // Declare Skin Palette (Parent)
             SkinPalette = GameObject.Find("1P/1PSkin");
+            Game_SkinPalette = GameObject.Find("1P/1PSkin/My1P");
 
         // Declare Color Palette (Parent)
             ColorPalette = GameObject.Find("1P/1PColor");
@@ -53,6 +58,9 @@ public class ReadyGame_Local1P : MonoBehaviour
             MySkin.Add(Resources.Load<GameObject>("SKIN_Prefab/"+"SKIN1"));        
             MySkin.Add(Resources.Load<GameObject>("SKIN_Prefab/"+"SKIN3"));
 
+        // MY SKIN_Select
+            MySkin_Select.Add(Resources.Load<GameObject>("SKIN_Prefab/Select Player/SKIN1_S/"+"SKIN"));
+
         Initiate_SKIN();
     }
 
@@ -62,8 +70,11 @@ public class ReadyGame_Local1P : MonoBehaviour
         InitiateFlag = true;
 
         // Set initiate SKIN Prefab
-            Selected_Skin = Instantiate(MySkin[0], new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+            Selected_Skin = Instantiate(MySkin_Select[0], new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             Selected_Skin.transform.SetParent(SkinPalette.transform, false);
+
+            Game_Skin = Instantiate(MySkin[0], new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+            Game_Skin.transform.SetParent(Game_SkinPalette.transform, false);
 
         ShowSkinColor();
 
@@ -114,7 +125,9 @@ public class ReadyGame_Local1P : MonoBehaviour
         else { Selected_Color = Skincolor_list[0]; }
 
         Selected_Skin.GetComponent<Image>().color = Selected_Color;
-        GameObject.Find("ReadyGame").GetComponent<GameReadyHub>().Final_Skin_1P = Selected_Skin;
+        Game_Skin.GetComponent<Image>().color = Selected_Color;
+
+        GameObject.Find("ReadyGame").GetComponent<GameReadyHub>().Final_Skin_1P = Game_Skin;
         GameObject.Find("ReadyGame").GetComponent<GameReadyHub>().DidYouSelect_Skin1 = true;
     }
 
@@ -124,11 +137,12 @@ public class ReadyGame_Local1P : MonoBehaviour
     {   
     // Change Final Skin Color
         Selected_Color = colorPrefab.GetComponent<Image>().color;    
+        
         Selected_Skin.GetComponent<Image>().color = Selected_Color;
+        Game_Skin.GetComponent<Image>().color = Selected_Color;
 
-        GameObject.Find("ReadyGame").GetComponent<GameReadyHub>().Final_Skin_1P = Selected_Skin;
+        GameObject.Find("ReadyGame").GetComponent<GameReadyHub>().Final_Skin_1P = Game_Skin;
         GameObject.Find("ReadyGame").GetComponent<GameReadyHub>().DidYouSelect_Skin1 = true;
-        // Debug.Log("ChangeColor : " + Selected_Color + "/ " + Selected_Skin.name);        
 
     // Block Skin(2P) by Initiate Selected Skin(1P)
         BlockColor_2P();                
@@ -161,11 +175,17 @@ public class ReadyGame_Local1P : MonoBehaviour
     public void SkinIndexUp()
     {
         Destroy(Selected_Skin);
+        Destroy(Game_Skin);
+
         if (MySkinIndex == MySkin.Count - 1){ MySkinIndex = 0; }
         else { MySkinIndex++; }
 
-        Selected_Skin = Instantiate(MySkin[MySkinIndex], new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        Selected_Skin = Instantiate(MySkin_Select[MySkinIndex], new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         Selected_Skin.transform.SetParent(SkinPalette.transform, false);
+
+        Game_Skin = Instantiate(MySkin[MySkinIndex], new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        Game_Skin.transform.SetParent(Game_SkinPalette.transform, false);
+
         ShowSkinColor();
 
     // ReBlock Skin(1P) by Selected Skin(2P)
@@ -182,11 +202,17 @@ public class ReadyGame_Local1P : MonoBehaviour
     public void SkinIndexDown()
     {
         Destroy(Selected_Skin); 
+        Destroy(Game_Skin);
+
         if (MySkinIndex == 0){ MySkinIndex = 2; }
         else { MySkinIndex--; }
 
-        Selected_Skin = Instantiate(MySkin[MySkinIndex], new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        Selected_Skin = Instantiate(MySkin_Select[MySkinIndex], new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         Selected_Skin.transform.SetParent(SkinPalette.transform, false);
+
+        Game_Skin = Instantiate(MySkin[MySkinIndex], new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        Game_Skin.transform.SetParent(Game_SkinPalette.transform, false);
+
         ShowSkinColor();
 
     // ReBlock Skin(1P) by Selected Skin(2P)
@@ -225,7 +251,7 @@ public class ReadyGame_Local1P : MonoBehaviour
         ZIZIPAPA = Instantiate(ZIZI_Parent, new Vector3(0, -100, 0), Quaternion.identity) as GameObject;
         ZIZIPAPA.transform.SetParent(SelectPanel.transform, false);
 
-        Final_Skin = Instantiate(Selected_Skin, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        Final_Skin = Instantiate(MySkin[MySkinIndex], new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         Final_Skin.transform.SetParent(ZIZIPAPA.transform, false);
 
         // Set Final Skin Color

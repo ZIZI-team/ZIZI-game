@@ -72,6 +72,9 @@ public class GameSceneSystem : MonoBehaviour
     public GameObject Stone_b_Color;
     public GameObject Stone_w_Color;    
 
+    public GameObject MyTurn_1P;
+    public GameObject MyTurn_2P;
+
     private bool isBlack = true;
     
     public int Turn = 0;
@@ -110,7 +113,10 @@ public class GameSceneSystem : MonoBehaviour
             mapGridNum_y = 11;            
 
             Stone_b_Color.GetComponent<Image>().color = Stone_b.GetComponent<Image>().color;
-            Stone_w_Color.GetComponent<Image>().color = Stone_w.GetComponent<Image>().color;
+            Stone_w_Color.GetComponent<Image>().color = Stone_w.GetComponent<Image>().color;    
+
+            // Stone_b.SetActive(true);        
+            // Stone_w.SetActive(true);        
 
         #region // Screen Ratio
         //     panel = Map.transform.GetChild(1).gameObject.GetComponent<RectTransform>();
@@ -283,20 +289,21 @@ public class GameSceneSystem : MonoBehaviour
         TimerText.text = "TIME : " + time.ToString("F1");
         TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 360f*(fullTime-time)/fullTime);
 
+        if (time <= fullTime * 0.2f)
+        {
+            TimerHand.transform.parent.gameObject.GetComponent<Animator>().SetBool("TimerEnd", true);
+            TimerHand.transform.parent.gameObject.GetComponent<Animator>().SetBool("Entry", false);
+        }
         if (time <= 0)
         {
+            TimerHand.transform.parent.gameObject.GetComponent<Animator>().SetBool("TimerEnd", false);
+            TimerHand.transform.parent.gameObject.GetComponent<Animator>().SetBool("Entry", true);
             changePlayer(); 
         }
     }
 
     public void changePlayer()
     {
-        #region Change Rock Color
-
-            Stone = isBlack ? Stone_w : Stone_b;
-
-        #endregion
-
         #region Check Did Player Used Item
 
             Skill_Dotori = false;
@@ -306,16 +313,20 @@ public class GameSceneSystem : MonoBehaviour
 
         #endregion
 
-        #region Timer, Button
+        #region Timer, Button, Change Rock Color
 
             // Reset Timer
                 time = fullTime;
                 TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
 
-            // Player 1
+            // Curr : Player 1, Next : Player 2
                 if (isBlack == true)  
                 {
                     isBlack = false;
+                    Stone = Stone_w;
+                    MyTurn_1P.SetActive(false);
+                    MyTurn_2P.SetActive(true);
+
                     // Item Slot Button (Player 2) Interactive false
                         if (Turn >= 10)
                         {
@@ -332,10 +343,14 @@ public class GameSceneSystem : MonoBehaviour
                         }
                 }
 
-            // Player 2
+            // Curr : Player 2, Next : Player 1
                 else 
                 {
                     isBlack = true;
+                    Stone = Stone_b;
+                    MyTurn_1P.SetActive(true);
+                    MyTurn_2P.SetActive(false);
+
                     // Item Slot Button (Player 1) Interactive false
                         if (Turn >= 10)
                         {
@@ -382,12 +397,20 @@ public class GameSceneSystem : MonoBehaviour
         }
 
     #endregion
+    
 
     #region OnClickPause() : PAUSE Func.
 
         public void OnClickPause()
         {
+            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", false);
+            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", true);
             PausePanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f);
+            StartCoroutine(Wait0());
+        }
+        IEnumerator Wait0()
+        {
+            yield return new WaitForSeconds(0.5f);
             Time.timeScale = 0f;
         }
 
@@ -398,6 +421,16 @@ public class GameSceneSystem : MonoBehaviour
         public void OnClickMainMenu() 
         {
             Time.timeScale = 1f;
+            StartCoroutine(Wait1());
+            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
+            PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
+            
+            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", false);
+            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", false);
+        }
+        IEnumerator Wait1()
+        {
+            yield return new WaitForSeconds(0.3f);            
             SceneManager.LoadScene("TitleScene");
         }
     
@@ -407,11 +440,25 @@ public class GameSceneSystem : MonoBehaviour
 
         public void OnClickContinue() 
         {
+            Time.timeScale = 1f;
+            StartCoroutine(Wait2());
+            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
+            PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
+
+            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", false);
+            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", false);
+        }
+        IEnumerator Wait2()
+        {
+            yield return new WaitForSeconds(0.3f);
+
             PausePanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f) + new Vector3(2000f, 0f, 0f);
             PlayerWinPanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f) + new Vector3(3800f, 0f, 0f);
-
-            Time.timeScale = 1f;
         }
+
+    #endregion
+
+    #region 
 
     #endregion
 
@@ -419,7 +466,7 @@ public class GameSceneSystem : MonoBehaviour
 // >> Game : Spon << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
-    // Rockì— OnclickRock ìŠ¤í¬ë¦½íŠ¸ ì—°ê²°í•˜ê¸°
+    // Rock?— OnclickRock ?Š¤?¬ë¦½íŠ¸ ?—°ê²°í•˜ê¸?
     #region OnclickRock() : Spon ZIZI on Rock
  
         int RockIndex;
@@ -486,7 +533,7 @@ public class GameSceneSystem : MonoBehaviour
     
     #endregion
 
-    // Itemì— ìŠ¤í¬ë¦½íŠ¸ ì—°ê²°í•˜ê¸°
+    // Item?— ?Š¤?¬ë¦½íŠ¸ ?—°ê²°í•˜ê¸?
     #region OnclickMapItem()
     
         public int Dotori_P1 = 0;
@@ -588,6 +635,9 @@ public class GameSceneSystem : MonoBehaviour
 
         public void GameOver()
         {
+            PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", false);
+            PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", true);
+
             PlayerWinPanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f);
 
             Skill_Dotori = false;
@@ -596,7 +646,7 @@ public class GameSceneSystem : MonoBehaviour
             if (isBlack == true){ ZIZIonPanel.GetComponent<Image>().color = Stone_b.GetComponent<Image>().color; }
             else { ZIZIonPanel.GetComponent<Image>().color = Stone_w.GetComponent<Image>().color; }
 
-            Time.timeScale = 0f;
+            StartCoroutine(Wait0());
         }
 
     #endregion
@@ -605,7 +655,7 @@ public class GameSceneSystem : MonoBehaviour
 // >> Skill : Dotori & Leaf << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
-    // Itemì— ìŠ¤í¬ë¦½íŠ¸ ì—°ê²°í•˜ê¸°
+    // Item?— ?Š¤?¬ë¦½íŠ¸ ?—°ê²°í•˜ê¸?
     #region OnClickSlotItem(), SkillChiso()
 
         public GameObject Selected_Item;
@@ -712,7 +762,7 @@ public class GameSceneSystem : MonoBehaviour
 
     #endregion
 
-    // ZIZIì— OnclickZIZI  ìŠ¤í¬ë¦½íŠ¸ ì—°ê²°í•˜ê¸°
+    // ZIZI?— OnclickZIZI  ?Š¤?¬ë¦½íŠ¸ ?—°ê²°í•˜ê¸?
     #region OnclickZIZI() : Skill or not
 
         GameObject Skill_ZIZI;

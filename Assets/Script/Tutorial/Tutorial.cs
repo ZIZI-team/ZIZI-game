@@ -110,7 +110,18 @@ public class Tutorial : MonoBehaviour
     public void SkipTutorial()
     {
         PlayerPrefs.SetInt("TutorialPlayed", 1);
-        SceneManager.LoadScene("TitleScene");
+
+        if (PlayerPrefs.GetInt("ShowTutorial") == 1)
+        {
+            PlayerPrefs.SetInt("ShowTutorial", 0);
+            PlayerPrefs.SetInt("GameScene", 1);
+            SceneManager.LoadScene("TitleScene");
+        }
+
+        else 
+        { 
+            SceneManager.LoadScene("TitleScene"); 
+        }
     }
 
 

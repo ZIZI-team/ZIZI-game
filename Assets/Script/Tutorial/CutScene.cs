@@ -11,6 +11,11 @@ public class CutScene : MonoBehaviour
     void Start()
     {
         Main = GameObject.Find("Main");
+
+        if (PlayerPrefs.GetInt("ShowTutorial") == 1)
+        {
+            SkipCutScene();
+        }
         
         SceneList.Add(Main.transform.GetChild(0).transform.GetChild(0).gameObject);
         SceneList.Add(Main.transform.GetChild(0).transform.GetChild(1).gameObject);
