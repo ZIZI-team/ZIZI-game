@@ -10,6 +10,10 @@ TagManager:
   - dotori_item
   - dotoriShit
   - doroti_item
+  - zizi_castle
+  - online_zizi
+  - store_zizi
+  - online_dummy
   layers:
   - Default
   - TransparentFX
