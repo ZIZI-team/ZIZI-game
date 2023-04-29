@@ -50,15 +50,21 @@ public class GameReadyHub : MonoBehaviour
         {
             GameObject.Find("ReadyGame").transform.GetChild(2).gameObject.SetActive(false);
             GameObject.Find("ReadyGame").transform.GetChild(3).gameObject.SetActive(true);
+            if (MakingMap == false){ ReadyMapSource(); }
+            MakeMapButton();
             ShowMapPalette();
         }
         else if (PlayerPrefs.GetInt("PlayerMode") == 2 && DidYouSelect_Skin1 == true && DidYouSelect_Skin2 == true)
         {
             GameObject.Find("ReadyGame").transform.GetChild(2).gameObject.SetActive(false);
             GameObject.Find("ReadyGame").transform.GetChild(3).gameObject.SetActive(true);
+            if (MakingMap == false){ ReadyMapSource(); }
+            MakeMapButton();
             ShowMapPalette();
         }
         else return;
+
+        MakingMap = true;
 
         // controller.SetBool("Finish", true);
     }
@@ -68,12 +74,14 @@ public class GameReadyHub : MonoBehaviour
     // Map Prefab : MapName(Str) + MapImg(Img) + MapRule(Script)
     private List<GameObject> MapImg = new List<GameObject>();
     private List<GameObject> Map = new List<GameObject>();
+    private List<GameObject> SelectMapButton = new List<GameObject>();
     
     public int MapIndex = 0;
 
     public GameObject MapPalette;                      // Start : Find
     public GameObject newMap;                          // Start : Instantiate
 
+    public bool MakingMap = false;
 
     public void ReadyMapSource()
     {
@@ -102,12 +110,27 @@ public class GameReadyHub : MonoBehaviour
         MapImg.Add(Resources.Load<GameObject>("MAP_Prefab/Map_Img/MapImage9"));  
 
         MapPalette = GameObject.Find("MAP");
+
+        SelectMapButton.Add(Resources.Load<GameObject>("MAP_Prefab/SelectMapButton/Classic Button"));
+        SelectMapButton.Add(Resources.Load<GameObject>("MAP_Prefab/SelectMapButton/MAP1 Button"));
+        SelectMapButton.Add(Resources.Load<GameObject>("MAP_Prefab/SelectMapButton/MAP2 Button"));
+        SelectMapButton.Add(Resources.Load<GameObject>("MAP_Prefab/SelectMapButton/MAP3 Button"));
+        SelectMapButton.Add(Resources.Load<GameObject>("MAP_Prefab/SelectMapButton/MAP4 Button"));
+        SelectMapButton.Add(Resources.Load<GameObject>("MAP_Prefab/SelectMapButton/MAP5 Button"));
+        SelectMapButton.Add(Resources.Load<GameObject>("MAP_Prefab/SelectMapButton/MAP6 Button"));
+        SelectMapButton.Add(Resources.Load<GameObject>("MAP_Prefab/SelectMapButton/MAP7 Button"));
+        SelectMapButton.Add(Resources.Load<GameObject>("MAP_Prefab/SelectMapButton/MAP8 Button"));
+        SelectMapButton.Add(Resources.Load<GameObject>("MAP_Prefab/SelectMapButton/MAP9 Button"));
     }
 
 
-    public GameObject SelectMapButton; // inspector
-    public GameObject Panel; // inspector
-    public RectTransform PanelRect; // inspector
+    // public GameObject SelectMapButton; // inspector
+    public GameObject Panel;           // inspector
+    public RectTransform PanelRect;    // inspector
+
+    public Sprite pressedSprite;
+    public Sprite tempSprite;
+    public GameObject ClassicButton;
 
     public void MakeMapButton()
     {
@@ -115,10 +138,12 @@ public class GameReadyHub : MonoBehaviour
         PanelRect.sizeDelta = new Vector2(850f, 300f * (MapNum) - 60f);
         PanelRect.localPosition = new Vector3(0f, -PanelRect.sizeDelta.y/2 + 860f/2 , 0f);
         GameObject Button;
+        pressedSprite = Resources.Load<Sprite>("Map_Prefab/SelectMapButton/Map Select");
 
         for(int i = 0; i < MapNum; i++)
         {
-            Button = Instantiate(SelectMapButton, new Vector3(0f, 0f, 0f), Quaternion.identity);
+            Button = Instantiate(SelectMapButton[i], new Vector3(0f, 0f, 0f), Quaternion.identity);
+                if (i == 0){ ClassicButton = Button; tempSprite = Button.GetComponent<Image>().sprite; Button.GetComponent<Image>().sprite = pressedSprite; }
             Button.transform.SetParent(Panel.transform, false);
             Button.transform.localPosition = new Vector3(0f, (PanelRect.sizeDelta.y/2-120f) -300f*i, 0f);
         }
@@ -126,8 +151,7 @@ public class GameReadyHub : MonoBehaviour
 
     public void ShowMapPalette()
     {
-        ReadyMapSource();
-        MakeMapButton();
+        ClassicButton.GetComponent<Image>().sprite = pressedSprite;
 
         // Set initiate Map image
         if (newMap != null){ Destroy(newMap); }
@@ -175,6 +199,8 @@ public class GameReadyHub : MonoBehaviour
 
     public void Finish_SelectMap(GameObject MapChart)
     {
+        ClassicButton.GetComponent<Image>().sprite = tempSprite; 
+
         MapIndex = MapChart.transform.GetSiblingIndex();
 
         if (newMap != null){ Destroy(newMap); }
@@ -205,6 +231,8 @@ public class GameReadyHub : MonoBehaviour
 
     public void GoBack_2()
     {
+        for(int i = 0; i < Panel.transform.childCount; i++){ Destroy(Panel.transform.GetChild(i).gameObject); }
+
         GameObject.Find("ReadyGame").transform.GetChild(2).gameObject.SetActive(true);
         GameObject.Find("ReadyGame").transform.GetChild(3).gameObject.SetActive(false);
     }
@@ -213,6 +241,7 @@ public class GameReadyHub : MonoBehaviour
     public void StartGame()
     {
         Game.SetActive(true);
+        Game.GetComponent<GameSceneSystem>().GettingStart();
         gameObject.SetActive(false);
 
         GameObject.Find("Game").GetComponent<GameSceneSystem>().Stone_b = Final_Skin_1P;

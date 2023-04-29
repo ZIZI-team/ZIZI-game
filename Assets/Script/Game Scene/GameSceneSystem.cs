@@ -14,14 +14,14 @@ public class GameSceneSystem : MonoBehaviour
 // +++++ UI +++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
-    float ratio = (float)Screen.width / (float)1440;
+    float ratio; // = (float)Screen.width / (float)1440;
 
     [Header("Timer")]
     public Text TimerText;                           // inspector
     public GameObject TimerHand;                     // inspector
 
-    float time = 20f;
-    float fullTime = 20f;
+    float time; //  = 20f;
+    float fullTime; // = 20f;
     
     [Header("Main UI")]
     public GameObject MainUI;                       // inspector
@@ -41,12 +41,12 @@ public class GameSceneSystem : MonoBehaviour
 
     public GameObject Map;
 
-    [SerializeField] public int[,] ZIZIBoard = new int[11+ 12, 11+ 12]; // ZIZI : B & W
+    [SerializeField] public int[,] ZIZIBoard; // = new int[11+ 12, 11+ 12]; // ZIZI : B & W
 
-    List<GameObject> BushList = new List<GameObject>();
-    List<GameObject> ZIZIList = new List<GameObject>();
+    List<GameObject> BushList; // = new List<GameObject>();
+    List<GameObject> ZIZIList; // = new List<GameObject>();
 
-    public List<int> ItemIndex = new List<int>();
+    public List<int> ItemIndex; // = new List<int>();
 
     public GameObject ButtonMap;
 
@@ -57,7 +57,11 @@ public class GameSceneSystem : MonoBehaviour
     GameObject Bush; // Find
 
     public GameObject Game;                           // Unity : Inspector
+    public GameObject ReadyGame;                      // Unity : Inspector
+
     public Transform ZIZI_Transform;                  // Unity : Inspector
+
+    public bool isClassic;
     
 
 // +++++ Stone +++++ //
@@ -75,9 +79,9 @@ public class GameSceneSystem : MonoBehaviour
     public GameObject MyTurn_1P;
     public GameObject MyTurn_2P;
 
-    private bool isBlack = true;
+    private bool isBlack; // = true;
     
-    public int Turn = 0;
+    public int Turn; // = 0;
 
 
 // +++++ Item List +++++ //
@@ -88,25 +92,54 @@ public class GameSceneSystem : MonoBehaviour
     public GameObject ItemSlotUI_2P;
     public GameObject dotoriIcon;
     public GameObject leafIcon;
-    public List<GameObject> P1_Item = new List<GameObject>();
-    public List<GameObject> P2_Item = new List<GameObject>();
+    public List<GameObject> P1_Item; // = new List<GameObject>();
+    public List<GameObject> P2_Item; // = new List<GameObject>();
 
-    public bool Skill_Dotori = false;
-    public bool Skill_Leaf = false;
+    public bool Skill_Dotori; // = false;
+    public bool Skill_Leaf; // = false;
 
 
 // +++++ Win Condition +++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
-    public int blackStoneCount = 0;
-    public int whiteStoneCount = 0;
-    public bool musicIsOn = false;
+    public int blackStoneCount; // = 0;
+    public int whiteStoneCount; // = 0;
+    public bool musicIsOn; // = false;
 
 
 // ------------------------------------------------------------------------------------------------------------------------ //
 
     void Start()
-    {              
+    {                 
+        GettingStart();
+    }
+
+    public void GettingStart()
+    {
+        #region reset
+        
+            time = 20f;
+            fullTime = 20f;
+
+            Turn = 0;
+            Skill_Dotori = false;
+            Skill_Leaf = false;
+            blackStoneCount = 0;
+            whiteStoneCount = 0;
+            musicIsOn = false;
+
+            if (ReadyGame.GetComponent<GameReadyHub>().MapIndex == 0){ isClassic = true; } else { isClassic = false; }
+
+            ratio = (float)Screen.width / (float)1440;
+            ZIZIBoard = new int[11+ 12, 11+ 12]; // ZIZI : B & W
+            BushList = new List<GameObject>();
+            ZIZIList = new List<GameObject>();
+            ItemIndex = new List<int>();
+            P1_Item = new List<GameObject>();
+            P2_Item = new List<GameObject>();
+
+        #endregion
+
         // 1. Set Map Grid & Stone (Initiate state)
             Map = GameObject.Find("Game").transform.GetChild(0).gameObject;
             mapGridNum_x = 11;
@@ -149,7 +182,6 @@ public class GameSceneSystem : MonoBehaviour
                 { BushList.Add(Map.transform.GetChild(0).transform.GetChild(4).transform.GetChild(i).gameObject); } 
             } 
             Reset_Item();
-
     }
 
     void Reset_Item()
@@ -158,6 +190,7 @@ public class GameSceneSystem : MonoBehaviour
 
             PausePanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f) + new Vector3(2000f, 0f, 0f);
             PlayerWinPanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f) + new Vector3(3800f, 0f, 0f);
+            MenuPanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f) + new Vector3(5500f, 0f, 0f);
 
             // ZIZIBoard 6 : No Rock, Under Bush
             Rock = Map.transform.GetChild(0).transform.GetChild(0).gameObject;
@@ -176,38 +209,37 @@ public class GameSceneSystem : MonoBehaviour
 
             isBlack = true;
             Stone = Stone_b;
+            MyTurn_1P.SetActive(true);
+            MyTurn_2P.SetActive(false);
 
-            Selected_Item = Stone_b;
-
-            for (int i = 0; i < BushList.Count; i++){ BushList[i].SetActive(true); } // Bush
-            for (int i = 0; i < Map.transform.GetChild(0).transform.GetChild(2).childCount; i++){ Destroy(Map.transform.GetChild(0).transform.GetChild(2).transform.GetChild(i).gameObject); } // Dotori
-            for (int i = 0; i < Map.transform.GetChild(0).transform.GetChild(3).childCount; i++){ Destroy(Map.transform.GetChild(0).transform.GetChild(3).transform.GetChild(i).gameObject); } // Leaf
             for (int i = 0; i < ZIZIList.Count; i++){ Destroy(ZIZIList[i]); } // ZIZI
-
+            ZIZIList = new List<GameObject>();
+            Turn = 0;
             for (int i = 0; i < ButtonMap.transform.childCount; i++){ ButtonMap.transform.GetChild(i).transform.GetChild(0).gameObject.name = "Button"; } // ButtonMap name
 
-            //for (int i = 0; i < Rock.)
+            if (isClassic == false)
+            {
+                Selected_Item = Stone_b;
 
-            // ItemList = new List<GameObject>();
-            ZIZIList = new List<GameObject>();
-        
-            Dotori_P1 = 0;
-            Dotori_P2 = 0;
-            Leaf_P1 = 0;
-            Leaf_P2 = 0;
+                for (int i = 0; i < BushList.Count; i++){ BushList[i].SetActive(true); } // Bush
+                for (int i = 0; i < Map.transform.GetChild(0).transform.GetChild(2).childCount; i++){ Destroy(Map.transform.GetChild(0).transform.GetChild(2).transform.GetChild(i).gameObject); } // Dotori
+                for (int i = 0; i < Map.transform.GetChild(0).transform.GetChild(3).childCount; i++){ Destroy(Map.transform.GetChild(0).transform.GetChild(3).transform.GetChild(i).gameObject); } // Leaf
+            
+                Dotori_P1 = 0;
+                Dotori_P2 = 0;
+                Leaf_P1 = 0;
+                Leaf_P2 = 0;
 
-        // Reset Item
+                // Reset Item
+                for (int j = 0; j < P1_Item.Count; j++){ Destroy(P1_Item[j]); }
+                for (int j = 0; j < P2_Item.Count; j++){ Destroy(P2_Item[j]); }
 
-            for (int j = 0; j < P1_Item.Count; j++){ Destroy(P1_Item[j]); }
-            for (int j = 0; j < P2_Item.Count; j++){ Destroy(P2_Item[j]); }
+                P1_Item = new List<GameObject>();
+                P2_Item = new List<GameObject>();
 
-            P1_Item = new List<GameObject>();
-            P2_Item = new List<GameObject>();
-
-            Skill_Dotori = false;
-            Skill_Leaf = false;
-
-            Turn = 0;
+                Skill_Dotori = false;
+                Skill_Leaf = false;
+            }
 
         #endregion
 
@@ -221,10 +253,13 @@ public class GameSceneSystem : MonoBehaviour
             for(int i = 6; i < mapGridNum_y + 6; i++){ for(int j = 0; j < 6; j++){ ZIZIBoard[i, j] = 6; } for(int j = mapGridNum_x + 6; j < mapGridNum_x + 12; j++){ ZIZIBoard[i, j] = 6; } }
             for(int i = mapGridNum_y + 6; i < mapGridNum_y + 12; i++){ for(int j = 0; j < mapGridNum_x + 12; j++){ ZIZIBoard[i, j] = 6; } }
                         
-            for (int i = 0; i < GridIndexMax; i++)
-            { 
-                if (Rock.transform.GetChild(i).gameObject.activeSelf == false){ ZIZIBoard[(int)(i / mapGridNum_x) + 6, i % mapGridNum_x + 6] = 6; }  //  Make ZIZIBoard 6 if [ No Rock ]                
-                if (Bush.transform.GetChild(i).gameObject.activeSelf == true){ ZIZIBoard[(int)(i / mapGridNum_x) + 6, i % mapGridNum_x + 6] = 6; ItemIndex.Add(i); }  //  Make ZIZIBoard 6 if [ under bush ] 
+            if (isClassic == false)
+            {
+                for (int i = 0; i < GridIndexMax; i++)
+                { 
+                    if (Rock.transform.GetChild(i).gameObject.activeSelf == false){ ZIZIBoard[(int)(i / mapGridNum_x) + 6, i % mapGridNum_x + 6] = 6; }  //  Make ZIZIBoard 6 if [ No Rock ]                
+                    if (Bush.transform.GetChild(i).gameObject.activeSelf == true){ ZIZIBoard[(int)(i / mapGridNum_x) + 6, i % mapGridNum_x + 6] = 6; ItemIndex.Add(i); }  //  Make ZIZIBoard 6 if [ under bush ] 
+                }
             }
         
         #endregion
@@ -235,35 +270,38 @@ public class GameSceneSystem : MonoBehaviour
             // Dotori : 2
             // Leaf : 3
 
-            List<int> ItemPercentage = new List<int>(){3, 2, 3, 3, 2, 3, 2, 3, 2, 2, 2, 3};
-            int RandomIndex = 0;
-            int ItemSetIndex = 0;
-            
-            for (int i = 0; i < 12; i++)
-            {                
-                RandomIndex = Random.Range(0, ItemIndex.Count);
-                ItemSetIndex = ItemIndex[RandomIndex];
-                ItemIndex.RemoveAt(RandomIndex);
+            if (isClassic == false)
+            {
+                List<int> ItemPercentage = new List<int>(){3, 2, 3, 3, 2, 3, 2, 3, 2, 2, 2, 3};
+                int RandomIndex = 0;
+                int ItemSetIndex = 0;
+                
+                for (int i = 0; i < 12; i++)
+                {                
+                    RandomIndex = Random.Range(0, ItemIndex.Count);
+                    ItemSetIndex = ItemIndex[RandomIndex];
+                    ItemIndex.RemoveAt(RandomIndex);
 
-                if (ItemPercentage[0] == 2)
-                {
-                    GameObject Dotori = Instantiate(Resources.Load("Item_Prefab/"+"dotori"), Rock.transform.GetChild(ItemSetIndex).transform.position, Quaternion.identity) as GameObject;
-                    Dotori.transform.SetParent(Map.transform.GetChild(0).transform.GetChild(2).transform);
-                    Dotori.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 121.8f, ratio * 121.8f, 1f);
-                    Dotori.name += "_" + ItemSetIndex.ToString();
-                }
-                else if (ItemPercentage[0] == 3)
-                {
-                    GameObject Leaf = Instantiate(Resources.Load("Item_Prefab/"+"leaf"), Rock.transform.GetChild(ItemSetIndex).transform.position, Quaternion.identity) as GameObject;
-                    Leaf.transform.SetParent(Map.transform.GetChild(0).transform.GetChild(3).transform);
-                    Leaf.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 121.8f, ratio * 121.8f, 1f);
-                    Leaf.name += "_" + ItemSetIndex.ToString();
-                }
+                    if (ItemPercentage[0] == 2)
+                    {
+                        GameObject Dotori = Instantiate(Resources.Load("Item_Prefab/"+"dotori"), Rock.transform.GetChild(ItemSetIndex).transform.position, Quaternion.identity) as GameObject;
+                        Dotori.transform.SetParent(Map.transform.GetChild(0).transform.GetChild(2).transform);
+                        Dotori.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 121.8f, ratio * 121.8f, 1f);
+                        Dotori.name += "_" + ItemSetIndex.ToString();
+                    }
+                    else if (ItemPercentage[0] == 3)
+                    {
+                        GameObject Leaf = Instantiate(Resources.Load("Item_Prefab/"+"leaf"), Rock.transform.GetChild(ItemSetIndex).transform.position, Quaternion.identity) as GameObject;
+                        Leaf.transform.SetParent(Map.transform.GetChild(0).transform.GetChild(3).transform);
+                        Leaf.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 121.8f, ratio * 121.8f, 1f);
+                        Leaf.name += "_" + ItemSetIndex.ToString();
+                    }
 
-                ItemPercentage.RemoveAt(0);
+                    ItemPercentage.RemoveAt(0);
+                }
+                
+                ItemIndex = new List<int>();
             }
-            
-            ItemIndex = new List<int>();
 
         #endregion
     }
@@ -287,7 +325,7 @@ public class GameSceneSystem : MonoBehaviour
     {
         time -= Time.deltaTime;
         TimerText.text = "TIME : " + time.ToString("F1");
-        TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 360f*(fullTime-time)/fullTime);
+        TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, -360f*(fullTime-time)/fullTime);
 
         if (time <= fullTime * 0.2f)
         {
@@ -302,14 +340,25 @@ public class GameSceneSystem : MonoBehaviour
         }
     }
 
+
+    IEnumerator WaitFor02()
+    {
+        yield return new WaitForSeconds(0.2f);            
+        Skill_Dotori = false;
+        Skill_Leaf = false;    
+    }
+
     public void changePlayer()
     {
         #region Check Did Player Used Item
 
+            // StartCoroutine(WaitFor02());
             Skill_Dotori = false;
             Skill_Leaf = false;
 
-            // Selected_Item.SetActive(true);
+            // Skill Item Animation (Down)
+            Selected_Item.GetComponent<Animator>().SetBool("On",false);
+            Selected_Item.GetComponent<Animator>().SetBool("Off", true);
 
         #endregion
 
@@ -327,7 +376,9 @@ public class GameSceneSystem : MonoBehaviour
                     MyTurn_1P.SetActive(false);
                     MyTurn_2P.SetActive(true);
 
-                    // Item Slot Button (Player 2) Interactive false
+                    if (isClassic == false)
+                    {
+                        // Item Slot Button (Player 2) Interactive false
                         if (Turn >= 10)
                         {
                             foreach (GameObject item in P2_Item) // true
@@ -341,6 +392,7 @@ public class GameSceneSystem : MonoBehaviour
                                 item.transform.GetChild(0).transform.GetChild(0).GetComponent<Button>().interactable = false; // chiso
                             }
                         }
+                    }
                 }
 
             // Curr : Player 2, Next : Player 1
@@ -351,7 +403,9 @@ public class GameSceneSystem : MonoBehaviour
                     MyTurn_1P.SetActive(true);
                     MyTurn_2P.SetActive(false);
 
-                    // Item Slot Button (Player 1) Interactive false
+                    if (isClassic == false)
+                    {
+                        // Item Slot Button (Player 1) Interactive false
                         if (Turn >= 10)
                         {
                             foreach (GameObject item in P2_Item) // false
@@ -365,16 +419,19 @@ public class GameSceneSystem : MonoBehaviour
                                 item.transform.GetChild(0).transform.GetChild(0).GetComponent<Button>().interactable = true; // chiso
                             }
                         }
+                    }
                 }
 
-            // Can't Use Item Before turn 10
+            if (isClassic == false)
+            {
+                // Can't Use Item Before turn 10
                 if (Turn < 10)
                 {
                     foreach (GameObject item in P2_Item){ item.transform.GetChild(0).GetComponent<Button>().interactable = false; }
                     foreach (GameObject item in P1_Item){ item.transform.GetChild(0).GetComponent<Button>().interactable = false; }
                     Turn++;
                 }
-
+            }
         
         #endregion
     }
@@ -403,8 +460,8 @@ public class GameSceneSystem : MonoBehaviour
 
         public void OnClickPause()
         {
-            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", false);
-            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", true);
+            // PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", false);
+            // PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", true);
             PausePanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f);
             StartCoroutine(Wait0());
         }
@@ -422,11 +479,11 @@ public class GameSceneSystem : MonoBehaviour
         {
             Time.timeScale = 1f;
             StartCoroutine(Wait1());
-            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
-            PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
+            // PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
+            // PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
             
-            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", false);
-            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", false);
+            // PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", false);
+            // PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", false);
         }
         IEnumerator Wait1()
         {
@@ -442,11 +499,11 @@ public class GameSceneSystem : MonoBehaviour
         {
             Time.timeScale = 1f;
             StartCoroutine(Wait2());
-            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
-            PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
+            // PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
+            // PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
 
-            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", false);
-            PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", false);
+            // PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", false);
+            // PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", false);
         }
         IEnumerator Wait2()
         {
@@ -458,7 +515,36 @@ public class GameSceneSystem : MonoBehaviour
 
     #endregion
 
-    #region 
+    #region OnClickMenu() : Menu(Pause) Func.
+
+        public GameObject MenuPanel; // inspector
+
+        public void OnClickMenu() 
+        {
+            MenuPanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f);
+        }
+
+        public void OnClickBackMap()
+        {
+            Time.timeScale = 0f;
+
+            ReadyGame.SetActive(true);
+            ReadyGame.GetComponent<GameReadyHub>().ShowMapPalette();
+
+            PausePanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f) + new Vector3(2000f, 0f, 0f);
+            MenuPanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f) + new Vector3(5500f, 0f, 0f);
+
+            // Reset_Item();
+
+            Time.timeScale = 1f;
+            Game.SetActive(false);
+        }
+
+        public void OnclickBackPause()
+        {
+            MenuPanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f) + new Vector3(5500f, 0f, 0f);
+        }
+
 
     #endregion
 
@@ -512,12 +598,12 @@ public class GameSceneSystem : MonoBehaviour
 
                 ButtonMap_Button.name += "_ZIZI";
                 
-                CutBush(RockIndex);
-                WinCondition();
-                
+                if (isClassic == false){ CutBush(RockIndex); }
+
+                Anim2Condition();
+                WinCondition();                
                 changePlayer();          
-            }  
-            
+            }     
         }
 
     #endregion
@@ -543,6 +629,8 @@ public class GameSceneSystem : MonoBehaviour
 
         public void OnclickMapItem(GameObject Clicked_MapItem)
         {
+            if(Skill_Dotori == true || Skill_Leaf == true){ return; }
+
             // Skill Item Animation (Down)
             Selected_Item.GetComponent<Animator>().SetBool("On", false);
             Selected_Item.GetComponent<Animator>().SetBool("Off", true);            
@@ -635,8 +723,8 @@ public class GameSceneSystem : MonoBehaviour
 
         public void GameOver()
         {
-            PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", false);
-            PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", true);
+            // PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", false);
+            // PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", true);
 
             PlayerWinPanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f);
 
@@ -662,6 +750,8 @@ public class GameSceneSystem : MonoBehaviour
 
         public void OnClickSlotItem(GameObject Clicked_SlotItem) // Item(Button Onclick) : Script : SkillClick : OnClickItem()
         {
+            if(Skill_Dotori == true || Skill_Leaf == true){ return; }
+
             // gameObject : Item on slot
             Selected_Item = Clicked_SlotItem;
 
@@ -731,6 +821,7 @@ public class GameSceneSystem : MonoBehaviour
 
             yield return new WaitForSeconds(0.3f);
             Destroy(Dotori);  
+            Skill_Dotori = false;
         }
         IEnumerator WaitSecond(int index)
         {
@@ -758,6 +849,8 @@ public class GameSceneSystem : MonoBehaviour
             Leaf.transform.SetParent(Clicked_ZIZI.transform, false);
 
             ButtonMap.transform.GetChild(ZIZI_index).transform.GetChild(0).gameObject.name = "Button_Leaf";
+
+            Skill_Leaf = false;    
         }
 
     #endregion
@@ -784,12 +877,13 @@ public class GameSceneSystem : MonoBehaviour
                     else if (isBlack == false && ZIZIname[0] == "Player2"){ PlaySkill_Dotori(Skill_ZIZI); }
                     else 
                     { 
-                        // Skill Item Animation (Down)
-                        Selected_Item.GetComponent<Animator>().SetBool("On", false);
-                        Selected_Item.GetComponent<Animator>().SetBool("Off", true);     
-                        Skill_Dotori = false;       
+                        // // Skill Item Animation (Down)
+                        // Selected_Item.GetComponent<Animator>().SetBool("On", false);
+                        // Selected_Item.GetComponent<Animator>().SetBool("Off", true);     
+                        // Skill_Dotori = false;       
                         return;
                     }
+                    changePlayer();
                 }
 
             // Skill leaf
@@ -799,17 +893,15 @@ public class GameSceneSystem : MonoBehaviour
                     else if (isBlack == false && ZIZIname[0] == "Player2"){ PlaySkill_Leaf(Skill_ZIZI); }
                     else 
                     { 
-                        // Skill Item Animation (Down)
-                        Selected_Item.GetComponent<Animator>().SetBool("On", false);
-                        Selected_Item.GetComponent<Animator>().SetBool("Off", true);            
-                        Skill_Leaf = false;       
+                        // // Skill Item Animation (Down)
+                        // Selected_Item.GetComponent<Animator>().SetBool("On", false);
+                        // Selected_Item.GetComponent<Animator>().SetBool("Off", true);            
+                        // Skill_Leaf = false;       
                         return;
                     }
                 }
             // else : Return
-                else return;  
-            
-            changePlayer();
+                else return;              
         }
     
     #endregion
@@ -1062,7 +1154,7 @@ public class GameSceneSystem : MonoBehaviour
 // >> ZIZI : play Animation << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
-    #region Animationn
+    #region Animation
 
         // Hop Animation : Default
         public void Play_Animation1()
