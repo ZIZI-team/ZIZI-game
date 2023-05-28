@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 
 public class Tutorial : MonoBehaviour
 {
+    public GameObject AudioManagerSRC;
 
     public TextMeshProUGUI textMeshPro;
 
@@ -20,10 +21,11 @@ public class Tutorial : MonoBehaviour
     // textMeshPro.text = $"Player: {playerName}\nScore: {playerScore}";
 
 
-
     public GameObject Main; // inspector
     void Start()
     {
+        AudioManagerSRC = GameObject.FindWithTag("Music");
+
         Main = GameObject.Find("Main");
         MakeButtonList();
         MakeObjectList();
@@ -109,6 +111,8 @@ public class Tutorial : MonoBehaviour
 
     public void SkipTutorial()
     {
+        AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+        
         PlayerPrefs.SetInt("TutorialPlayed", 1);
 
         if (PlayerPrefs.GetInt("ShowTutorial") == 1)
@@ -184,7 +188,7 @@ public class Tutorial : MonoBehaviour
         if (T1_2Flag == true){ return; }
 
             // Text 2.
-            textMeshPro.text = "도토리를 발견했어요!\n말을 놓아 도토리를 주워보세요.";
+            textMeshPro.text = $"<color=#FF9CD1>도토리</color>를 발견했어요!\n말을 놓아 도토리를 주워보세요.";
 
             // Buton interactive false : Next Button    
             ButtonList[0].interactable = false;
@@ -360,7 +364,8 @@ public class Tutorial : MonoBehaviour
         ObjectList[9].transform.GetChild(2).gameObject.SetActive(false);
 
         // SetActive false : my dotori
-        ObjectList[6].SetActive(false);
+        ObjectList[6].GetComponent<Button>().interactable = false;
+        ObjectList[6].GetComponent<Image>().color = new Color(0.8f, 0.8f, 0.8f, 0.5f);
 
         // Animation : Spot My ZIZI 2
 
@@ -394,7 +399,7 @@ public class Tutorial : MonoBehaviour
         ObjectList[9].transform.GetChild(5).gameObject.SetActive(true);
 
         // Text 2-7.
-        textMeshPro.text = "잘했어요!\n(Tip) 도토리로 상대를 공격할 수 있습니다.";
+        textMeshPro.text = "잘했어요! (Tip) 도토리로\n상대를 공격할 수 있습니다.";
 
         // Buton interactive false : My ZIZI
         ObjectList[1].GetComponent<Button>().interactable = false;
@@ -418,7 +423,7 @@ public class Tutorial : MonoBehaviour
             ObjectList[9].transform.GetChild(5).gameObject.SetActive(false);
 
             // Text 3.
-            textMeshPro.text = "이번에는 나뭇잎을 발견했어요!\n말을 놓아 나뭇잎을 주워보세요.";
+            textMeshPro.text = $"이번에는 <color=#C6FF9C>나뭇잎</color>을 발견했어요!\n말을 놓아 나뭇잎을 주워보세요.";
 
             // Animation Play (leaf)
             ObjectList[9].transform.GetChild(6).gameObject.SetActive(true);
@@ -564,7 +569,8 @@ public class Tutorial : MonoBehaviour
         ObjectList[9].transform.GetChild(7).gameObject.SetActive(false);
 
         // SetActive false : My leaf 
-        ObjectList[7].SetActive(false);
+        ObjectList[7].GetComponent<Button>().interactable = false;
+        ObjectList[7].GetComponent<Image>().color = new Color(0.8f, 0.8f, 0.8f, 0.5f);
 
         // Animation : Spot My ZIZI 3
 
@@ -614,7 +620,7 @@ public class Tutorial : MonoBehaviour
         // Animation : ZIZI 1, 2
 
         // Text 3-6.
-        textMeshPro.text = "잘했어요!\n(Tip) 나뭇잎을 붙인 지지는\n상대의 도토리 공격을 받지 않습니다.";
+        textMeshPro.text = "잘했어요! (Tip) 나뭇잎을 붙인\n지지는 상대의 공격을 받지 않습니다.";
 
         // Buton interactive false : My ZIZI 3
         ObjectList[2].GetComponent<Button>().interactable = true;
@@ -641,7 +647,7 @@ public class Tutorial : MonoBehaviour
             // Animation : DANCE ZIZI
 
             // Text 4.
-            textMeshPro.text = "아이템은 최대 3개씩 모을 수 있고,\n5턴 이후부터 사용 가능합니다.";
+            textMeshPro.text = $"아이템은 <color=#FF9CD1>최대 3개</color>씩 모을 수 있고,\n<color=#FF9CD1>5턴 이후</color>부터 사용 가능합니다.";
 
             // Buton interactive false : Next Button
             ButtonList[0].interactable = false;
@@ -670,7 +676,7 @@ public class Tutorial : MonoBehaviour
         if (T4Flag == true){ return; }
 
             // Text 4-1.
-            textMeshPro.text = "한 턴에는 제한시간이 있습니다.\n시간이 지나면 턴이 넘어가니 주의하세요!";
+            textMeshPro.text = $"제한시간 <color=#FF9CD1>40초</color>가 지나면\n턴이 넘어가니 주의하세요!";
 
             // SetActive true : DANCE ZIZI
 
@@ -690,11 +696,37 @@ public class Tutorial : MonoBehaviour
 
         // Buton interactive true : Next Button
         ButtonList[0].interactable = true;
+        T4_0Flag = false;
+    }
+
+// 4-0. 아이템은 최대 3개씩 모을 수 있고, 5턴 이후부터 사용 가능합니다. (next button) (UI 하이라이트)
+// Onclick : Next Button
+    bool T4_0Flag = true;
+    public void T4_0_Next()
+    {
+        if (T4_0Flag == true){ return; }
+
+            // Text 4-0.
+            textMeshPro.text = $"<color=#FF9CD1>도토리</color>는 턴이 바뀌고, <color=#C6FF9C>나뭇잎</color>은\n턴이 바뀌지 않습니다.";
+
+            // Buton interactive false : Next Button
+            ButtonList[0].interactable = false;
+
+        T4_0Flag = true;
+
+        StartCoroutine(DelayCoroutine_T4_0());
+    }
+    IEnumerator DelayCoroutine_T4_0()
+    {
+        // Delay
+        yield return new WaitForSeconds(0.5f);
+
+        // Buton interactive true : Next Button
+        ButtonList[0].interactable = true;
         T4_1Flag = false;
     }
 
-
-// 4-1. 한 턴에는 제한시간이 있습니다. 시간이 지나면 턴이 넘어가니 주의하세요! (next button) 
+// 4-1.제한시간 40초가 지나면\n턴이 넘어가니 주의하세요! (next button) 
 // Onclick : Next Button
     bool T4_1Flag = true;
     public void T4_1_Next()
@@ -745,7 +777,7 @@ public class Tutorial : MonoBehaviour
         if (T4_2Flag == true){ return; }
 
             // Text 4-2.
-            textMeshPro.text = "시작 버튼을 눌러\n게임을 시작해보세요!";
+            textMeshPro.text = $"<color=#C6FF9C>시작 버튼</color>을 눌러\n게임을 시작해보세요!";
 
             // SetActive false : Skip Button
             Main.transform.GetChild(1).transform.GetChild(5).transform.GetChild(0).gameObject.SetActive(true);

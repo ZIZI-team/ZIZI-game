@@ -11,6 +11,13 @@ using Random = UnityEngine.Random;
 public class GameSceneSystem : MonoBehaviour
 {
 
+// +++++ Music +++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+
+    public AudioSource audioSource;
+    public AudioClip music2;
+    public GameObject AudioManagerSRC;
+
 // +++++ UI +++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
@@ -96,7 +103,7 @@ public class GameSceneSystem : MonoBehaviour
     public List<GameObject> P2_Item; // = new List<GameObject>();
 
     public bool Skill_Dotori; // = false;
-    public bool Skill_Leaf; // = false;
+    public bool Skill_Leaf;   // = false;
 
 
 // +++++ Win Condition +++++ //
@@ -116,10 +123,17 @@ public class GameSceneSystem : MonoBehaviour
 
     public void GettingStart()
     {
+            AudioManagerSRC = GameObject.FindWithTag("Music");
+            AudioManagerSRC.GetComponent<AudioManager>().MuteOn();
+
+            audioSource.clip = music2;
+            audioSource.Play();
+
+
         #region reset
         
-            time = 20f;
-            fullTime = 20f;
+            time = 40f;
+            fullTime = 40f;
 
             Turn = 0;
             Skill_Dotori = false;
@@ -282,18 +296,20 @@ public class GameSceneSystem : MonoBehaviour
                     ItemSetIndex = ItemIndex[RandomIndex];
                     ItemIndex.RemoveAt(RandomIndex);
 
+                    float itemRatio = 121.8f / Map.transform.GetChild(0).transform.GetChild(4).transform.GetChild(0).transform.GetComponent<RectTransform>().sizeDelta.x;
+
                     if (ItemPercentage[0] == 2)
                     {
                         GameObject Dotori = Instantiate(Resources.Load("Item_Prefab/"+"dotori"), Rock.transform.GetChild(ItemSetIndex).transform.position, Quaternion.identity) as GameObject;
                         Dotori.transform.SetParent(Map.transform.GetChild(0).transform.GetChild(2).transform);
-                        Dotori.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 121.8f, ratio * 121.8f, 1f);
+                        // Dotori.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(90f*itemRatio, 90*itemRatio, 1f);
                         Dotori.name += "_" + ItemSetIndex.ToString();
                     }
                     else if (ItemPercentage[0] == 3)
                     {
                         GameObject Leaf = Instantiate(Resources.Load("Item_Prefab/"+"leaf"), Rock.transform.GetChild(ItemSetIndex).transform.position, Quaternion.identity) as GameObject;
                         Leaf.transform.SetParent(Map.transform.GetChild(0).transform.GetChild(3).transform);
-                        Leaf.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 121.8f, ratio * 121.8f, 1f);
+                        // Leaf.transform.GetComponent<RectTransform>().sizeDelta = new Vector3(90f*itemRatio, 90f*itemRatio, 1f);
                         Leaf.name += "_" + ItemSetIndex.ToString();
                     }
 
@@ -367,6 +383,8 @@ public class GameSceneSystem : MonoBehaviour
             // Reset Timer
                 time = fullTime;
                 TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+                TimerHand.transform.parent.gameObject.GetComponent<Animator>().SetBool("TimerEnd", false);
+                TimerHand.transform.parent.gameObject.GetComponent<Animator>().SetBool("Entry", true);
 
             // Curr : Player 1, Next : Player 2
                 if (isBlack == true)  
@@ -444,6 +462,7 @@ public class GameSceneSystem : MonoBehaviour
     
         public void OnClickReset()
         {
+            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
             Reset_Item();
 
             isBlack = true;
@@ -451,6 +470,7 @@ public class GameSceneSystem : MonoBehaviour
             time = fullTime;
             TimerHand.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
             Time.timeScale = 1f;
+            audioSource.Play();
         }
 
     #endregion
@@ -460,6 +480,9 @@ public class GameSceneSystem : MonoBehaviour
 
         public void OnClickPause()
         {
+            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+            audioSource.Pause();
+
             // PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", false);
             // PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", true);
             PausePanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f);
@@ -477,6 +500,9 @@ public class GameSceneSystem : MonoBehaviour
 
         public void OnClickMainMenu() 
         {
+            AudioManagerSRC.GetComponent<AudioManager>().SFX3();   
+            audioSource.Stop();
+
             Time.timeScale = 1f;
             StartCoroutine(Wait1());
             // PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
@@ -487,7 +513,8 @@ public class GameSceneSystem : MonoBehaviour
         }
         IEnumerator Wait1()
         {
-            yield return new WaitForSeconds(0.3f);            
+            yield return new WaitForSeconds(0.3f);  
+            AudioManagerSRC.GetComponent<AudioManager>().MuteOff();   
             SceneManager.LoadScene("TitleScene");
         }
     
@@ -497,6 +524,9 @@ public class GameSceneSystem : MonoBehaviour
 
         public void OnClickContinue() 
         {
+            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+            audioSource.Play();
+
             Time.timeScale = 1f;
             StartCoroutine(Wait2());
             // PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", true);
@@ -521,11 +551,16 @@ public class GameSceneSystem : MonoBehaviour
 
         public void OnClickMenu() 
         {
+            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+            audioSource.Pause();
+
             MenuPanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f);
         }
 
         public void OnClickBackMap()
         {
+            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+            audioSource.Stop();          
             Time.timeScale = 0f;
 
             ReadyGame.SetActive(true);
@@ -538,10 +573,16 @@ public class GameSceneSystem : MonoBehaviour
 
             Time.timeScale = 1f;
             Game.SetActive(false);
+
+            AudioManagerSRC.GetComponent<AudioManager>().MuteOff();
+
         }
 
         public void OnclickBackPause()
         {
+            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+            audioSource.mute = true;
+
             MenuPanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f) + new Vector3(5500f, 0f, 0f);
         }
 
@@ -570,7 +611,6 @@ public class GameSceneSystem : MonoBehaviour
 
             if (ButtonMap_Button.name == "Button_ZIZI")
             {
-                
                 ZIZI_index = RockIndex;
                 OnclickZIZI( Rock.transform.GetChild(RockIndex).transform.GetChild(0).transform.GetChild(0).gameObject ); // ZIZILand > ZIZI
                 return;
@@ -579,6 +619,8 @@ public class GameSceneSystem : MonoBehaviour
             else if (ButtonMap_Button.name == "Button")
             {
                 if (Skill_Dotori == true || Skill_Leaf == true){ return; }
+
+                AudioManagerSRC.GetComponent<AudioManager>().SFX1();
 
                 GameObject ZIZILand = Instantiate(Resources.Load("SKIN_Prefab/"+"ZIZILand"), new Vector3(0f, 0f, 0f), Quaternion.identity) as GameObject;
                 ZIZILand.transform.SetParent(Rock.transform.GetChild(RockIndex).transform, false);
@@ -631,6 +673,8 @@ public class GameSceneSystem : MonoBehaviour
         {
             if(Skill_Dotori == true || Skill_Leaf == true){ return; }
 
+            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+
             // Skill Item Animation (Down)
             Selected_Item.GetComponent<Animator>().SetBool("On", false);
             Selected_Item.GetComponent<Animator>().SetBool("Off", true);            
@@ -673,16 +717,18 @@ public class GameSceneSystem : MonoBehaviour
 
                 if (isBlack == true)
                 {
-                    GameObject ItemForSlot = Instantiate(dotoriIcon, ItemSlotUI_1P.transform.position + new Vector3((-665f + (120 * (Dotori_P1)))*ratio, 0f), Quaternion.identity) as GameObject;
-                    ItemForSlot.transform.SetParent(ItemSlotUI_1P.transform);
-                    ItemForSlot.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
+                    GameObject ItemForSlot = Instantiate(dotoriIcon, ItemSlotUI_1P.transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity) as GameObject;
+                    ItemForSlot.transform.SetParent(ItemSlotUI_1P.transform.GetChild(2).transform.GetChild(Dotori_P1-1).transform);
+                    ItemForSlot.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 160f, ratio * 160f, 1f);
+                    ItemForSlot.transform.localPosition = new Vector3(0f, 0f, 0f);
                     P1_Item.Add(ItemForSlot);
                 }
                 else
                 {
-                    GameObject ItemForSlot = Instantiate(dotoriIcon, ItemSlotUI_2P.transform.position + new Vector3((-665f + (120 * (Dotori_P2)))*ratio, 0f), Quaternion.identity) as GameObject;
-                    ItemForSlot.transform.SetParent(ItemSlotUI_2P.transform);
-                    ItemForSlot.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
+                    GameObject ItemForSlot = Instantiate(dotoriIcon, ItemSlotUI_2P.transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity) as GameObject;
+                    ItemForSlot.transform.SetParent(ItemSlotUI_2P.transform.GetChild(2).transform.GetChild(Dotori_P2-1).transform);
+                    // ItemForSlot.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 160f, ratio * 160f, 1f);
+                    ItemForSlot.transform.localPosition = new Vector3(0f, 0f, 0f);
                     P2_Item.Add(ItemForSlot);
                 }
             }
@@ -696,16 +742,18 @@ public class GameSceneSystem : MonoBehaviour
 
                 if (isBlack == true)
                 {
-                    GameObject ItemForSlot = Instantiate(leafIcon, ItemSlotUI_1P.transform.position + new Vector3((190f + (120 * (Leaf_P1)))*ratio, 0f), Quaternion.identity) as GameObject;
-                    ItemForSlot.transform.SetParent(ItemSlotUI_1P.transform);
-                    ItemForSlot.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
+                    GameObject ItemForSlot = Instantiate(leafIcon, ItemSlotUI_1P.transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity) as GameObject;
+                    ItemForSlot.transform.SetParent(ItemSlotUI_1P.transform.GetChild(3).transform.GetChild(Leaf_P1-1).transform);
+                    ItemForSlot.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 160f, ratio * 160f, 1f);
+                    ItemForSlot.transform.localPosition = new Vector3(0f, 0f, 0f);
                     P1_Item.Add(ItemForSlot);
                 }
                 else
                 {
-                    GameObject ItemForSlot = Instantiate(leafIcon, ItemSlotUI_2P.transform.position + new Vector3((190f + (120 * (Leaf_P2)))*ratio, 0f), Quaternion.identity) as GameObject;
-                    ItemForSlot.transform.SetParent(ItemSlotUI_2P.transform);
+                    GameObject ItemForSlot = Instantiate(leafIcon, ItemSlotUI_2P.transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity) as GameObject;
+                    ItemForSlot.transform.SetParent(ItemSlotUI_2P.transform.GetChild(3).transform.GetChild(Leaf_P2-1).transform);
                     ItemForSlot.GetComponent<RectTransform>().sizeDelta = new Vector3(ratio * 180f, ratio * 180f, 1f);
+                    ItemForSlot.transform.localPosition = new Vector3(0f, 0f, 0f);
                     P2_Item.Add(ItemForSlot);
                 }
             }
@@ -723,6 +771,8 @@ public class GameSceneSystem : MonoBehaviour
 
         public void GameOver()
         {
+            AudioManagerSRC.GetComponent<AudioManager>().SFX2();
+
             // PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", false);
             // PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", true);
 
@@ -752,6 +802,8 @@ public class GameSceneSystem : MonoBehaviour
         {
             if(Skill_Dotori == true || Skill_Leaf == true){ return; }
 
+            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+
             // gameObject : Item on slot
             Selected_Item = Clicked_SlotItem;
 
@@ -766,6 +818,8 @@ public class GameSceneSystem : MonoBehaviour
         public void SkillChiso(GameObject Clicked_SlotChiso)
         {
             // gameObject : Item on slot - chiso button
+
+            AudioManagerSRC.GetComponent<AudioManager>().SFX2();
 
             // Skill Item Animation (Down)
             Clicked_SlotChiso.GetComponent<Animator>().SetBool("On",false);
@@ -827,6 +881,8 @@ public class GameSceneSystem : MonoBehaviour
         {
             yield return new WaitForSeconds(0.3f);
 
+            AudioManagerSRC.GetComponent<AudioManager>().SFX2();
+
             GameObject WaitingZIZI = Rock.transform.GetChild(index).transform.GetChild(0).gameObject;
             WaitingZIZIname = WaitingZIZI.transform.GetChild(0).gameObject.name.Split("_");
             if (WaitingZIZIname[2] != "Leaf"){ Destroy(WaitingZIZI); }
@@ -839,6 +895,8 @@ public class GameSceneSystem : MonoBehaviour
 
         public void PlaySkill_Leaf(GameObject Clicked_ZIZI)
         {
+            AudioManagerSRC.GetComponent<AudioManager>().SFX1();
+
             Selected_Item.SetActive(false);
 
             string[] ForNewName;
@@ -1376,32 +1434,6 @@ public class GameSceneSystem : MonoBehaviour
             }
         }    
     
-    #endregion
-
-
-// >> Music << //
-// ------------------------------------------------------------------------------------------------------------------------ //
-
-    #region OnclickMusic()
-
-        public void OnclickMusic()
-        {
-            if (musicIsOn == true)
-            {
-                //mute = false;
-                // music = Music.GetComponent<
-                Game.GetComponent<AudioSource>().mute  = true;
-                musicIsOn = false;
-            } 
-            else
-            {
-                //mute = true;
-                Game.GetComponent<AudioSource>().mute  = false;
-                musicIsOn = true;
-
-            }
-        }
-
     #endregion
 
 }

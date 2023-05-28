@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class CutScene : MonoBehaviour
 {
+    public GameObject AudioManagerSRC;
+
     public List<GameObject> SceneList = new List<GameObject>();
     int ListIndex = 0;
 
     public GameObject Main;
     void Start()
     {
+        AudioManagerSRC = GameObject.FindWithTag("Music");
+
         Main = GameObject.Find("Main");
+
+        // Cut scene 임시 보류 : 축제용
+        SkipCutScene();
 
         if (PlayerPrefs.GetInt("ShowTutorial") == 1)
         {
@@ -49,6 +56,8 @@ public class CutScene : MonoBehaviour
 
     public void SkipCutScene()
     {
+        AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+
         controller.SetBool("Fade", true);
         Main.transform.GetChild(0).gameObject.SetActive(false); // CutScene Canvas
         Main.transform.GetChild(1).gameObject.SetActive(true);  // Tutorial Canvas

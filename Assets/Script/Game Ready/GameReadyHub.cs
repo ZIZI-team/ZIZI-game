@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class GameReadyHub : MonoBehaviour
 {   
+    public GameObject AudioManagerSRC;
+
     public GameObject Final_Skin_1P;                       // ReadyGame_Local1P >> Hub
     public GameObject Final_Skin_2P;                       // ReadyGame_Local2P >> Hub
 
@@ -13,6 +15,8 @@ public class GameReadyHub : MonoBehaviour
 
     void Start()
     {
+        AudioManagerSRC = GameObject.FindWithTag("Music");
+
         // Set Initiate Skin
         Final_Skin_1P = Resources.Load<GameObject>("SKIN_Prefab/"+"SKIN_Temp1");
         Final_Skin_2P = Resources.Load<GameObject>("SKIN_Prefab/"+"SKIN_Temp2");
@@ -199,6 +203,8 @@ public class GameReadyHub : MonoBehaviour
 
     public void Finish_SelectMap(GameObject MapChart)
     {
+        AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+        
         ClassicButton.GetComponent<Image>().sprite = tempSprite; 
 
         MapIndex = MapChart.transform.GetSiblingIndex();
@@ -225,12 +231,16 @@ public class GameReadyHub : MonoBehaviour
 
     public void GoBack_1()
     {
+        AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+
         PlayerPrefs.SetInt("GameScene", 1);
         SceneManager.LoadScene("TitleScene");
     }
 
     public void GoBack_2()
     {
+        AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+
         for(int i = 0; i < Panel.transform.childCount; i++){ Destroy(Panel.transform.GetChild(i).gameObject); }
 
         GameObject.Find("ReadyGame").transform.GetChild(2).gameObject.SetActive(true);
@@ -240,6 +250,8 @@ public class GameReadyHub : MonoBehaviour
     // Unity : Start Game Onclick
     public void StartGame()
     {
+        AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+
         Game.SetActive(true);
         Game.GetComponent<GameSceneSystem>().GettingStart();
         gameObject.SetActive(false);

@@ -10,6 +10,8 @@ TagManager:
   - dotori_item
   - dotoriShit
   - doroti_item
+  - Game
+  - Music
   layers:
   - Default
   - TransparentFX
