@@ -10,8 +10,15 @@ TagManager:
   - dotori_item
   - dotoriShit
   - doroti_item
+<<<<<<< HEAD
   - Game
   - Music
+=======
+  - zizi_castle
+  - online_zizi
+  - store_zizi
+  - online_dummy
+>>>>>>> f18e530ae80baeb088f0aeb69670f0253c9e44d3
   layers:
   - Default
   - TransparentFX
