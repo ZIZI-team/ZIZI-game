@@ -19,4 +19,4 @@ Engine	Unity
 
 '지지 어드벤처'는 전통과 창의의 조화로운 조합을 통해 흥미로운 게임 경험을 제공합니다.
 
-![Uploading image.png…]()
+![image](https://github.com/sodaakim/ZIZI-Adventure/assets/83997634/b44834b0-4af2-4537-91ee-a3351959f400)
