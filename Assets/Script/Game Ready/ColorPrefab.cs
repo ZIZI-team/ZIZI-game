@@ -21,7 +21,7 @@ public class ColorPrefab : MonoBehaviour
     // color Prefab Onclick
     public void ColorPrefab_Onclick()
     {
-        AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+        AudioManager.Instance.SFX3();
         
         if ( gameObject.transform.parent.name == "1PColor")
         {

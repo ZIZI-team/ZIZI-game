@@ -56,7 +56,7 @@ public class CutScene : MonoBehaviour
 
     public void SkipCutScene()
     {
-        AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+        AudioManager.Instance.SFX3();
 
         controller.SetBool("Fade", true);
         Main.transform.GetChild(0).gameObject.SetActive(false); // CutScene Canvas

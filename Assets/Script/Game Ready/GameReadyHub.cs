@@ -203,7 +203,7 @@ public class GameReadyHub : MonoBehaviour
 
     public void Finish_SelectMap(GameObject MapChart)
     {
-        AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+        AudioManager.Instance.SFX3();
         
         ClassicButton.GetComponent<Image>().sprite = tempSprite; 
 
@@ -231,7 +231,7 @@ public class GameReadyHub : MonoBehaviour
 
     public void GoBack_1()
     {
-        AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+        AudioManager.Instance.SFX3();
 
         PlayerPrefs.SetInt("GameScene", 1);
         SceneManager.LoadScene("TitleScene");
@@ -239,7 +239,7 @@ public class GameReadyHub : MonoBehaviour
 
     public void GoBack_2()
     {
-        AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+        AudioManager.Instance.SFX3();
 
         for(int i = 0; i < Panel.transform.childCount; i++){ Destroy(Panel.transform.GetChild(i).gameObject); }
 
@@ -250,7 +250,7 @@ public class GameReadyHub : MonoBehaviour
     // Unity : Start Game Onclick
     public void StartGame()
     {
-        AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+        AudioManager.Instance.SFX3();
 
         Game.SetActive(true);
         Game.GetComponent<GameSceneSystem>().GettingStart();

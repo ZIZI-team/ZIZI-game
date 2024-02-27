@@ -124,7 +124,7 @@ public class GameSceneSystem : MonoBehaviour
     public void GettingStart()
     {
             AudioManagerSRC = GameObject.FindWithTag("Music");
-            AudioManagerSRC.GetComponent<AudioManager>().MuteOn();
+            AudioManager.Instance.MuteOn();
 
             audioSource.clip = music2;
             audioSource.Play();
@@ -462,7 +462,7 @@ public class GameSceneSystem : MonoBehaviour
     
         public void OnClickReset()
         {
-            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+            AudioManager.Instance.SFX3();
             Reset_Item();
 
             isBlack = true;
@@ -480,7 +480,7 @@ public class GameSceneSystem : MonoBehaviour
 
         public void OnClickPause()
         {
-            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+            AudioManager.Instance.SFX3();
             audioSource.Pause();
 
             // PausePanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", false);
@@ -500,7 +500,7 @@ public class GameSceneSystem : MonoBehaviour
 
         public void OnClickMainMenu() 
         {
-            AudioManagerSRC.GetComponent<AudioManager>().SFX3();   
+            AudioManager.Instance.SFX3();   
             audioSource.Stop();
 
             Time.timeScale = 1f;
@@ -514,7 +514,7 @@ public class GameSceneSystem : MonoBehaviour
         IEnumerator Wait1()
         {
             yield return new WaitForSeconds(0.3f);  
-            AudioManagerSRC.GetComponent<AudioManager>().MuteOff();   
+            AudioManager.Instance.MuteOff();   
             SceneManager.LoadScene("TitleScene");
         }
     
@@ -524,7 +524,7 @@ public class GameSceneSystem : MonoBehaviour
 
         public void OnClickContinue() 
         {
-            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+            AudioManager.Instance.SFX3();
             audioSource.Play();
 
             Time.timeScale = 1f;
@@ -551,7 +551,7 @@ public class GameSceneSystem : MonoBehaviour
 
         public void OnClickMenu() 
         {
-            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+            AudioManager.Instance.SFX3();
             audioSource.Pause();
 
             MenuPanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f);
@@ -559,7 +559,7 @@ public class GameSceneSystem : MonoBehaviour
 
         public void OnClickBackMap()
         {
-            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+            AudioManager.Instance.SFX3();
             audioSource.Stop();          
             Time.timeScale = 0f;
 
@@ -574,13 +574,13 @@ public class GameSceneSystem : MonoBehaviour
             Time.timeScale = 1f;
             Game.SetActive(false);
 
-            AudioManagerSRC.GetComponent<AudioManager>().MuteOff();
+            AudioManager.Instance.MuteOff();
 
         }
 
         public void OnclickBackPause()
         {
-            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+            AudioManager.Instance.SFX3();
             audioSource.mute = true;
 
             MenuPanel.transform.localPosition = Game.transform.position - new Vector3(Screen.width/2, Screen.height/2, 0f) + new Vector3(5500f, 0f, 0f);
@@ -593,7 +593,7 @@ public class GameSceneSystem : MonoBehaviour
 // >> Game : Spon << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
-    // Rock?óê OnclickRock ?ä§?Å¨Î¶ΩÌä∏ ?ó∞Í≤∞ÌïòÍ∏?
+    // Rock?ÔøΩÔøΩ OnclickRock ?ÔøΩÔøΩ?ÔøΩÔøΩÎ¶ΩÌä∏ ?ÔøΩÔøΩÍ≤∞ÌïòÔøΩ?
     #region OnclickRock() : Spon ZIZI on Rock
  
         int RockIndex;
@@ -620,7 +620,7 @@ public class GameSceneSystem : MonoBehaviour
             {
                 if (Skill_Dotori == true || Skill_Leaf == true){ return; }
 
-                AudioManagerSRC.GetComponent<AudioManager>().SFX1();
+                AudioManager.Instance.SFX1();
 
                 GameObject ZIZILand = Instantiate(Resources.Load("SKIN_Prefab/"+"ZIZILand"), new Vector3(0f, 0f, 0f), Quaternion.identity) as GameObject;
                 ZIZILand.transform.SetParent(Rock.transform.GetChild(RockIndex).transform, false);
@@ -661,7 +661,7 @@ public class GameSceneSystem : MonoBehaviour
     
     #endregion
 
-    // Item?óê ?ä§?Å¨Î¶ΩÌä∏ ?ó∞Í≤∞ÌïòÍ∏?
+    // Item?ÔøΩÔøΩ ?ÔøΩÔøΩ?ÔøΩÔøΩÎ¶ΩÌä∏ ?ÔøΩÔøΩÍ≤∞ÌïòÔøΩ?
     #region OnclickMapItem()
     
         public int Dotori_P1 = 0;
@@ -673,7 +673,7 @@ public class GameSceneSystem : MonoBehaviour
         {
             if(Skill_Dotori == true || Skill_Leaf == true){ return; }
 
-            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+            AudioManager.Instance.SFX3();
 
             // Skill Item Animation (Down)
             Selected_Item.GetComponent<Animator>().SetBool("On", false);
@@ -771,7 +771,7 @@ public class GameSceneSystem : MonoBehaviour
 
         public void GameOver()
         {
-            AudioManagerSRC.GetComponent<AudioManager>().SFX2();
+            AudioManager.Instance.SFX2();
 
             // PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("close", false);
             // PlayerWinPanel.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("open", true);
@@ -793,7 +793,7 @@ public class GameSceneSystem : MonoBehaviour
 // >> Skill : Dotori & Leaf << //
 // ------------------------------------------------------------------------------------------------------------------------ //
 
-    // Item?óê ?ä§?Å¨Î¶ΩÌä∏ ?ó∞Í≤∞ÌïòÍ∏?
+    // Item?ÔøΩÔøΩ ?ÔøΩÔøΩ?ÔøΩÔøΩÎ¶ΩÌä∏ ?ÔøΩÔøΩÍ≤∞ÌïòÔøΩ?
     #region OnClickSlotItem(), SkillChiso()
 
         public GameObject Selected_Item;
@@ -802,7 +802,7 @@ public class GameSceneSystem : MonoBehaviour
         {
             if(Skill_Dotori == true || Skill_Leaf == true){ return; }
 
-            AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+            AudioManager.Instance.SFX3();
 
             // gameObject : Item on slot
             Selected_Item = Clicked_SlotItem;
@@ -819,7 +819,7 @@ public class GameSceneSystem : MonoBehaviour
         {
             // gameObject : Item on slot - chiso button
 
-            AudioManagerSRC.GetComponent<AudioManager>().SFX2();
+            AudioManager.Instance.SFX2();
 
             // Skill Item Animation (Down)
             Clicked_SlotChiso.GetComponent<Animator>().SetBool("On",false);
@@ -881,7 +881,7 @@ public class GameSceneSystem : MonoBehaviour
         {
             yield return new WaitForSeconds(0.3f);
 
-            AudioManagerSRC.GetComponent<AudioManager>().SFX2();
+            AudioManager.Instance.SFX2();
 
             GameObject WaitingZIZI = Rock.transform.GetChild(index).transform.GetChild(0).gameObject;
             WaitingZIZIname = WaitingZIZI.transform.GetChild(0).gameObject.name.Split("_");
@@ -895,7 +895,7 @@ public class GameSceneSystem : MonoBehaviour
 
         public void PlaySkill_Leaf(GameObject Clicked_ZIZI)
         {
-            AudioManagerSRC.GetComponent<AudioManager>().SFX1();
+            AudioManager.Instance.SFX1();
 
             Selected_Item.SetActive(false);
 
@@ -913,7 +913,7 @@ public class GameSceneSystem : MonoBehaviour
 
     #endregion
 
-    // ZIZI?óê OnclickZIZI  ?ä§?Å¨Î¶ΩÌä∏ ?ó∞Í≤∞ÌïòÍ∏?
+    // ZIZI?ÔøΩÔøΩ OnclickZIZI  ?ÔøΩÔøΩ?ÔøΩÔøΩÎ¶ΩÌä∏ ?ÔøΩÔøΩÍ≤∞ÌïòÔøΩ?
     #region OnclickZIZI() : Skill or not
 
         GameObject Skill_ZIZI;

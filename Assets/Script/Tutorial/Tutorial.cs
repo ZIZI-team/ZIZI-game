@@ -111,7 +111,7 @@ public class Tutorial : MonoBehaviour
 
     public void SkipTutorial()
     {
-        AudioManagerSRC.GetComponent<AudioManager>().SFX3();
+        AudioManager.Instance.SFX3();
         
         PlayerPrefs.SetInt("TutorialPlayed", 1);
 
