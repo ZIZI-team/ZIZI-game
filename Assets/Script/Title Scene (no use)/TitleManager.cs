@@ -31,7 +31,7 @@ public class TitleManager : MonoBehaviour
     public void Select_StartGame()
     {
         if (PlayerPrefs.GetInt("GameScene") == 0)
-        {
+        {   
             controller.SetBool("FadeOut", true);
         }
 

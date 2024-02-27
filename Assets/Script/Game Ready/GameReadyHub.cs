@@ -90,7 +90,7 @@ public class GameReadyHub : MonoBehaviour
     public void ReadyMapSource()
     {
         Map.Add(Resources.Load<GameObject>("MAP_Prefab/Classic"));  
-
+        
         Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP1"));  
         Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP2"));  
         Map.Add(Resources.Load<GameObject>("MAP_Prefab/BushMAP3"));
@@ -260,8 +260,4 @@ public class GameReadyHub : MonoBehaviour
         GameObject.Find("Game").GetComponent<GameSceneSystem>().Stone_w = Final_Skin_2P;
     }
 
-    void Update()
-    {
-
-    }
 }
