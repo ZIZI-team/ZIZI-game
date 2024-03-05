@@ -92,3 +92,5 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 >>>>>>> cd6c87605bc1f6ea6cc7b911a8a3b5f08e07d908
+
+Assets/Firebase/Plugins/x86_64/
