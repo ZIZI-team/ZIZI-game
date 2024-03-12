@@ -5,7 +5,7 @@ using UnityEngine;
 using Firebase.Auth;
 
 
-public class FirebaseAuthManager
+public class FirebaseAuthManager 
 {
     private static FirebaseAuthManager instance = null;
 

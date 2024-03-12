@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class TitleManager : MonoBehaviour
 {
+    public List<GameObject> MenuList;
+
     void Start()
     {
         // button1 = GameObject.Find("Canvas").transform.GetChild(3).transform.GetChild(0).transform.GetChild(0).gameObject;
@@ -24,7 +26,8 @@ public class TitleManager : MonoBehaviour
         if (PlayerPrefs.GetInt("GameScene") == 1)
         {
             Select_StartGame();
-        } 
+        }
+
     }
 
     public Animator controller;                            // Unity : Inspector
@@ -35,8 +38,17 @@ public class TitleManager : MonoBehaviour
             controller.SetBool("FadeOut", true);
         }
 
-        GameObject.Find("Canvas").transform.GetChild(2).gameObject.SetActive(false);
-        GameObject.Find("Canvas").transform.GetChild(3).gameObject.SetActive(true);
+        if (PlayerPrefs.GetInt("IsSignUp") == 0)
+        {
+            GameObject.Find("Canvas").transform.GetChild(2).gameObject.SetActive(false);
+            GameObject.Find("Canvas").transform.GetChild(3).gameObject.SetActive(true);
+        }
+        else if (PlayerPrefs.GetInt("IsSignUp") == 1)
+        {
+            GameObject.Find("Canvas").transform.GetChild(2).gameObject.SetActive(false);
+            GameObject.Find("Canvas").transform.GetChild(4).gameObject.SetActive(true);
+        }
+        
     }
 
     public void BacktoTitle()
@@ -137,10 +149,16 @@ public class TitleManager : MonoBehaviour
         SceneManager.LoadScene("Tutorial");        
     }
 
-
-
-    void Update()
+    public void SelectLogInMenuBT()
     {
-        
+        MenuList[1].SetActive(false);
+        MenuList[2].SetActive(true);
+
+    }
+    public void SelectSignUpMenuBT()
+    {
+        MenuList[1].SetActive(false);
+        MenuList[3].SetActive(true);
+
     }
 }
