@@ -101,20 +101,17 @@ public class AuthManager : MonoBehaviour
             {
                 auth.SignInWithEmailAndPasswordAsync(result, loginPassword.text)
             .ContinueWith(task => {
-                // 작업이 취소되었는지 확인
                 if (task.IsCanceled)
                 {
                     Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
                     return;
                 }
-                // 작업이 실패했는지 확인
                 if (task.IsFaulted)
                 {
                     Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
                     return;
                 }
 
-                // 로그인 성공한 경우
                 Firebase.Auth.AuthResult result = task.Result;
                 Debug.LogFormat("User signed in successfully: {0} ({1})",
                     result.User.DisplayName, result.User.UserId);
