@@ -1361,6 +1361,8 @@ GameObject:
   - component: {fileID: 591200392}
   - component: {fileID: 591200390}
   - component: {fileID: 591200391}
+  - component: {fileID: 591200394}
+  - component: {fileID: 591200393}
   m_Layer: 0
   m_Name: Itemmap
   m_TagString: Untagged
@@ -1446,7 +1448,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -1470,6 +1472,35 @@ Transform:
   m_Father: {fileID: 1740246550}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &591200393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591200389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc19e7573ab9ef24b8bef334d03aed1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &591200394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591200389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b61d0d15d71104aa32b61c2bce4e33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mytile: {fileID: 591200393}
+  _tilemap: {fileID: 591200390}
+  _tilebase:
+  - {fileID: 11400000, guid: 2be14b814fd0f5a4c98452efe16a1240, type: 2}
+  - {fileID: 11400000, guid: 861784fbddc63b64a89d606aeb3171b9, type: 2}
 --- !u!1 &595651724
 GameObject:
   m_ObjectHideFlags: 0
@@ -4304,7 +4335,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1740246550}
   - component: {fileID: 1740246549}
-  - component: {fileID: 1740246551}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -4342,26 +4372,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1740246551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1740246548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76fba2402b8e81f48a41072d9b24255b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tilemap: {fileID: 1887101535}
-  tilePrefab: {fileID: 11400000, guid: 6cf324bb85dd66e46b6e18e909570d7f, type: 2}
-  bushTile: {fileID: 1784454106}
-  bushPrefab: {fileID: 11400000, guid: 7ec65aca481649e45a515feb24b2a060, type: 2}
-  itemTile: {fileID: 591200390}
-  itemTilebase:
-  - {fileID: 11400000, guid: 861784fbddc63b64a89d606aeb3171b9, type: 2}
-  - {fileID: 11400000, guid: 2be14b814fd0f5a4c98452efe16a1240, type: 2}
 --- !u!1 &1752087579
 GameObject:
   m_ObjectHideFlags: 0
@@ -4485,6 +4495,8 @@ GameObject:
   - component: {fileID: 1784454108}
   - component: {fileID: 1784454106}
   - component: {fileID: 1784454107}
+  - component: {fileID: 1784454110}
+  - component: {fileID: 1784454109}
   m_Layer: 0
   m_Name: Bushmap
   m_TagString: Untagged
@@ -4594,6 +4606,34 @@ Transform:
   m_Father: {fileID: 1740246550}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1784454109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1784454105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e08f7552941ef774b8dde714b552cbac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1784454110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1784454105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b61d0d15d71104aa32b61c2bce4e33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mytile: {fileID: 1784454109}
+  _tilemap: {fileID: 1784454106}
+  _tilebase:
+  - {fileID: 11400000, guid: 7ec65aca481649e45a515feb24b2a060, type: 2}
 --- !u!1 &1832586738
 GameObject:
   m_ObjectHideFlags: 0
@@ -4937,6 +4977,8 @@ GameObject:
   - component: {fileID: 1887101533}
   - component: {fileID: 1887101535}
   - component: {fileID: 1887101534}
+  - component: {fileID: 1887101537}
+  - component: {fileID: 1887101536}
   m_Layer: 0
   m_Name: Tilemap
   m_TagString: Untagged
@@ -5004,7 +5046,7 @@ TilemapRenderer:
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
-  m_SortOrder: 2
+  m_SortOrder: 0
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
@@ -5070,6 +5112,34 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &1887101536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887101532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20a4ead70a25d404f85c25a6d1387b8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1887101537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887101532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b61d0d15d71104aa32b61c2bce4e33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mytile: {fileID: 1887101536}
+  _tilemap: {fileID: 1887101535}
+  _tilebase:
+  - {fileID: 11400000, guid: 6cf324bb85dd66e46b6e18e909570d7f, type: 2}
 --- !u!1 &1911179458
 GameObject:
   m_ObjectHideFlags: 0
