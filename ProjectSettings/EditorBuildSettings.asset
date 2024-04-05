@@ -6,27 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Test.unity
-    guid: 807d981e8eaaefc40aab4e4cbcdb7a61
-  - enabled: 1
-    path: Assets/Scenes/Title/Univia.unity
+    path: Assets/00. Scenes/Title/Univia.unity
     guid: d8c79c3e0a77810498c4acda9ba049e3
   - enabled: 1
-    path: Assets/Scenes/Tutorial.unity
+    path: Assets/00. Scenes/Tutorial.unity
     guid: 8c8cba4b600da044998aef33a71b2110
   - enabled: 1
-    path: Assets/Scenes/Title/TitleScene.unity
+    path: Assets/00. Scenes/Title/TitleScene.unity
     guid: 9bd436e88739317439d9c8f64335d315
-  - enabled: 1
-    path: Assets/Scenes/Local/GameScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
-    path: Assets/Scenes/Online/Online.unity
-    guid: fd006c0b2fcb72a4599ef316efab633c
-  - enabled: 1
-    path: Assets/Scenes/Online/Map/Map Sea.unity
-    guid: 1c7483523146cc94c9527574934b165c
-  - enabled: 1
-    path: Assets/Scenes/Online/Map/Map ZIZICastle.unity
-    guid: 5ec55e60fa68a0745bb52250f5b01ed7
   m_configObjects: {}
