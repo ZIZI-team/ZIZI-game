@@ -49,15 +49,15 @@ public abstract class Tiles : MonoBehaviour
                 {
                     if (data.TileName == "MainTile")
                     {
-                        DataManager.Instance.board[x, y] = 0;
+                        DataManager.Instance.tiledata.mainTile[x, y] = 0;
                     }
                     else if (data.TileName == "BushTile")
                     {
-                        DataManager.Instance.board[x, y] = 2;
+                        DataManager.Instance.tiledata.mainTile[x, y] = 2;
                     }
                     else if (data.TileName == "ItemTile")
                     {
-                        DataManager.Instance.board[x, y] = 3;
+                        DataManager.Instance.tiledata.mainTile[x, y] = 3;
                     }
                 }
 
