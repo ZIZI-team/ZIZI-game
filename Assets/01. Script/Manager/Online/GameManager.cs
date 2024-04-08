@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     }
     public void GameStart()
     {
-
+        TileManager.Instance.InitTile();
     }
 
     public void GameEnd()

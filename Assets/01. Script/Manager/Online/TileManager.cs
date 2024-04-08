@@ -4,6 +4,15 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 public class TileManager : MonoBehaviour
 {
+    private static TileManager instance;
+    public static TileManager Instance
+    {
+        get
+        {
+            if(instance == null) { return null; } return instance;
+        }
+    }
+
     public List<GameObject> TilemapPrefabsList;
     List<Tilemap> myTilemap = new List<Tilemap>();
 
@@ -11,7 +20,11 @@ public class TileManager : MonoBehaviour
 
     void Awake()
     {
-        InitTile();
+        if(instance == null)
+        {
+            instance = this;
+        }
+
     }
     void Start()
     {

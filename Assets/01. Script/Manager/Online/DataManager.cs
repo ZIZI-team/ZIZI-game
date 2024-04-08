@@ -8,9 +8,17 @@ public struct TileData
     //input N(ull) or W(hite) or B(lack)
     public string[,] stoneTile;
 }
+
+public struct GameData
+{
+    // if turnData ==  1{ p1} esle if turnData ==2 {p2}
+    public int turnData;
+}
+
 public class DataManager : MonoBehaviour
 {
     public TileData tiledata;
+    public GameData gamedata;
 
     private static DataManager instance;
 
@@ -49,6 +57,11 @@ public class DataManager : MonoBehaviour
     {
         tiledata.mainTile = new int[11, 11];
         tiledata.stoneTile = new string[11, 11];
+    }
+
+    private void InitGameData()
+    {
+        gamedata.turnData = 0;
     }
     
 }
