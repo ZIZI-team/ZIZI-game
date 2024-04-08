@@ -26,16 +26,6 @@ public class TileManager : MonoBehaviour
         }
 
     }
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-        OnClickPosition();
-    }
-
 
     public void InitTile()
     {
@@ -54,19 +44,19 @@ public class TileManager : MonoBehaviour
     IEnumerator GetTile()
     {
         yield return new WaitForSeconds(1);
-        for (int i = 0; i < myTilemap.Count; i++)
+        foreach (Tilemap tilemap in myTilemap)
         {
             for (int x = 0; x < 11; x++)
             {
                 for (int y = 0; y < 11; y++)
                 {
-                    TileBase tilebase = myTilemap[i].GetTile(new Vector3Int(x, y, 0));
+                    TileBase tilebase = tilemap.GetTile(new Vector3Int(x, y, 0));
 
                     if (tilebase != null)
                     {
-                        if (myTilemap[i].name == "Maintile") { DataManager.Instance.tiledata.mainTile[x, y] = 0; }
-                        else if (myTilemap[i].name == "Bushtile") { DataManager.Instance.tiledata.mainTile[x, y] = 1; }
-                        else if (myTilemap[i].name == "Itemtile") { DataManager.Instance.tiledata.mainTile[x, y] = 2; }
+                        if (tilemap.name == "Maintile") { DataManager.Instance.tiledata.mainTile[x, y] = 0; }
+                        else if (tilemap.name == "Bushtile") { DataManager.Instance.tiledata.mainTile[x, y] = 1; }
+                        else if (tilemap.name == "Itemtile") { DataManager.Instance.tiledata.mainTile[x, y] = 2; }
                     }
                     DataManager.Instance.tiledata.stoneTile[x,y] = "N";
                 }
@@ -74,7 +64,7 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    void OnClickPosition()
+    public void OnClickPosition()
     {
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
@@ -85,7 +75,7 @@ public class TileManager : MonoBehaviour
                 InstallStone(cellPos);
                 RemoveBush(cellPos);
                 GetItem(cellPos);
-                GameManager.Intances.CheckWinCondition("W", cellPos.x, cellPos.y);
+                StartCoroutine(GameSystem.Instance.CheckWinCondition("W", cellPos.x, cellPos.y));
             }
             Debug.Log("Touched tile position: " + cellPos);
             

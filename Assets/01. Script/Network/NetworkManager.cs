@@ -3,28 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-using TMPro;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
-    public TMP_Text StatusText;
-    public TMP_InputField roomInput, NickNameInput;
+    private static NetworkManager instance;
 
+    public static NetworkManager Instance
+    {
+        get
+        {
+            if(instance == null) { return null; } return instance;
+        }
+    }
 
-    void Awake() => PhotonNetwork.ConnectUsingSettings();
+    private UIManager uimanager;
 
-    void Update() => StatusText.text = PhotonNetwork.NetworkClientState.ToString();
-
+    void Awake() 
+    {
+        PhotonNetwork.ConnectUsingSettings();
+        if(instance== null) { instance = this; }
+    }
+     
 
 
     public void Connect() => PhotonNetwork.ConnectUsingSettings();
 
-    public override void OnConnectedToMaster()
+    public override void OnConnectedToMaster() => PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 2 }, null);
+    public override void OnJoinedRoom()
     {
-        print("서버접속완료");
-        PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
-        PhotonNetwork.JoinOrCreateRoom(roomInput.text, new RoomOptions { MaxPlayers = 2 }, null);
 
+    }
+
+    // RPC 메소드
+    [PunRPC]
+    private void OpColor(Color opcolor)
+    {
+        DataManager.Instance.gamedata.opcolor = opcolor;
+        Debug.Log("실행되었음");
+    }
+
+    public void SendMyColor(Color color)
+    { 
+        // RPC를 호출하여 다른 플레이어에게 변수 값을 전달합니다.
+        photonView.RPC("OpColor", RpcTarget.All, color);
     }
 
 
@@ -35,30 +56,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 
 
-    public void JoinLobby() => PhotonNetwork.JoinLobby();
-
-    public override void OnJoinedLobby() => print("로비접속완료");
-
-
-
-    public void CreateRoom() => PhotonNetwork.CreateRoom(roomInput.text, new RoomOptions { MaxPlayers = 2 });
-
-    public void JoinRoom() => PhotonNetwork.JoinRoom(roomInput.text);
-
-    public void JoinOrCreateRoom() => PhotonNetwork.JoinOrCreateRoom(roomInput.text, new RoomOptions { MaxPlayers = 2 }, null);
-
-    public void JoinRandomRoom() => PhotonNetwork.JoinRandomRoom();
-
-    public void LeaveRoom() => PhotonNetwork.LeaveRoom();
-
-    public override void OnCreatedRoom() => print("방만들기완료");
-
-    public override void OnJoinedRoom() => print("방참가완료");
-
-    public override void OnCreateRoomFailed(short returnCode, string message) => print("방만들기실패");
-
-    public override void OnJoinRoomFailed(short returnCode, string message) => print("방참가실패");
-
-    public override void OnJoinRandomFailed(short returnCode, string message) => print("방랜덤참가실패");
+    
 
 }

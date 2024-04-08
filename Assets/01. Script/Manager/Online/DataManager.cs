@@ -13,6 +13,10 @@ public struct GameData
 {
     // if turnData ==  1{ p1} esle if turnData ==2 {p2}
     public int turnData;
+    public bool isGameStart;
+
+    public Color mycolor;
+    public Color opcolor;
 }
 
 public class DataManager : MonoBehaviour
@@ -50,7 +54,13 @@ public class DataManager : MonoBehaviour
 
     private void Start()
     {
+        InitData();
+    }
+
+    private void InitData()
+    {
         InitTileData();
+        InitGameData();
     }
 
     private void InitTileData()
@@ -62,6 +72,9 @@ public class DataManager : MonoBehaviour
     private void InitGameData()
     {
         gamedata.turnData = 0;
+        gamedata.isGameStart = false;
+        gamedata.mycolor = new Color(255, 255, 255);
+        gamedata.opcolor = new Color(255, 255, 255);
     }
     
 }
