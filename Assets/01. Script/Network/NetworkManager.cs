@@ -31,7 +31,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster() => PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 2 }, null);
     public override void OnJoinedRoom()
     {
-        Debug.Log("방에 접속하였습니다");
+        if(PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+        {
+            SendMaxRoom();
+        }
     }
 
     // RPC 메소드
@@ -42,12 +45,24 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         Debug.Log(a.ToString());
     }
 
+    [PunRPC]
+    private void MaxRoom()
+    {
+        UIManager.Instance.waitingPlayerPanel.SetActive(false);   
+        UIManager.Instance.selectColorPanel.SetActive(true);
+    }
+
     public void SendMyColor(float r, float g, float b, float a)
     { 
         // RPC를 호출하여 다른 플레이어에게 변수 값을 전달합니다.
         photonView.RPC("SaveOpColor", RpcTarget.Others, r,g,b,a);
     }
 
+    public void SendMaxRoom()
+    {
+        photonView.RPC("MaxRoom", RpcTarget.All);
+    }
+    
 
 
     public void Disconnect() => PhotonNetwork.Disconnect();
