@@ -19,38 +19,10 @@ public struct GameData
     public Color opcolor;
 }
 
-public class DataManager : MonoBehaviour
+public class DataManager : Singleton<DataManager>
 {
     public TileData tiledata;
     public GameData gamedata;
-
-    private static DataManager instance;
-
-    public static DataManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                return null;
-            }
-            return instance;
-        }
-    }
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        
-    }
 
     private void Start()
     {

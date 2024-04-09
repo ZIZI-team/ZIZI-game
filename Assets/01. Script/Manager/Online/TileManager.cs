@@ -2,30 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-public class TileManager : MonoBehaviour
+public class TileManager : Singleton<TileManager>
 {
-    private static TileManager instance;
-    public static TileManager Instance
-    {
-        get
-        {
-            if(instance == null) { return null; } return instance;
-        }
-    }
 
     public List<GameObject> TilemapPrefabsList;
     List<Tilemap> myTilemap = new List<Tilemap>();
 
     public GameObject stonePrefab;
-
-    void Awake()
-    {
-        if(instance == null)
-        {
-            instance = this;
-        }
-
-    }
 
     public void InitTile()
     {

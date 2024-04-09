@@ -36,16 +36,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     // RPC 메소드
     [PunRPC]
-    private void OpColor(Color opcolor)
+    private void OpColor(float r, float g, float b)
     {
-        DataManager.Instance.gamedata.opcolor = opcolor;
-        Debug.Log("실행되었음");
+        DataManager.Instance.gamedata.opcolor = new Color(r,g,b);
+        Debug.Log(r.ToString()+g.ToString()+b.ToString());
     }
 
-    public void SendMyColor(Color color)
+    public void SendMyColor(float r, float g, float b)
     { 
         // RPC를 호출하여 다른 플레이어에게 변수 값을 전달합니다.
-        photonView.RPC("OpColor", RpcTarget.All, color);
+        photonView.RPC("OpColor", RpcTarget.All, r,g,b);
     }
 
 

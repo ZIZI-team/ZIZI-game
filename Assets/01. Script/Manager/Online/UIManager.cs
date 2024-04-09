@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
     [Header("Select Color Panel")]
     [SerializeField] private GameObject selectColorPanel;
@@ -71,12 +71,11 @@ public class UIManager : MonoBehaviour
         selectColorPanel.SetActive(false);
 
         DataManager.Instance.gamedata.mycolor = ziziImage.color;
-        NetworkManager.Instance.SendMyColor(DataManager.Instance.gamedata.mycolor);
+        NetworkManager.Instance.SendMyColor(DataManager.Instance.gamedata.mycolor.r, DataManager.Instance.gamedata.mycolor.g, DataManager.Instance.gamedata.mycolor.b);
 
         waitPanel.SetActive(true);
 
         myZizi.color = DataManager.Instance.gamedata.mycolor;
-        opZizi.color = DataManager.Instance.gamedata.opcolor;
     }
 
 }

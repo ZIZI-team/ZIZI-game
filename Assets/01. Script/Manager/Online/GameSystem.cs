@@ -2,31 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameSystem : MonoBehaviour
+public class GameSystem : Singleton<GameSystem>
 {
-    private static GameSystem instance;
-
-    public static GameSystem Instance
-    {
-        get
-        {
-            if(instance == null)
-            {
-                return null;
-            }
-            return instance;
-        }
-    }
-
-    void Awake()
-    {
-        Screen.SetResolution(1080, 2400, true);
-        if(instance == null)
-        {
-            instance = this;
-        }
-    }
-
     private void Update()
     {
         if(DataManager.Instance.gamedata.isGameStart == true)
@@ -34,7 +11,6 @@ public class GameSystem : MonoBehaviour
             TileManager.Instance.OnClickPosition();
         }
     }
-
     public void ChageTurn()
     {
 
@@ -124,7 +100,7 @@ public class GameSystem : MonoBehaviour
         // 어느 한 방향으로 5개 이상의 돌이 연속되어 있으면 승리
         if (countVertical >= 5 || countHorizontal >= 5 || countDiagonal1 >= 5 || countDiagonal2 >= 5)
         {
-            GameManager.Intance.GameEnd();
+            GameManager.Instance.GameEnd();
         }
 
 
