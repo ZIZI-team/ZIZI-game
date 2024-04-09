@@ -7,16 +7,21 @@ using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
+    [Header("Waiting Player Panel")]
+    public GameObject waitingPlayerPanel;
+
     [Header("Select Color Panel")]
-    [SerializeField] private GameObject selectColorPanel;
+    public GameObject selectColorPanel;
     [SerializeField] private Image ziziImage;
     public Button[] colorPallate;
     private Button selectColor;
 
-    [Header("Wait Panel")]
+    [Header("Wait Select Color")]
     [SerializeField] private GameObject waitPanel;
     [SerializeField] private Image myZizi;
-    [SerializeField] private Image opZizi;
+    public Image opZizi;
+
+    private bool readresevedData = false;
 
     void Start()
     {
@@ -27,8 +32,19 @@ public class UIManager : Singleton<UIManager>
 
         selectColor = colorPallate[0];
         selectColor.interactable = false;
-
-        NetworkManager.Instance.Connect();
+    }
+    void Update()
+    {
+        if (readresevedData)
+        {
+            Debug.Log("Update 시작");
+            if (DataManager.Instance.gamedata.opcolor.a == 1f)
+            {
+                Debug.Log("reseved Data");
+                opZizi.color = DataManager.Instance.gamedata.opcolor;
+                readresevedData = false;
+            }
+        }
     }
 
     private void OnButtonClick(Button clickedButton)
@@ -44,7 +60,7 @@ public class UIManager : Singleton<UIManager>
 
             // 새로 선택된 버튼을 현재 선택된 버튼으로 설정합니다.
             selectColor = clickedButton;
-            ChangemyZiziColor(selectColor.GetComponent<Image>().color);
+            ziziImage.color = selectColor.GetComponent<Image>().color;
             
 
             // 새로 선택된 버튼을 선택된 상태로 설정하고 다른 버튼들은 선택 해제합니다.
@@ -61,21 +77,25 @@ public class UIManager : Singleton<UIManager>
         ziziImage.color = color;
     }
 
-    public void ChangeOpZiziColorc(Color color)
-    {
-        opZizi.color = color;
-    }
-
     public void ClickGameStart()
     {
         selectColorPanel.SetActive(false);
 
         DataManager.Instance.gamedata.mycolor = ziziImage.color;
-        NetworkManager.Instance.SendMyColor(DataManager.Instance.gamedata.mycolor.r, DataManager.Instance.gamedata.mycolor.g, DataManager.Instance.gamedata.mycolor.b);
+        NetworkManager.Instance.SendMyColor(DataManager.Instance.gamedata.mycolor.r, DataManager.Instance.gamedata.mycolor.g, DataManager.Instance.gamedata.mycolor.b, DataManager.Instance.gamedata.mycolor.a);
 
         waitPanel.SetActive(true);
 
         myZizi.color = DataManager.Instance.gamedata.mycolor;
+
+        if (DataManager.Instance.gamedata.opcolor.a != 1f)
+        {
+            readresevedData = true;
+        }
+        else
+        {
+            opZizi.color = DataManager.Instance.gamedata.opcolor;
+        }
     }
 
 }

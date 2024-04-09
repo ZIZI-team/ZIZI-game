@@ -16,7 +16,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
-    private UIManager uimanager;
+
 
     void Awake() 
     {
@@ -31,21 +31,21 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster() => PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 2 }, null);
     public override void OnJoinedRoom()
     {
-
+        Debug.Log("방에 접속하였습니다");
     }
 
     // RPC 메소드
     [PunRPC]
-    private void OpColor(float r, float g, float b)
+    private void SaveOpColor(float r, float g, float b, float a)
     {
-        DataManager.Instance.gamedata.opcolor = new Color(r,g,b);
-        Debug.Log(r.ToString()+g.ToString()+b.ToString());
+        DataManager.Instance.gamedata.opcolor = new Color(r,g,b,a);
+        Debug.Log(a.ToString());
     }
 
-    public void SendMyColor(float r, float g, float b)
+    public void SendMyColor(float r, float g, float b, float a)
     { 
         // RPC를 호출하여 다른 플레이어에게 변수 값을 전달합니다.
-        photonView.RPC("OpColor", RpcTarget.All, r,g,b);
+        photonView.RPC("SaveOpColor", RpcTarget.Others, r,g,b,a);
     }
 
 

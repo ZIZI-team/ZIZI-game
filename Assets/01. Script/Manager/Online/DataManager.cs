@@ -46,7 +46,7 @@ public class DataManager : Singleton<DataManager>
         gamedata.turnData = 0;
         gamedata.isGameStart = false;
         gamedata.mycolor = new Color(255, 255, 255);
-        gamedata.opcolor = new Color(255, 255, 255);
+        gamedata.opcolor = new Color(255, 255, 255, 0.8f);
     }
     
 }
