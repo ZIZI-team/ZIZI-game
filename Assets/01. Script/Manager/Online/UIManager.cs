@@ -35,6 +35,13 @@ public class UIManager : Singleton<UIManager>
     }
     void Update()
     {
+
+        if (DataManager.Instance.gamedata.isMaxRoomTriger)
+        {
+            changeUIAToB(waitingPlayerPanel, selectColorPanel);
+            DataManager.Instance.gamedata.isMaxRoomTriger = false;
+        }
+
         if (readresevedData)
         {
             Debug.Log("Update Ω√¿€");
@@ -45,6 +52,8 @@ public class UIManager : Singleton<UIManager>
                 readresevedData = false;
             }
         }
+
+        
     }
 
     private void OnButtonClick(Button clickedButton)
@@ -71,31 +80,25 @@ public class UIManager : Singleton<UIManager>
         }
         
     }
-
-    public void ChangemyZiziColor(Color color)
-    {
-        ziziImage.color = color;
-    }
-
     public void ClickGameStart()
     {
         selectColorPanel.SetActive(false);
 
         DataManager.Instance.gamedata.mycolor = ziziImage.color;
-        NetworkManager.Instance.SendMyColor(DataManager.Instance.gamedata.mycolor.r, DataManager.Instance.gamedata.mycolor.g, DataManager.Instance.gamedata.mycolor.b, DataManager.Instance.gamedata.mycolor.a);
+        Color Sendcolor = DataManager.Instance.gamedata.mycolor;
+        NetworkManager.Instance.SendMyColor(Sendcolor.r, Sendcolor.g, Sendcolor.b, Sendcolor.a);
 
         waitPanel.SetActive(true);
 
         myZizi.color = DataManager.Instance.gamedata.mycolor;
 
-        if (DataManager.Instance.gamedata.opcolor.a != 1f)
-        {
-            readresevedData = true;
-        }
-        else
-        {
-            opZizi.color = DataManager.Instance.gamedata.opcolor;
-        }
+        if (DataManager.Instance.gamedata.opcolor.a != 1f) { readresevedData = true; }
+        else{opZizi.color = DataManager.Instance.gamedata.opcolor;}
     }
 
+    void changeUIAToB(GameObject a, GameObject b)
+    {
+        a.SetActive(false);
+        b.SetActive(true);
+    }
 }

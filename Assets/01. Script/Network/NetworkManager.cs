@@ -33,11 +33,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         if(PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
         {
-            SendMaxRoom();
+            SendisMaxRoom();
         }
     }
 
     // RPC ¸Þ¼Òµå
+
     [PunRPC]
     private void SaveOpColor(float r, float g, float b, float a)
     {
@@ -48,8 +49,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void MaxRoom()
     {
-        UIManager.Instance.waitingPlayerPanel.SetActive(false);   
-        UIManager.Instance.selectColorPanel.SetActive(true);
+        DataManager.Instance.gamedata.isMaxRoomTriger = true;
     }
 
     public void SendMyColor(float r, float g, float b, float a)
@@ -58,7 +58,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         photonView.RPC("SaveOpColor", RpcTarget.Others, r,g,b,a);
     }
 
-    public void SendMaxRoom()
+    public void SendisMaxRoom()
     {
         photonView.RPC("MaxRoom", RpcTarget.All);
     }

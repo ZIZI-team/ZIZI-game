@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/00. Scenes/Online/Online.unity
+    path: Assets/00. Scenes/Online/GameReadyOnline.unity
     guid: fd006c0b2fcb72a4599ef316efab633c
   m_configObjects: {}

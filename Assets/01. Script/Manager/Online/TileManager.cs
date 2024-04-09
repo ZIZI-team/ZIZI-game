@@ -22,7 +22,7 @@ public class TileManager : Singleton<TileManager>
         myTilemap.Add(GameObject.Find("Maintile").GetComponent<Tilemap>());
         myTilemap.Add(GameObject.Find("Itemtile").GetComponent<Tilemap>());
         myTilemap.Add(GameObject.Find("Bushtile").GetComponent<Tilemap>());
-    }
+    }   
 
     IEnumerator GetTile()
     {

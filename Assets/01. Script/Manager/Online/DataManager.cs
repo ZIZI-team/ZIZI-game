@@ -17,6 +17,8 @@ public struct GameData
 
     public Color mycolor;
     public Color opcolor;
+
+    public bool isMaxRoomTriger;
 }
 
 public class DataManager : Singleton<DataManager>
@@ -47,6 +49,7 @@ public class DataManager : Singleton<DataManager>
         gamedata.isGameStart = false;
         gamedata.mycolor = new Color(255, 255, 255);
         gamedata.opcolor = new Color(255, 255, 255, 0.8f);
+        gamedata.isMaxRoomTriger = false;
     }
     
 }
