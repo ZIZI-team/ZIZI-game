@@ -42,6 +42,9 @@ MonoBehaviour:
   - OpColor
   - SaveOpColor
   - MaxRoom
+  - RPCMaxRoom
+  - RPCOpColor
+  - RPCSelectColorButton
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

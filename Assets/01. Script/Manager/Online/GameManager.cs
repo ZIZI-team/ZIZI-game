@@ -5,6 +5,11 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
 
+    void Start()
+    {
+        SetGame();
+    }
+
     public void Update()
     {
         
@@ -12,6 +17,7 @@ public class GameManager : Singleton<GameManager>
     public void SetGame()
     {
         TileManager.Instance.InitTile();
+        DataManager.Instance.gamedata.isGameStart = true;
     }
     public void GameStart()
     {

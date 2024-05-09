@@ -1,8 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using DG.Tweening;
 
 
 public class UIManager : Singleton<UIManager>
@@ -15,26 +15,35 @@ public class UIManager : Singleton<UIManager>
     public GameObject selectColorPanel;
     [SerializeField] private Image ziziImage;
     public Button[] colorPallate;
-    private Button selectColor;
+
+    private Button selectButton;
+    public int sendSelectButtonindex = -1;
+    public Button gamePlayButton;
 
     [Header("Wait Select Color")]
     [SerializeField] private GameObject waitPanel;
     [SerializeField] private Image myZizi;
     public Image opZizi;
+    [SerializeField] private TMP_Text opText;
+
+    [Header("Count Down Panel")]
+    [SerializeField] private GameObject countDownPanel;
+    [SerializeField] private TMP_Text countDownText;
 
     private bool readresevedData = false;
 
+    
     #endregion
 
     void Start()
     {
+        gamePlayButton.interactable = false;
         foreach (Button button in colorPallate)
         {
             button.onClick.AddListener(() => OnButtonClick(button));
         }
 
-        selectColor = colorPallate[0];
-        selectColor.interactable = false;
+
     }
     void Update()
     {
@@ -45,6 +54,11 @@ public class UIManager : Singleton<UIManager>
             DataManager.Instance.gamedata.isMaxRoomTriger = false;
         }
 
+        isreadygame();
+    }
+
+    private void isreadygame()
+    {
         if (readresevedData)
         {
             Debug.Log("Update 시작");
@@ -52,33 +66,71 @@ public class UIManager : Singleton<UIManager>
             {
                 Debug.Log("reseved Data");
                 opZizi.color = DataManager.Instance.gamedata.opcolor;
+                opText.text = "Ready";
+
                 readresevedData = false;
-                ScenesManager.Instance.ChangeSceneToA("GameOnline",3);
+
+                StartCoroutine(ScenesManager.Instance.ChangeSceneToA("GameOnline", 3));
+
+                CountBeforeGameStart();
+
             }
         }
     }
+
+
     #region OnlineGameReadyScene UIScript
+    
+    public void InitWaitingPlayerPanel()
+    {
+
+        changeUIAToB(selectColorPanel, waitingPlayerPanel);
+
+        gamePlayButton.interactable = false;
+
+        ziziImage.color = new Color(255, 255, 255, 0.75f);
+
+        if (sendSelectButtonindex != -1)
+        {
+            colorPallate[sendSelectButtonindex].interactable = true;
+        }
+        sendSelectButtonindex = -1;
+
+        if (selectButton != null)
+        {
+            selectButton.interactable = true;
+        }
+        selectButton = null;
+    }
 
     private void OnButtonClick(Button clickedButton)
     {
-        
-        if (selectColor != clickedButton)
+        gamePlayButton.interactable = true;
+        if (selectButton != clickedButton)
         {
-            // 이전에 선택되어 있던 버튼의 선택 상태를 해제합니다.
-            if (selectColor != null)
+            if(selectButton != null)
             {
-                selectColor.interactable = false ; // 선택 해제되었으므로 버튼을 다시 활성화합니다.
+                selectButton.interactable = true;
             }
 
-            // 새로 선택된 버튼을 현재 선택된 버튼으로 설정합니다.
-            selectColor = clickedButton;
-            ziziImage.color = selectColor.GetComponent<Image>().color;
-            
+            selectButton = clickedButton;
+            ziziImage.color = selectButton.GetComponent<Image>().color;
 
-            // 새로 선택된 버튼을 선택된 상태로 설정하고 다른 버튼들은 선택 해제합니다.
-            foreach (Button button in colorPallate)
+            for(int i=0; i < colorPallate.Length; i++)
             {
-                button.interactable = (button != selectColor); // 선택된 버튼만 활성화합니다.
+                if(colorPallate[i] == selectButton)
+                {
+                    colorPallate[i].interactable = false;
+                    NetworkManager.Instance.SendButtoninterable(i, false);
+                }
+                else
+                {
+                    colorPallate[i].interactable = true;
+                }
+            }
+            if (sendSelectButtonindex != -1)
+            {
+                colorPallate[sendSelectButtonindex].interactable = false;
             }
         }
         
@@ -94,10 +146,28 @@ public class UIManager : Singleton<UIManager>
         waitPanel.SetActive(true);
 
         myZizi.color = DataManager.Instance.gamedata.mycolor;
+        readresevedData = true;
+        if (DataManager.Instance.gamedata.opcolor.a == 1f) { opZizi.color = DataManager.Instance.gamedata.opcolor; }
+    }
 
-        if (DataManager.Instance.gamedata.opcolor.a != 1f) { readresevedData = true; }
-        else{opZizi.color = DataManager.Instance.gamedata.opcolor;}
+    public void CountBeforeGameStart()
+    {
+        countDownPanel.SetActive(true);
+        countDownText.transform.DOScale(new Vector3(10, 10, 10), 1).SetEase(Ease.OutCirc).OnComplete(() =>
+        {
+            countDownText.transform.DOScale(new Vector3(6, 6, 6), 0);
+            countDownText.text = "2";
 
+            countDownText.transform.DOScale(new Vector3(10, 10, 10), 1).SetEase(Ease.OutCirc).OnComplete(() =>
+            {
+                countDownText.transform.DOScale(new Vector3(6, 6, 6), 0);
+                countDownText.text = "1";
+
+                countDownText.transform.DOScale(new Vector3(10, 10, 10), 1);
+            }
+            );
+        }
+        );
     }
 
     #endregion
@@ -107,6 +177,9 @@ public class UIManager : Singleton<UIManager>
 
 
     #endregion
+
+
+
     void changeUIAToB(GameObject a, GameObject b)
     {
         a.SetActive(false);

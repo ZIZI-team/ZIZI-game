@@ -25,18 +25,25 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
     private void Awake()
     {
-        if(transform.parent != null && transform.root != null)
+
+        if (instance == null)
         {
-            DontDestroyOnLoad(this.transform.root.gameObject);
+            instance = this as T;
+            if (transform.parent != null && transform.root != null)
+            {
+                DontDestroyOnLoad(this.transform.root.gameObject);
+            }
+            else
+            {
+                DontDestroyOnLoad(this.gameObject);
+            }
         }
         else
         {
-            DontDestroyOnLoad(this.gameObject);
+            Destroy(gameObject);
         }
+
+        
     }
 
-    private void Start()
-    {
-        this.gameObject.transform.parent = GameObject.Find("System").transform;
-    }
 }
