@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
+    #region Input Region
     [Header("Waiting Player Panel")]
     public GameObject waitingPlayerPanel;
 
@@ -22,6 +23,8 @@ public class UIManager : Singleton<UIManager>
     public Image opZizi;
 
     private bool readresevedData = false;
+
+    #endregion
 
     void Start()
     {
@@ -50,11 +53,11 @@ public class UIManager : Singleton<UIManager>
                 Debug.Log("reseved Data");
                 opZizi.color = DataManager.Instance.gamedata.opcolor;
                 readresevedData = false;
+                ScenesManager.Instance.ChangeSceneToA("GameOnline",3);
             }
         }
-
-        
     }
+    #region OnlineGameReadyScene UIScript
 
     private void OnButtonClick(Button clickedButton)
     {
@@ -94,8 +97,16 @@ public class UIManager : Singleton<UIManager>
 
         if (DataManager.Instance.gamedata.opcolor.a != 1f) { readresevedData = true; }
         else{opZizi.color = DataManager.Instance.gamedata.opcolor;}
+
     }
 
+    #endregion
+
+    #region OnlineGameScene UIScrpt
+
+
+
+    #endregion
     void changeUIAToB(GameObject a, GameObject b)
     {
         a.SetActive(false);

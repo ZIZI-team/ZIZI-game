@@ -9,5 +9,6 @@ public class ScenesManager : Singleton<ScenesManager>
     {
         yield return new WaitForSeconds(delayTime);
         SceneManager.LoadScene(sceneName);
+        TileManager.Instance.InitTile();
     }
 }

@@ -15,6 +15,8 @@ public class TileManager : Singleton<TileManager>
         SetTile();
         StartCoroutine(GetTile());
     }
+
+    #region Init Tile Script
     public void SetTile()
     {
 
@@ -47,6 +49,8 @@ public class TileManager : Singleton<TileManager>
         }
     }
 
+    #endregion
+
     public void OnClickPosition()
     {
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
@@ -56,7 +60,7 @@ public class TileManager : Singleton<TileManager>
             if (DataManager.Instance.tiledata.mainTile[cellPos.x, cellPos.y] != 1 && DataManager.Instance.tiledata.stoneTile[cellPos.x, cellPos.y] == "N")
             {
                 InstallStone(cellPos);
-                RemoveBush(cellPos);
+                RemoveBush(cellPos);    
                 GetItem(cellPos);
                 StartCoroutine(GameSystem.Instance.CheckWinCondition("W", cellPos.x, cellPos.y));
             }

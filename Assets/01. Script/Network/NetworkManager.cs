@@ -16,8 +16,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
-
-
     void Awake() 
     {
         PhotonNetwork.ConnectUsingSettings();
@@ -37,6 +35,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
+
+    #region PUNRPC
     // RPC 메소드
 
     [PunRPC]
@@ -45,6 +45,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         DataManager.Instance.gamedata.opcolor = new Color(r,g,b,a);
         Debug.Log(a.ToString());
     }
+    public void SendMyColor(float r, float g, float b, float a)
+    {
+        // RPC를 호출하여 다른 플레이어에게 변수 값을 전달합니다.
+        photonView.RPC("SaveOpColor", RpcTarget.Others, r, g, b, a);
+    }
+
 
     [PunRPC]
     private void MaxRoom()
@@ -52,18 +58,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         DataManager.Instance.gamedata.isMaxRoomTriger = true;
     }
 
-    public void SendMyColor(float r, float g, float b, float a)
-    { 
-        // RPC를 호출하여 다른 플레이어에게 변수 값을 전달합니다.
-        photonView.RPC("SaveOpColor", RpcTarget.Others, r,g,b,a);
-    }
-
+    
     public void SendisMaxRoom()
     {
         photonView.RPC("MaxRoom", RpcTarget.All);
     }
-    
 
+    #endregion
 
     public void Disconnect() => PhotonNetwork.Disconnect();
 
