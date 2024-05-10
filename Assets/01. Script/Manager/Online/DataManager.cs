@@ -4,9 +4,9 @@ using UnityEngine;
 
 public struct TileData
 {
-    public int[,] mainTile;
+    public int[,] tileStatus;
     //input N(ull) or W(hite) or B(lack)
-    public string[,] stoneTile;
+    public string[,] stoneStatus;
 }
 
 public struct GameData
@@ -41,8 +41,8 @@ public class DataManager : Singleton<DataManager>
 
     private void InitTileData()
     {
-        tiledata.mainTile = new int[11, 11];
-        tiledata.stoneTile = new string[11, 11];
+        tiledata.tileStatus = new int[11, 11];
+        tiledata.stoneStatus = new string[11, 11];
     }
 
     private void InitGameData()

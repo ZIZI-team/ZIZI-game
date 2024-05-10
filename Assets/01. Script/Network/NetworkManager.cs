@@ -43,15 +43,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         if(PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
         {
-            SendisMaxRoom();
             CheckingMasterClient();
+            SendisMaxRoom();
         }
     }
 
     public void CheckingMasterClient()
     {
-        if (PhotonNetwork.IsMasterClient) { DataManager.Instance.gamedata.myP = "P1"; }
-        else { DataManager.Instance.gamedata.myP = "P2"; }
+        if (!PhotonNetwork.IsMasterClient) { DataManager.Instance.gamedata.myP = "P2"; }
+        else { DataManager.Instance.gamedata.myP = "P1"; }
+       
         Debug.Log(DataManager.Instance.gamedata.myP);
     }
 
@@ -95,6 +96,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         photonView.RPC("RPCSelectColorButton", RpcTarget.Others, buttonIndex, interable);
     }
+
+
 
     #endregion
 

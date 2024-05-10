@@ -5,19 +5,14 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
 
-    void Start()
-    {
-        SetGame();
-    }
-
     public void Update()
     {
         
     }
     public void SetGame()
     {
-        TileManager.Instance.InitTile();
         DataManager.Instance.gamedata.isGameStart = true;
+        TileManager.Instance.InitTile();
     }
     public void GameStart()
     {

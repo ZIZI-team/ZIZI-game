@@ -70,7 +70,7 @@ public class UIManager : Singleton<UIManager>
 
                 readresevedData = false;
 
-                StartCoroutine(ScenesManager.Instance.ChangeSceneToA("GameOnline", 3));
+                StartCoroutine(ScenesManager.Instance.goToOnlineGameScene());
 
                 CountBeforeGameStart();
 

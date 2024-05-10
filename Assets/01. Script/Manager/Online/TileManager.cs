@@ -39,11 +39,11 @@ public class TileManager : Singleton<TileManager>
 
                     if (tilebase != null)
                     {
-                        if (tilemap.name == "Maintile") { DataManager.Instance.tiledata.mainTile[x, y] = 0; }
-                        else if (tilemap.name == "Bushtile") { DataManager.Instance.tiledata.mainTile[x, y] = 1; }
-                        else if (tilemap.name == "Itemtile") { DataManager.Instance.tiledata.mainTile[x, y] = 2; }
+                        if (tilemap.name == "Maintile") { DataManager.Instance.tiledata.tileStatus[x, y] = 0; }
+                        else if (tilemap.name == "Bushtile") { DataManager.Instance.tiledata.tileStatus[x, y] = 1; }
+                        else if (tilemap.name == "Itemtile") { DataManager.Instance.tiledata.tileStatus[x, y] = 2; }
                     }
-                    DataManager.Instance.tiledata.stoneTile[x,y] = "N";
+                    DataManager.Instance.tiledata.stoneStatus[x,y] = "N";
                 }
             }
         }
@@ -53,25 +53,28 @@ public class TileManager : Singleton<TileManager>
 
     public void OnClickPosition()
     {
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        if ((DataManager.Instance.gamedata.turnData == 1 && DataManager.Instance.gamedata.myP == "P1") || (DataManager.Instance.gamedata.turnData == 2 && DataManager.Instance.gamedata.myP == "P2"))
         {
-            Vector3 touchWorldPos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
-            Vector3Int cellPos = myTilemap[0].WorldToCell(touchWorldPos);
-            if (DataManager.Instance.tiledata.mainTile[cellPos.x, cellPos.y] != 1 && DataManager.Instance.tiledata.stoneTile[cellPos.x, cellPos.y] == "N")
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
             {
-                InstallStone(cellPos);
-                RemoveBush(cellPos);    
-                GetItem(cellPos);
-                StartCoroutine(GameSystem.Instance.CheckWinCondition("W", cellPos.x, cellPos.y));
+                Vector3 touchWorldPos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+                Vector3Int cellPos = myTilemap[0].WorldToCell(touchWorldPos);
+                if (DataManager.Instance.tiledata.tileStatus[cellPos.x, cellPos.y] != 1 && DataManager.Instance.tiledata.stoneStatus[cellPos.x, cellPos.y] == "N")
+                {
+                    InstallStone(DataManager.Instance.gamedata.myP, cellPos);
+                    RemoveBush(cellPos);
+                    GetItem(cellPos);
+                    StartCoroutine(GameSystem.Instance.CheckWinCondition(DataManager.Instance.gamedata.myP, cellPos.x, cellPos.y));
+                }
+                Debug.Log("Touched tile position: " + cellPos);
+
             }
-            Debug.Log("Touched tile position: " + cellPos);
-            
         }
     }
 
-    void InstallStone(Vector3Int cellPos)
+    void InstallStone(string player ,Vector3Int cellPos)
     {
-        DataManager.Instance.tiledata.stoneTile[cellPos.x, cellPos.y] = "W";  
+        DataManager.Instance.tiledata.stoneStatus[cellPos.x, cellPos.y] = player;  
         //Tile map과 transform와의 오차값 0.5f
         Vector3 stonePosition = new Vector3(cellPos.x + 0.5f, cellPos.y + 0.5f, 0);
         GameObject instanceStone = Instantiate(stonePrefab, stonePosition, Quaternion.identity);
@@ -91,7 +94,7 @@ public class TileManager : Singleton<TileManager>
             myTilemap[2].SetTile(BushpositionList[i], null);
             try
             {
-                DataManager.Instance.tiledata.mainTile[BushpositionList[i].x, BushpositionList[i].y] = 0;
+                DataManager.Instance.tiledata.tileStatus[BushpositionList[i].x, BushpositionList[i].y] = 0;
             }
             catch
             {

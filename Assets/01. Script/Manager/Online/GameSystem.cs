@@ -22,13 +22,14 @@ public class GameSystem : Singleton<GameSystem>
         // 오목판의 크기
         int boardSize = 11;
 
+        Debug.Log("CheckWinCondition 함수 실행");
         // 각 방향별로 연속된 돌의 개수를 세는 변수들
         int countVertical = 1;
         int countHorizontal = 1;
         int countDiagonal1 = 1;
         int countDiagonal2 = 1;
 
-        string[,] board = DataManager.Instance.tiledata.stoneTile;
+        string[,] board = DataManager.Instance.tiledata.stoneStatus;
         // 수직 방향 확인
         for (int i = 1; i < 5; i++)
         {

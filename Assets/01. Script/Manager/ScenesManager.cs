@@ -9,6 +9,13 @@ public class ScenesManager : Singleton<ScenesManager>
     {
         yield return new WaitForSeconds(delayTime);
         SceneManager.LoadScene(sceneName);
-        TileManager.Instance.InitTile();
     }
-}
+
+    public IEnumerator goToOnlineGameScene()
+    {
+        yield return new WaitForSeconds(3);
+        SceneManager.LoadScene("GameOnline");
+        yield return new WaitForSeconds(0.25f);
+        GameManager.Instance.SetGame();
+    }
+}   
