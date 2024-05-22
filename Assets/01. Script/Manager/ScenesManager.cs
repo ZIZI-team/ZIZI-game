@@ -18,4 +18,13 @@ public class ScenesManager : Singleton<ScenesManager>
         yield return new WaitForSeconds(0.25f);
         GameManager.Instance.SetGame();
     }
+
+    public void ChangeReadyOnlineScene()
+    {
+        SceneManager.LoadScene("GameReadyOnline");
+    }
+    public void ChangeTitleScene()
+    {
+        SceneManager.LoadScene("TitleScene");
+    }
 }   
