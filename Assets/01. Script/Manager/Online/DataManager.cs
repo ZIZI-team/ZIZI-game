@@ -10,9 +10,7 @@ public struct TileData
 }
 
 public struct GameData
-{
-    // if turnData ==  1{ p1} esle if turnData ==2 {p2}
-    public int turnData;
+{   
     public bool isGameStart;
 
     public Color mycolor;
@@ -20,6 +18,7 @@ public struct GameData
 
     public bool isMaxRoomTriger;
 
+    public string turnData;
     public string myP;
 }
 
@@ -47,7 +46,7 @@ public class DataManager : Singleton<DataManager>
 
     private void InitGameData()
     {
-        gamedata.turnData = 1;
+        gamedata.turnData = "P1";
         gamedata.isGameStart = false;
         gamedata.mycolor = new Color(255, 255, 255);
         gamedata.opcolor = new Color(255, 255, 255, 0.8f);

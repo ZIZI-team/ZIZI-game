@@ -312,8 +312,8 @@ Canvas:
   m_GameObject: {fileID: 26299482}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 344735469}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -2724,6 +2724,8 @@ MonoBehaviour:
   opText: {fileID: 193045014}
   countDownPanel: {fileID: 190408351}
   countDownText: {fileID: 809236268}
+  winnerPanel: {fileID: 6232608263761181358, guid: ad8bd3a9ea604af43ad859740d3909b1, type: 3}
+  pausedPanel: {fileID: 7621610973745656701, guid: e30003126d19df7428d04c8370daa314, type: 3}
 --- !u!1 &1499537835
 GameObject:
   m_ObjectHideFlags: 0

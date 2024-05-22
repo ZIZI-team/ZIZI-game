@@ -42,8 +42,15 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
 
-        
+    void Start()
+    {
+        GameObject system = GameObject.Find("System");
+        if (system != null)
+        {
+            transform.SetParent(system.transform);
+        }
     }
 
 }

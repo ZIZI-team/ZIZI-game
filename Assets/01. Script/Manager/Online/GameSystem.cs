@@ -8,12 +8,26 @@ public class GameSystem : Singleton<GameSystem>
     {
         if(DataManager.Instance.gamedata.isGameStart == true)
         {
-            TileManager.Instance.OnClickPosition();
+            if (IsMyturn()) 
+            { 
+                TileManager.Instance.OnClickPosition();
+            }
         }
     }
-    public void ChageTurn()
+    bool IsMyturn()
     {
+        //턴의 상태
+        string turnData = DataManager.Instance.gamedata.turnData;
+        //나 player number P1 or P2
+        string mystate = DataManager.Instance.gamedata.myP;
+        Debug.Log(turnData + "  "  + mystate);
+        return turnData == mystate;
+    }
 
+    public void changeTurn()
+    {
+        string tmp = DataManager.Instance.gamedata.turnData == "P1" ? "P2" : "P1";
+        DataManager.Instance.gamedata.turnData = tmp;
     }
 
     public IEnumerator CheckWinCondition(string player, int x, int y)

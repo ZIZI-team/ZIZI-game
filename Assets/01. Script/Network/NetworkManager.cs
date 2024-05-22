@@ -41,21 +41,26 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        if(PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+        CheckIfMasterClient();
+        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
         {
-            CheckingMasterClient();
             SendisMaxRoom();
         }
     }
 
-    public void CheckingMasterClient()
+    private void CheckIfMasterClient()
     {
-        if (!PhotonNetwork.IsMasterClient) { DataManager.Instance.gamedata.myP = "P2"; }
-        else { DataManager.Instance.gamedata.myP = "P1"; }
-       
-        Debug.Log(DataManager.Instance.gamedata.myP);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            DataManager.Instance.gamedata.myP = "P1";
+            Debug.Log(DataManager.Instance.gamedata.myP);
+        }
+        else
+        {
+            DataManager.Instance.gamedata.myP = "P2";
+            Debug.Log(DataManager.Instance.gamedata.myP);
+        }
     }
-
 
     #region PUNRPC
 
@@ -97,7 +102,37 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         photonView.RPC("RPCSelectColorButton", RpcTarget.Others, buttonIndex, interable);
     }
 
+    [PunRPC]
+    private void RPCSetTile()
+    {
+        TileManager.Instance.SetTile(0);
+    }
+    
+    public void SendSetTile()
+    {
+        photonView.RPC("RPCSetTile", RpcTarget.Others);
+    }
 
+    [PunRPC]
+    private void RPCStoneLocation(string player ,int x, int y, int z)
+    {
+        TileManager.Instance.InstallStone(player, new Vector3Int(x, y, z));
+    }
+
+    public void SendStoneLocation(string player,Vector3Int cellPos) 
+    {
+        photonView.RPC("RPCStoneLocation", RpcTarget.All, player, cellPos.x, cellPos.y, cellPos.z);
+    }
+
+    [PunRPC]
+    private void RPCEndGame()
+    {
+        UIManager.Instance.InstantiatePausedPanel();
+    }
+    public void SendRPCEndGame()
+    {
+        photonView.RPC("RPCEndGame", RpcTarget.Others);
+    }
 
     #endregion
 

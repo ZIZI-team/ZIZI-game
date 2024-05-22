@@ -9,24 +9,17 @@ public class TileManager : Singleton<TileManager>
     List<Tilemap> myTilemap = new List<Tilemap>();
 
     public GameObject stonePrefab;
-
-    public void InitTile()
-    {
-        SetTile();
-        StartCoroutine(GetTile());
-    }
-
     #region Init Tile Script
-    public void SetTile()
+    public void SetTile(int randomNumber)
     {
 
-        Instantiate(TilemapPrefabsList[Random.Range(0, TilemapPrefabsList.Count)]);
+        Instantiate(TilemapPrefabsList[randomNumber]);
         myTilemap.Add(GameObject.Find("Maintile").GetComponent<Tilemap>());
         myTilemap.Add(GameObject.Find("Itemtile").GetComponent<Tilemap>());
         myTilemap.Add(GameObject.Find("Bushtile").GetComponent<Tilemap>());
     }   
 
-    IEnumerator GetTile()
+    public IEnumerator GetTile()
     {
         yield return new WaitForSeconds(1);
         foreach (Tilemap tilemap in myTilemap)
@@ -53,32 +46,46 @@ public class TileManager : Singleton<TileManager>
 
     public void OnClickPosition()
     {
-        if ((DataManager.Instance.gamedata.turnData == 1 && DataManager.Instance.gamedata.myP == "P1") || (DataManager.Instance.gamedata.turnData == 2 && DataManager.Instance.gamedata.myP == "P2"))
-        {
-            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
             {
-                Vector3 touchWorldPos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
-                Vector3Int cellPos = myTilemap[0].WorldToCell(touchWorldPos);
-                if (DataManager.Instance.tiledata.tileStatus[cellPos.x, cellPos.y] != 1 && DataManager.Instance.tiledata.stoneStatus[cellPos.x, cellPos.y] == "N")
-                {
-                    InstallStone(DataManager.Instance.gamedata.myP, cellPos);
-                    RemoveBush(cellPos);
-                    GetItem(cellPos);
-                    StartCoroutine(GameSystem.Instance.CheckWinCondition(DataManager.Instance.gamedata.myP, cellPos.x, cellPos.y));
-                }
-                Debug.Log("Touched tile position: " + cellPos);
-
+            Vector3 touchWorldPos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+            Vector3Int cellPos = myTilemap[0].WorldToCell(touchWorldPos);
+            if (DataManager.Instance.tiledata.tileStatus[cellPos.x, cellPos.y] != 1 && DataManager.Instance.tiledata.stoneStatus[cellPos.x, cellPos.y] == "N")
+            {
+                NetworkManager.Instance.SendStoneLocation(DataManager.Instance.gamedata.myP, cellPos);
+                
             }
+            Debug.Log("Touched tile position: " + cellPos);
         }
     }
 
-    void InstallStone(string player ,Vector3Int cellPos)
+    #region Install Stone and Check Tile Condition
+
+    public void InstallStone(string player ,Vector3Int cellPos)
     {
         DataManager.Instance.tiledata.stoneStatus[cellPos.x, cellPos.y] = player;  
         //Tile map과 transform와의 오차값 0.5f
         Vector3 stonePosition = new Vector3(cellPos.x + 0.5f, cellPos.y + 0.5f, 0);
         GameObject instanceStone = Instantiate(stonePrefab, stonePosition, Quaternion.identity);
+        if(player == DataManager.Instance.gamedata.myP)
+        {
+            instanceStone.GetComponent<SpriteRenderer>().color = DataManager.Instance.gamedata.mycolor;
+        }
+        else
+        {
+            instanceStone.GetComponent<SpriteRenderer>().color = DataManager.Instance.gamedata.opcolor;
+        }
+
         instanceStone.transform.SetParent(GameObject.Find("Stone Pooling").transform);
+
+        UpdateTileCondition(cellPos);
+    }
+    void UpdateTileCondition(Vector3Int cellPos)
+    {
+        RemoveBush(cellPos);
+        GetItem(cellPos);
+        StartCoroutine(GameSystem.Instance.CheckWinCondition(DataManager.Instance.gamedata.myP, cellPos.x, cellPos.y));
+        GameSystem.Instance.changeTurn();
     }
 
     void RemoveBush(Vector3Int cellPos)
@@ -110,8 +117,7 @@ public class TileManager : Singleton<TileManager>
         myTilemap[1].SetTile(new Vector3Int(cellPos.x, cellPos.y), null);
         //UIManager.Instance.ItemGoInbantory();
     }
-
-    
+    #endregion
 }
 
 

@@ -12,7 +12,9 @@ public class GameManager : Singleton<GameManager>
     public void SetGame()
     {
         DataManager.Instance.gamedata.isGameStart = true;
-        TileManager.Instance.InitTile();
+        NetworkManager.Instance.SendSetTile();
+        StartCoroutine(TileManager.Instance.GetTile());
+        
     }
     public void GameStart()
     {
@@ -21,7 +23,8 @@ public class GameManager : Singleton<GameManager>
 
     public void GameEnd()
     {
-        Debug.Log("오목완성");
+        UIManager.Instance.InstantiateWinnerPanel();
+        NetworkManager.Instance.SendRPCEndGame();
     }
 
     public void RestartGame()

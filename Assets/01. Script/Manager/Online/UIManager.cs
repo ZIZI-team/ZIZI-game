@@ -30,6 +30,11 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject countDownPanel;
     [SerializeField] private TMP_Text countDownText;
 
+    [Header("End Game panel")]
+    [SerializeField] private GameObject winnerPanel;
+    [SerializeField] private GameObject pausedPanel;
+
+
     private bool readresevedData = false;
 
     
@@ -174,7 +179,15 @@ public class UIManager : Singleton<UIManager>
 
     #region OnlineGameScene UIScrpt
 
+    public void InstantiateWinnerPanel()
+    {
+        Instantiate(winnerPanel, GameObject.Find("Canvas").transform) ;
+    }
 
+    public void InstantiatePausedPanel()
+    {
+        Instantiate(pausedPanel, GameObject.Find("Canvas").transform);
+    }
 
     #endregion
 
