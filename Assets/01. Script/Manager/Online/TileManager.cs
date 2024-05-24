@@ -12,11 +12,17 @@ public class TileManager : Singleton<TileManager>
     #region Init Tile Script
     public void SetTile(int randomNumber)
     {
-
-        Instantiate(TilemapPrefabsList[randomNumber]);
-        myTilemap.Add(GameObject.Find("Maintile").GetComponent<Tilemap>());
-        myTilemap.Add(GameObject.Find("Itemtile").GetComponent<Tilemap>());
-        myTilemap.Add(GameObject.Find("Bushtile").GetComponent<Tilemap>());
+        try
+        {
+            Instantiate(TilemapPrefabsList[randomNumber]);
+            myTilemap.Add(GameObject.Find("Maintile").GetComponent<Tilemap>());
+            myTilemap.Add(GameObject.Find("Itemtile").GetComponent<Tilemap>());
+            myTilemap.Add(GameObject.Find("Bushtile").GetComponent<Tilemap>());
+        }
+        catch
+        {
+            SetTile(randomNumber);
+        }
     }   
 
     public IEnumerator GetTile()
@@ -59,7 +65,7 @@ public class TileManager : Singleton<TileManager>
         }
     }
 
-    #region Install Stone and Check Tile Condition
+    #region Install Stone and Update Tile Condition
 
     public void InstallStone(string player ,Vector3Int cellPos)
     {
@@ -114,8 +120,11 @@ public class TileManager : Singleton<TileManager>
 
     void GetItem(Vector3Int cellPos)
     {
+        TileBase tilebaes = myTilemap[1].GetTile(cellPos);
+
         myTilemap[1].SetTile(new Vector3Int(cellPos.x, cellPos.y), null);
-        //UIManager.Instance.ItemGoInbantory();
+        UIManager.Instance.GetItem(tilebaes, cellPos);
+
     }
     #endregion
 }

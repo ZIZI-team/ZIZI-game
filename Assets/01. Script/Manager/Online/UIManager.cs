@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.Tilemaps;
 
 
 public class UIManager : Singleton<UIManager>
@@ -34,6 +35,9 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject winnerPanel;
     [SerializeField] private GameObject pausedPanel;
 
+    [Header("Itme Prefabs")]
+    [SerializeField] private GameObject dotori;
+    [SerializeField] private GameObject leaf;
 
     private bool readresevedData = false;
 
@@ -62,11 +66,13 @@ public class UIManager : Singleton<UIManager>
         isreadygame();
     }
 
+    #region OnlineGameReadyScene UIScript
+
     private void isreadygame()
     {
         if (readresevedData)
         {
-            Debug.Log("Update ����");
+            Debug.Log("Update 시작");
             if (DataManager.Instance.gamedata.opcolor.a == 1f)
             {
                 Debug.Log("reseved Data");
@@ -82,10 +88,6 @@ public class UIManager : Singleton<UIManager>
             }
         }
     }
-
-
-    #region OnlineGameReadyScene UIScript
-    
     public void InitWaitingPlayerPanel()
     {
 
@@ -191,7 +193,44 @@ public class UIManager : Singleton<UIManager>
 
     #endregion
 
+    #region Item UI
+    public void GetItem(TileBase tilebase, Vector3Int cellPos)
+    {
+        //---변수 선언---
+        string itemName = null;
+        GameObject targetobject = null;
 
+        if (tilebase.name == "dotori")
+        {
+            itemName = "Dotori";
+            targetobject = dotori;
+
+        }
+        else if (tilebase.name == "leaf")
+        {
+            itemName = "Leaf";
+            targetobject = leaf;
+        }
+
+        string setparentName = DataManager.Instance.gamedata.myP == DataManager.Instance.gamedata.turnData ? "My" : "Op";
+
+        //---Parent 설정---
+        GameObject instanceItme = Instantiate(targetobject, GameObject.Find("Canvas").transform.Find(setparentName + "Inbantroy").transform);
+
+        instanceItme.transform.SetParent(GameObject.Find(setparentName + " " + itemName).transform);
+
+        int itemCount = instanceItme.transform.parent.childCount;
+
+        //---Item Move---
+        instanceItme.transform.position = Camera.main.WorldToScreenPoint(new Vector3(cellPos.x + 0.5f, cellPos.y + 0.5f, 0));
+        instanceItme.GetComponent<RectTransform>().DOAnchorPos(new Vector2(100 +(50 *itemCount), 0), 2);
+
+        //---UpdateInbantoryData---
+        DataManager.Instance.UpdateInbantoryData(setparentName, itemName, itemCount, true);
+ 
+    }
+
+    #endregion
 
     void changeUIAToB(GameObject a, GameObject b)
     {

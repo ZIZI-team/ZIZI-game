@@ -2687,6 +2687,8 @@ MonoBehaviour:
   countDownText: {fileID: 809236268}
   winnerPanel: {fileID: 6232608263761181358, guid: ad8bd3a9ea604af43ad859740d3909b1, type: 3}
   pausedPanel: {fileID: 7621610973745656701, guid: e30003126d19df7428d04c8370daa314, type: 3}
+  dotori: {fileID: 3308870133314024637, guid: 50e28e9521701da498607d8fa8a1c386, type: 3}
+  leaf: {fileID: 1370544824440758844, guid: 12d07ee2331a7d44b9d68f93d910d95d, type: 3}
 --- !u!1 &1499537835
 GameObject:
   m_ObjectHideFlags: 0

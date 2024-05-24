@@ -22,10 +22,20 @@ public struct GameData
     public string myP;
 }
 
+public struct InbantoryData
+{
+    public bool[] mydotoriInban;
+    public bool[] myleafInban;
+
+    public bool[] opdotoriInban;
+    public bool[] opleafInban;
+}
+
 public class DataManager : Singleton<DataManager>
 {
     public TileData tiledata;
     public GameData gamedata;
+    public InbantoryData inbantorydata;
 
     private void Start()
     {
@@ -36,6 +46,7 @@ public class DataManager : Singleton<DataManager>
     {
         InitTileData();
         InitGameData();
+        InitInbantoryData();
     }
 
     private void InitTileData()
@@ -51,6 +62,41 @@ public class DataManager : Singleton<DataManager>
         gamedata.mycolor = new Color(255, 255, 255);
         gamedata.opcolor = new Color(255, 255, 255, 0.8f);
         gamedata.isMaxRoomTriger = false;
+    }
+
+    private void InitInbantoryData()
+    {
+        inbantorydata.mydotoriInban = new bool[5];
+        inbantorydata.myleafInban = new bool[5];
+
+        inbantorydata.opdotoriInban = new bool[5];
+        inbantorydata.opleafInban = new bool[5];
+    }
+
+    public void UpdateInbantoryData(string myP, string itemName, int index, bool status)
+    {
+        if(myP == "My")
+        {
+            if(itemName == "Dotori")
+            {
+                inbantorydata.mydotoriInban[index] = status;
+            }
+            else if (itemName == "Leaf")
+            {
+                inbantorydata.myleafInban[index] = status;
+            }
+        }
+        else if(myP == "Op")
+        {
+            if (itemName == "Dotori")
+            {
+                inbantorydata.opdotoriInban[index] = status;
+            }
+            else if (itemName == "Leaf")
+            {
+                inbantorydata.opleafInban[index] = status;
+            }
+        }
     }
     
 }
