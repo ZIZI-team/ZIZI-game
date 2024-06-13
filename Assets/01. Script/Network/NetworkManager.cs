@@ -20,7 +20,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     void Awake() 
     {
         PhotonNetwork.ConnectUsingSettings();
-        if(instance== null) { instance = this; }
+        if(instance== null) 
+        {
+            instance = this;
+            if (transform.parent != null && transform.root != null)
+            {
+                DontDestroyOnLoad(this.transform.root.gameObject);
+            }
+            else
+            {
+                DontDestroyOnLoad(this.gameObject);
+            }
+        }
     }
 
     #endregion

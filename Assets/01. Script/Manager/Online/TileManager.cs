@@ -56,8 +56,10 @@ public class TileManager : Singleton<TileManager>
             {
             Vector3 touchWorldPos = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
             Vector3Int cellPos = myTilemap[0].WorldToCell(touchWorldPos);
+            if (cellPos == null) return;
             if (DataManager.Instance.tiledata.tileStatus[cellPos.x, cellPos.y] != 1 && DataManager.Instance.tiledata.stoneStatus[cellPos.x, cellPos.y] == "N")
             {
+                AudioManager.Instance.SFX3();
                 NetworkManager.Instance.SendStoneLocation(DataManager.Instance.gamedata.myP, cellPos);
                 
             }

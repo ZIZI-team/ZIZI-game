@@ -226,7 +226,7 @@ public class UIManager : Singleton<UIManager>
         instanceItme.GetComponent<RectTransform>().DOAnchorPos(new Vector2(100 +(50 *itemCount), 0), 2);
 
         //---UpdateInbantoryData---
-        DataManager.Instance.UpdateInbantoryData(setparentName, itemName, itemCount, true);
+        DataManager.Instance.UpdateInbantoryData(setparentName, itemName, itemCount-1, true);
  
     }
 
