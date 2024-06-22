@@ -61,7 +61,7 @@ public class TileManager : Singleton<TileManager>
             {
                 AudioManager.Instance.SFX3();
                 NetworkManager.Instance.SendStoneLocation(DataManager.Instance.gamedata.myP, cellPos);
-                
+                NetworkManager.Instance.SendChangeTurn();
             }
             Debug.Log("Touched tile position: " + cellPos);
         }
@@ -93,7 +93,6 @@ public class TileManager : Singleton<TileManager>
         RemoveBush(cellPos);
         GetItem(cellPos);
         StartCoroutine(GameSystem.Instance.CheckWinCondition(DataManager.Instance.gamedata.myP, cellPos.x, cellPos.y));
-        GameSystem.Instance.changeTurn();
     }
 
     void RemoveBush(Vector3Int cellPos)

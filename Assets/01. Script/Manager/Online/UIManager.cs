@@ -39,6 +39,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private GameObject dotori;
     [SerializeField] private GameObject leaf;
 
+
     private bool readresevedData = false;
 
     

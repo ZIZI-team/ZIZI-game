@@ -28,6 +28,7 @@ public class GameSystem : Singleton<GameSystem>
     {
         string tmp = DataManager.Instance.gamedata.turnData == "P1" ? "P2" : "P1";
         DataManager.Instance.gamedata.turnData = tmp;
+        DataManager.Instance.InitTimer();
     }
 
     public IEnumerator CheckWinCondition(string player, int x, int y)

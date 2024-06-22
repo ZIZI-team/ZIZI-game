@@ -145,14 +145,20 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         photonView.RPC("RPCEndGame", RpcTarget.Others);
     }
 
+    [PunRPC]
+    private void PRCchangeTurn()
+    {
+        GameSystem.Instance.changeTurn();
+    }
+
+    public void SendChangeTurn()
+    {
+        photonView.RPC("PRCchangeTurn", RpcTarget.All);
+    }
     #endregion
 
     public void Disconnect() => PhotonNetwork.Disconnect();
 
     public override void OnDisconnected(DisconnectCause cause) => print("¿¬°á²÷±è");
-
-
-
-    
 
 }

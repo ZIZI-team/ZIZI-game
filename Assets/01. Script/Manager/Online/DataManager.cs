@@ -20,6 +20,8 @@ public struct GameData
 
     public string turnData;
     public string myP;
+
+    public float timertime;
 }
 
 public struct InbantoryData
@@ -62,6 +64,7 @@ public class DataManager : Singleton<DataManager>
         gamedata.mycolor = new Color(255, 255, 255);
         gamedata.opcolor = new Color(255, 255, 255, 0.8f);
         gamedata.isMaxRoomTriger = false;
+        gamedata.timertime = 60f;
     }
 
     private void InitInbantoryData()
@@ -99,4 +102,8 @@ public class DataManager : Singleton<DataManager>
         }
     }
     
+    public void InitTimer()
+    {
+        gamedata.timertime = 60;
+    }
 }
