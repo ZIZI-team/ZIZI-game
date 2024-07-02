@@ -898,7 +898,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &266242059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8967,6 +8967,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16c2f2a4a824cb84399de9d42c264a49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AudioManagerSRC: {fileID: 0}
   SceneList: []
   Main: {fileID: 0}
   controller: {fileID: 1582540417}
@@ -9565,7 +9566,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1660562613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9669,6 +9670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81e29ca6f78dce54cb9b8df057ffbbba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AudioManagerSRC: {fileID: 0}
   textMeshPro: {fileID: 0}
   Main: {fileID: 959354165}
   ButtonList: []
