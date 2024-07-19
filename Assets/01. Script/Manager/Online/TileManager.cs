@@ -7,7 +7,10 @@ public class TileManager : Singleton<TileManager>
     public List<GameObject> TilemapPrefabsList; // 타일맵 프리팹 리스트
     List<Tilemap> myTilemap = new List<Tilemap>(); // 타일맵 리스트
 
+    List<GameObject> invalidObjectList = new List<GameObject>();
+
     public GameObject stonePrefab; // 돌 프리팹
+    public GameObject invalidPrefab; // 수를 둘 수 없는 곳에 설치되는 돌
 
     #region Init Tile Script
     /// <summary>
@@ -77,8 +80,10 @@ public class TileManager : Singleton<TileManager>
             if (DataManager.Instance.tiledata.tileStatus[cellPos.x, cellPos.y] != 1 && DataManager.Instance.tiledata.stoneStatus[cellPos.x, cellPos.y] == "N")
             {
                 AudioManager.Instance.SFX3(); // 사운드 재생
-                NetworkManager.Instance.SendStoneLocation(DataManager.Instance.gamedata.myP, cellPos); // 돌 위치 전송
+                NetworkManager.Instance.SendStonePosition(DataManager.Instance.gamedata.myP, cellPos); // 돌 위치 전송
                 NetworkManager.Instance.SendChangeTurn(); // 턴 변경 전송
+                                                          // 플레이어 이름과 코루틴이 완료된 후 실행될 콜백을 전달합니다.
+                StartCoroutine(GameSystem.Instance.GetInvalidMovesCoroutine(DataManager.Instance.gamedata.myP, OnInvalidInstallReceived));
             }
             Debug.Log("Touched tile position: " + cellPos); // 디버그 로그
         }
@@ -157,6 +162,25 @@ public class TileManager : Singleton<TileManager>
         UIManager.Instance.GetItem(tilebaes, cellPos); // UI 업데이트
     }
     #endregion
+
+
+    void OnInvalidInstallReceived(List<Vector2Int> invalidInstall)
+    {
+        foreach(var installObject in invalidObjectList)
+        {
+            Destroy(installObject);
+        }
+        invalidObjectList = new List<GameObject>();
+        // invalidMoves를 이용하여 원하는 작업을 수행합니다.
+        foreach (var move in invalidInstall)
+        {
+            DataManager.Instance.tiledata.stoneStatus[move.x, move.y] = DataManager.Instance.gamedata.myP;
+            Vector3 invalidPosition = new Vector3(move.x + 0.5f, move.y + 0.5f, 0);
+            GameObject invalidObject = Instantiate(invalidPrefab, invalidPosition, Quaternion.identity);
+
+            invalidObjectList.Add(invalidObject);
+        }
+    }
 }
 
 

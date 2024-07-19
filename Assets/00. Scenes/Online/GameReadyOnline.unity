@@ -3195,7 +3195,7 @@ MonoBehaviour:
   waitPanel: {fileID: 31746601}
   myZizi: {fileID: 69382053}
   opZizi: {fileID: 1063263572}
-  opText: {fileID: 193045014}
+  opReadyCondition: {fileID: 193045014}
   countDownPanel: {fileID: 190408351}
   countDownText: {fileID: 809236268}
   winnerPanel: {fileID: 6232608263761181358, guid: ad8bd3a9ea604af43ad859740d3909b1, type: 3}

@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Tile들의 위치에 대한 Data들이 저장되는 strust임. 
 /// tileStatus에서 0는 Maintile, 1은 Bushtile, 2는 Itemtile임.
-/// stoneStatus에서는 N(ull) or P1 or P2 3가지 값을 가짐.
+/// stoneStatus에서는 N(ull) or P1 or P2 or 3가지 값을 가짐.
 /// </summary>
 public struct TileData
 {

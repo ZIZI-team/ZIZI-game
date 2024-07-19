@@ -1,34 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : Singleton<AudioManager>
 {
-    private static AudioManager instance = null;
-
-    public static AudioManager Instance
-    {
-        get
-        {
-            if(instance == null)
-            {
-                return null;
-            }
-            return instance;
-        }
-    }
-    private void Awake()
-    {
-        if(instance == null)
-        {
-            instance = this;
-
-            DontDestroyOnLoad(this.gameObject);
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
-    }
 
     public AudioSource audioSource1;
 

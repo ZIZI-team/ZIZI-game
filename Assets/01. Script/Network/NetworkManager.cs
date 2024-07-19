@@ -143,7 +143,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    private void RPCStoneLocation(string player ,int x, int y, int z)
+    private void RPCStonePosition(string player ,int x, int y, int z)
     {
         TileManager.Instance.InstallStone(player, new Vector3Int(x, y, z));
     }
@@ -152,9 +152,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     /// </summary>
     /// <param name="player">P1 or P2</param>
     /// <param name="cellPos">선택한 위치의 값</param>
-    public void SendStoneLocation(string player,Vector3Int cellPos) 
+    public void SendStonePosition(string player,Vector3Int cellPos) 
     {
-        photonView.RPC("RPCStoneLocation", RpcTarget.All, player, cellPos.x, cellPos.y, cellPos.z);
+        photonView.RPC("RPCStonePosition", RpcTarget.All, player, cellPos.x, cellPos.y, cellPos.z);
     }
 
     [PunRPC]

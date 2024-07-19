@@ -49,6 +49,7 @@ MonoBehaviour:
   - RPCStoneLocation
   - RPCEndGame
   - PRCchangeTurn
+  - RPCStonePosition
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

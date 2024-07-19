@@ -8,6 +8,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:36495451058:android:7744ab376be36e7fb2faab",
+        "android_client_info": {
+          "package_name": "com.Sprout.ZIZIsAdventure"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2VvH5UPY9MRycEjERzRODmwmD0kLAc40"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:36495451058:android:cd9c72905cd0a8aab2faab",
         "android_client_info": {
           "package_name": "com.firebase.test"

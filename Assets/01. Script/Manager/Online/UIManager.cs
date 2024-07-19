@@ -268,6 +268,13 @@ public class UIManager : Singleton<UIManager>
         string itemName = null;
         GameObject targetobject = null;
 
+        //---tilebase Null 체크---
+        if (tilebase == null)
+        {
+            Debug.LogError("Tilebase is null");
+            return;
+        }
+
         //---아이템 이름 및 오브젝트 설정---
         if (tilebase.name == "dotori")
         {
@@ -280,21 +287,58 @@ public class UIManager : Singleton<UIManager>
             targetobject = leaf;
         }
 
+        //---targetobject Null 체크---
+        if (targetobject == null)
+        {
+            Debug.LogError("Target object is null");
+            return;
+        }
+
         //---아이템 부모 오브젝트 설정---
         string setparentName = DataManager.Instance.gamedata.myP == DataManager.Instance.gamedata.turnData ? "My" : "Op";
-        GameObject instanceItme = Instantiate(targetobject, GameObject.Find("Canvas").transform.Find(setparentName + "Inbantroy").transform);
-        instanceItme.transform.SetParent(GameObject.Find(setparentName + " " + itemName).transform);
+        GameObject parentObject = GameObject.Find("Canvas").transform.Find(setparentName + "Inbantroy").gameObject;
+        if (parentObject == null)
+        {
+            Debug.LogError("Parent object not found: " + setparentName + "Inbantroy");
+            return;
+        }
+
+        GameObject instanceItme = Instantiate(targetobject, parentObject.transform);
+        Transform itemParentTransform = GameObject.Find(setparentName + " " + itemName)?.transform;
+        if (itemParentTransform == null)
+        {
+            Debug.LogError("Item parent not found: " + setparentName + " " + itemName);
+            return;
+        }
+        instanceItme.transform.SetParent(itemParentTransform);
 
         //---아이템 개수 확인---
         int itemCount = instanceItme.transform.parent.childCount;
 
+        //---카메라 Null 체크---
+        Camera mainCamera = Camera.main;
+        if (mainCamera == null)
+        {
+            Debug.LogError("Main camera not found");
+            return;
+        }
+
+        //---RectTransform Null 체크---
+        RectTransform rectTransform = instanceItme.GetComponent<RectTransform>();
+        if (rectTransform == null)
+        {
+            Debug.LogError("RectTransform not found on instance item");
+            return;
+        }
+
         //---아이템 이동---
-        instanceItme.transform.position = Camera.main.WorldToScreenPoint(new Vector3(cellPos.x + 0.5f, cellPos.y + 0.5f, 0));
-        instanceItme.GetComponent<RectTransform>().DOAnchorPos(new Vector2(100 + (50 * itemCount), 0), 2);
+        instanceItme.transform.position = mainCamera.WorldToScreenPoint(new Vector3(cellPos.x + 0.5f, cellPos.y + 0.5f, 0));
+        rectTransform.DOAnchorPos(new Vector2(100 + (50 * itemCount), 0), 2);
 
         //---인벤토리 데이터 업데이트---
         DataManager.Instance.UpdateInbantoryData(setparentName, itemName, itemCount - 1, true);
     }
+
 
 
     #endregion
